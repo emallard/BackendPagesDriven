@@ -1,0 +1,5 @@
+**/bin
+**/obj
+CocoriCore
+**/*.map
+plantuml.jar

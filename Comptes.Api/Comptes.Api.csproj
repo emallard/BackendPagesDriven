@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.2.1" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+    
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject.Extensions.ContextPreservation" Version="3.3.1" />
+    <PackageReference Include="Ninject.Extensions.NamedScope" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Comptes\Comptes.csproj" />
+    <ProjectReference Include="..\CocoriCore.Page\CocoriCore.Page.csproj" />
+    <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Ninject\CocoriCore.Ninject.csproj" />
+    <ProjectReference Include="..\CocoriCore\backend\CocoriCore\CocoriCore.csproj" />
+    <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Router\CocoriCore.Router.csproj" />
+    <ProjectReference Include="..\CocoriCore.MyExtensions\CocoriCore.MyExtensions.csproj" />
+  </ItemGroup>
+
+</Project>

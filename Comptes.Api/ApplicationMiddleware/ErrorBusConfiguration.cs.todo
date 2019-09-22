@@ -1,0 +1,38 @@
+﻿using Autofac;
+using CocoriCore;
+using System;
+using System.Reflection;
+
+namespace Sudouheste.RestApi.Configuration
+{
+    public static class ErrorBusConfiguration
+    {
+        private static Assembly apiAssembly = AssemblyInfo.Assembly;
+
+        public static ErrorBusOptionsBuilder Configure(this ErrorBusOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.For<Exception>().Call<ConsoleLogger>((l, e) => l.LogAsync(e));
+            optionsBuilder.For<Exception>().Call<ITransactionHolder>((h, e) => 
+            {
+                return h.RollbackAsync();
+            });
+
+            optionsBuilder.SetUnexpectedExceptionHandler(async (ue, e) =>
+            {
+                var logger = new ConsoleLogger();
+                await logger.LogAsync(ue);
+                await logger.LogAsync(e);
+            });
+            return optionsBuilder;
+        }
+
+        public static ContainerBuilder RegisterErrorBus(this ContainerBuilder builder, ErrorBusOptionsBuilder optionsBuilder)
+        {
+            builder.Register(c => optionsBuilder.Options).As<ErrorBusOptions>().SingleInstance();
+            builder.RegisterType<ErrorBus>().As<IErrorBus>().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(apiAssembly).AssignableTo<IErrorHandler>().AsSelf();
+            builder.RegisterType<ConsoleLogger>().AsSelf().SingleInstance();
+            return builder;
+        }
+    }
+}
