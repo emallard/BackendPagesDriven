@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CocoriCore;
 
-namespace CocoriCore.Mapper.Comptes
+namespace Comptes
 {
 
-    public class TestComptesModule : ICocoriCoreModule
+    public class ComptesModule : ICocoriCoreModule
     {
-        public TestComptesModule(INewMapper mapper)
+        public ComptesModule(INewMapper mapper)
         {
+            mapper.AddView<PosteCreateDefault>(x => x.Nom = "Voiture");
+
             mapper.AddCreate<PosteCreate, Poste>((x, y) =>
             {
                 y.Nom = x.Nom;

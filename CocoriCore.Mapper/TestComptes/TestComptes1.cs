@@ -14,7 +14,7 @@ namespace CocoriCore.Mapper.Comptes
         public async void Test1()
         {
             kernel.Get<TestComptesModule>();
-            var id = await this.ExecuteAsync(new InsertCommand<PosteCreate>()
+            var id = await this.ExecuteAsync(new CreateCommand<PosteCreate>()
             {
                 Object = new PosteCreate()
                 {

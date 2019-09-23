@@ -5,6 +5,7 @@ namespace Comptes
 {
     public class PagePosteQuery : IMessage<PagePoste>
     {
+        public Guid Id;
     }
 
     public class PagePoste

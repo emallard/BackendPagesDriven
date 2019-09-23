@@ -8,7 +8,7 @@ namespace CocoriCore
         public T Object;
     }
 
-    public class UpdateCommandHandler<T> : IHandler<UpdateCommand<T>, Guid>
+    public class UpdateCommandHandler<T> : MessageHandler<UpdateCommand<T>, Guid>
     {
         private readonly IRepository repository;
         private readonly INewMapper mapper;
@@ -19,7 +19,7 @@ namespace CocoriCore
             this.mapper = mapper;
         }
 
-        public async Task<Guid> ExecuteAsync(UpdateCommand<T> message)
+        public override async Task<Guid> ExecuteAsync(UpdateCommand<T> message)
         {
             var entityType = mapper.GetUpdateEntityType<T>();
             var idFunc = mapper.GetUpdateIdFunc<T>();
@@ -28,11 +28,6 @@ namespace CocoriCore
             mapper.UpdateEntity(message.Object, entity);
             await repository.UpdateAsync(entity);
             return entity.Id;
-        }
-
-        public async Task<object> HandleAsync(IMessage message)
-        {
-            return await ExecuteAsync((UpdateCommand<T>)message);
         }
     }
 }

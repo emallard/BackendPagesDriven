@@ -29,30 +29,6 @@ namespace Comptes
 
         public async Task<object> ExecuteAsync(IMessage message)
         {
-
-            if (message is IQuery)
-            {
-                // repository.SetReadOnly();
-            }
-
-            if (message is ICommand)
-            {
-                // repository.SetReadWrite();
-            }
-
-            /*
-            if (message is IUserMessage)
-            {
-                var userClaims = authenticator.GetClaims<UserClaims>();
-            }
-            
-                        if (message is IProfilMessage)
-                        {
-                            var userClaims = authenticator.GetClaims<UserClaims>();
-                            var profile = repository.Loadsync<Profile>(message.Id);
-                            if (profile.IdUtilisateur != userClaims.Id)
-                                throw new AuthenticationException("");
-                        }*/
             object response;
             if (!mapper.TryHandle(message, out response))
                 response = await FindHandlerAndExecute(message);

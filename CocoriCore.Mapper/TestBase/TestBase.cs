@@ -28,6 +28,9 @@ namespace CocoriCore.Mapper
             kernel.Bind<IMessageBus>().To<CocoriCore.Mapper.MessageBus>().InNamedScope("unitofwork");
 
             kernel.Bind<INewMapper>().To<NewMapper>().InSingletonScope();
+
+            //kernel.Bind<CocoriCoreModuleLoaderOptions>().ToConstant(new CocoriCoreModuleLoaderOptions(CocoriCore.Mapper.AssemblyInfo.Assembly));
+            //kernel.Get<CocoriCoreModuleLoader>();
         }
 
         protected async Task<T> ExecuteAsync<T>(IMessage<T> message)

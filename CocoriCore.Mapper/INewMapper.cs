@@ -9,6 +9,8 @@ namespace CocoriCore
         void AddCreate<T, U>(Action<T, U> action) where T : ICreate<U>;
         void AddUpdate<T, U>(Func<T, TypedId<U>> idFunc, Action<T, U> action) where T : IUpdate<U>;
         void AddView<T, U>(Action<T, U> action) where U : IView<T>;
+        void AddView<U>(Action<U> action);
+
         void AddFrom<T, U, V>(
             Func<T, TypedId<U>> idU,
             Action<T, U> actionU,
@@ -75,6 +77,16 @@ namespace CocoriCore
                 FromType = typeof(T),
                 ToType = typeof(U),
                 MapAction = (a, b) => action((T)a, (U)b)
+            });
+        }
+
+        public void AddView<U>(Action<U> action)
+        {
+            ViewMappings.Add(new NewMapperMapping()
+            {
+                FromType = null,
+                ToType = typeof(U),
+                MapAction = (a, b) => action((U)b)
             });
         }
 
