@@ -17,6 +17,16 @@ namespace CocoriCore.Page
             TMessage message)
         where TMessage : IMessage, new();
 
+
+
+        void Fill<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember, TMember value);
+        void ApplyBindings(IPageBase page);
+        Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(
+            TPage page,
+            Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
+        where TMessage : IMessage, new();
+
+
         Task<T> SubmitRedirect<T>(IMessage<T> message);
     }
 }

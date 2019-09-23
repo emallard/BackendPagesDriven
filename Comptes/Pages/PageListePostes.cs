@@ -4,7 +4,7 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PageListePostesQuery : IMessage<PageListePostes>
+    public class PageListePostesQuery : IPageQuery<PageListePostes>
     {
     }
 
@@ -32,7 +32,10 @@ namespace Comptes
             }).ToArray());
             this.Handle<PageListePostesQuery, PageListePostes>(q => new PageListePostes()
             {
-                Postes = new AsyncCall<PageListePostesQuery, PageListePosteItem[]>(),
+                Postes = new AsyncCall<PageListePostesQuery, PageListePosteItem[]>()
+                {
+                    PageQuery = q
+                },
                 NouveauPoste = new PageNouveauPosteQuery()
             });
         }

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using CocoriCore;
 
@@ -80,6 +82,36 @@ namespace CocoriCore.Page
             var form = func(page);
             form.Command = message;
             return await ExecuteAsync(form);
+        }
+
+        public void ApplyBindings(IPageBase page)
+        {
+            page.ApplyBindings();
+        }
+
+        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm) where TMessage : IMessage, new()
+        {
+            var func = expressionForm.Compile();
+            var form = func(page);
+            return await ExecuteAsync(form);
+        }
+
+        public void Fill<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember, TMember value)
+        {
+            var expression = expressionMember.Body;
+            var memberInfos = new List<MemberInfo>();
+            while (expression is MemberExpression memberExpression)
+            {
+                var memberInfo = memberExpression.Member;
+                memberInfos.Add(memberInfo);
+                expression = memberExpression.Expression;
+            }
+
+            object currentObject = page;
+            for (var i = memberInfos.Count - 1; i > 0; --i)
+                currentObject = memberInfos[i].InvokeGetter(currentObject);
+
+            memberInfos[0].InvokeSetter(currentObject, value);
         }
     }
 }

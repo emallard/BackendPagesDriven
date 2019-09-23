@@ -22,7 +22,10 @@ namespace CocoriCore
         public async Task<T> ExecuteAsync(ViewQuery<T> message)
         {
             var entityType = mapper.GetViewEntityType<T>();
-            IEntity entity = entityType == null ? null : (IEntity)await repository.LoadAsync(entityType, message.Id);
+            if (entityType == null)
+                return mapper.View<T>();
+
+            IEntity entity = (IEntity)await repository.LoadAsync(entityType, message.Id);
             var view = mapper.View<T>(entity);
             return view;
 

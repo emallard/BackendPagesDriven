@@ -9,7 +9,6 @@ namespace CocoriCore
     {
         private readonly IFactory factory;
         private readonly CocoriCoreModuleLoaderOptions options;
-        Dictionary<Type, HandlerFunc> handlings;
 
         public CocoriCoreModuleLoader(
             IFactory factory,

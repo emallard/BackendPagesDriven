@@ -47,7 +47,6 @@ namespace CocoriCore
         {
             var found = mappings3[Tuple.Create(o.GetType(), p.GetType(), typeof(TTarget))];
             return (TTarget)found.Func(o, p);
-
         }
 
         public bool TryHandle(object message, out object response)

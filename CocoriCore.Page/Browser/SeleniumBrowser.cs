@@ -103,5 +103,38 @@ namespace CocoriCore.Page
 
             return default(TFormResponse);
         }
+
+        public void ApplyBindings(IPageBase page)
+        {
+
+        }
+
+        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm) where TMessage : IMessage, new()
+        {
+            await Task.CompletedTask;
+
+            var body = (MemberExpression)expressionForm.Body;
+            var memberInfo = body.Member;
+            var formName = memberInfo.Name;
+
+            driver.FindElement(By.CssSelector("#" + formName + " button")).Click();
+
+            return default(TFormResponse);
+        }
+
+        public void Fill<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember, TMember value)
+        {
+            //throw new NotImplementedException();
+            var body = (MemberExpression)expressionMember.Body;
+            var memberInfo = body.Member;
+            var memberName = memberInfo.Name;
+
+            var elt = driver.FindElement(By.CssSelector("#" + memberName));
+            if (value != null)
+            {
+                elt.SendKeys(value.ToString());
+                Thread.Sleep(500);
+            }
+        }
     }
 }

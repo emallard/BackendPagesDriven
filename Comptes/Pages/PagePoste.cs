@@ -3,7 +3,7 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PagePosteQuery : IMessage<PagePoste>
+    public class PagePosteQuery : IPageQuery<PagePoste>
     {
         public Guid Id;
     }

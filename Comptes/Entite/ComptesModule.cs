@@ -6,9 +6,9 @@ using CocoriCore;
 namespace Comptes
 {
 
-    public class ComptesModule : ICocoriCoreModule
+    public class ComptesModule : INewMapperModule
     {
-        public ComptesModule(INewMapper mapper)
+        public void Load(INewMapper mapper)
         {
             mapper.AddView<PosteCreateDefault>(x => x.Nom = "Voiture");
 

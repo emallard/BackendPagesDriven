@@ -5,9 +5,9 @@ using System.Reflection;
 namespace CocoriCore.Mapper.Comptes
 {
 
-    public class TestComptesModule : ICocoriCoreModule
+    public class TestComptesModule : INewMapperModule
     {
-        public TestComptesModule(INewMapper mapper)
+        public void Load(INewMapper mapper)
         {
             mapper.AddCreate<PosteCreate, Poste>((x, y) =>
             {

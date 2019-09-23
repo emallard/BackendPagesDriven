@@ -8,7 +8,7 @@ namespace CocoriCore
 
     public class HandlerMapper : IHandlerMapper
     {
-        Dictionary<Type, HandlerFunc> handlings;
+        Dictionary<Type, HandlerFunc> handlings = new Dictionary<Type, HandlerFunc>();
 
         public void Add<TMessage, TResponse>(Func<TMessage, TResponse> func) where TMessage : IMessage<TResponse>
         {

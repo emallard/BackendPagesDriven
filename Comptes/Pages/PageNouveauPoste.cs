@@ -5,26 +5,8 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PageBinding<TPage>
-    {
-        public Expression<Func<TPage, object>> From;
-        public Expression<Func<TPage, object>> To;
-    }
 
-    public class PageBase<TPage>
-    {
-        public List<PageBinding<TPage>> Bindings = new List<PageBinding<TPage>>();
-        public void Bind(Expression<Func<TPage, object>> from, Expression<Func<TPage, object>> to)
-        {
-            Bindings.Add(new PageBinding<TPage>()
-            {
-                From = from,
-                To = to
-            });
-        }
-    }
-
-    public class PageNouveauPosteQuery : IMessage<PageNouveauPoste>
+    public class PageNouveauPosteQuery : IPageQuery<PageNouveauPoste>
     {
     }
 
@@ -45,9 +27,19 @@ namespace Comptes
         {
             Handle<PageNouveauPosteQuery, PageNouveauPoste>(q => new PageNouveauPoste()
             {
-                Modele = new AsyncCall<PageNouveauPosteQuery, PosteCreateDefault>(),
+                Modele = new AsyncCall<PageNouveauPosteQuery, PosteCreateDefault>()
+                {
+                    PageQuery = q
+                },
                 Creer = new Form<CreateCommand<PosteCreate>, PageListePostesQuery>()
             });
+
+            this.Map<PageNouveauPosteQuery, ViewQuery<PosteCreateDefault>>(q => new ViewQuery<PosteCreateDefault>());
+            this.Map<ViewQuery<PosteCreateDefault>, PosteCreateDefault, PosteCreateDefault>((q, r) => r);
+
+            this.Map<CreateCommand<PosteCreate>, Guid, PageListePostesQuery>((q, r) =>
+                new PageListePostesQuery()
+            );
         }
     }
 }

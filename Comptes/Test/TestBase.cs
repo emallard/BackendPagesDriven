@@ -29,7 +29,13 @@ namespace Comptes
             kernel.Bind<IRepository>().To<MemoryRepository>().InNamedScope("unitofwork");
 
             // messagebus
-            kernel.Bind<HandlerFinder>().ToConstant(new HandlerFinder(CocoriCore.Page.AssemblyInfo.Assembly, Comptes.AssemblyInfo.Assembly)).InSingletonScope();
+            kernel.Bind<HandlerFinder>().ToConstant(new HandlerFinder(
+                CocoriCore.Mapper.AssemblyInfo.Assembly,
+                CocoriCore.Page.AssemblyInfo.Assembly,
+                Comptes.AssemblyInfo.Assembly)).InSingletonScope();
+            kernel.Bind<IPageMapper>().ToConstant(new PageMapper(Comptes.AssemblyInfo.Assembly));
+            kernel.Bind<INewMapper>().ToConstant(new NewMapper(Comptes.AssemblyInfo.Assembly));
+
             kernel.Bind<IMessageBus>().To<Comptes.MessageBus>().InNamedScope("unitofwork");
             kernel.Bind<IExecuteHandler>().To<ExecuteHandler>().InNamedScope("unitofwork");
 
@@ -45,7 +51,6 @@ namespace Comptes
             kernel.Bind<IClaimsProvider, IClaimsWriter>().To<ClaimsProviderAndWriter>().InNamedScope("unitofwork");
             kernel.Bind<IUserLogger, UserLogger>().To<UserLogger>().InSingletonScope();
 
-            kernel.Bind<IPageMapper>().ToConstant(new PageMapper(Comptes.AssemblyInfo.Assembly));
 
             kernel.Bind<IBrowser>().To<TestBrowser>();
         }

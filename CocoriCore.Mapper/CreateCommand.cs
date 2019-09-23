@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 namespace CocoriCore
 {
     public class CreateCommand<T> : IMessage<Guid>
+        where T : new()
     {
-        public T Object;
+        public T Object = new T();
     }
 
     public class CreateCommandHandler<T> : MessageHandler<CreateCommand<T>, Guid>
+        where T : new()
     {
         private readonly IRepository repository;
         private readonly INewMapper mapper;

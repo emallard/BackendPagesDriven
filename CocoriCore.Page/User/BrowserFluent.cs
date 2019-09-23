@@ -91,6 +91,22 @@ namespace CocoriCore.Page
             var formResponse = browser.Submit(Page, getForm, command).Result;
             return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
         }
+
+        public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
+            Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
+            where TMessage : IMessage, new()
+        {
+            browser.ApplyBindings((IPageBase)this.Page);
+            this.logs.Log(new LogSubmit { Id = this.Id, MemberName = ((MemberExpression)getForm.Body).Member.Name });
+            var formResponse = browser.Submit(Page, getForm).Result;
+            return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
+        }
+
+        public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, TMember value)
+        {
+            this.browser.Fill(this.Page, expressionMember, value);
+            return this;
+        }
     }
 
     public class TestBrowserFluentSubmitted<TPage, TPostResponse>

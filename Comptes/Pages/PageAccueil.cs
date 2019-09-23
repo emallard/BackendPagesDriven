@@ -3,7 +3,7 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PageAccueilQuery : IMessage<PageAccueil>
+    public class PageAccueilQuery : IPageQuery<PageAccueil>
     {
     }
 

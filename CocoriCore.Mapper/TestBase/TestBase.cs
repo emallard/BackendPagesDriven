@@ -27,7 +27,7 @@ namespace CocoriCore.Mapper
             kernel.Bind<HandlerFinder>().ToConstant(new HandlerFinder(CocoriCore.Mapper.AssemblyInfo.Assembly)).InSingletonScope();
             kernel.Bind<IMessageBus>().To<CocoriCore.Mapper.MessageBus>().InNamedScope("unitofwork");
 
-            kernel.Bind<INewMapper>().To<NewMapper>().InSingletonScope();
+            kernel.Bind<INewMapper>().ToConstant(new NewMapper(CocoriCore.Mapper.AssemblyInfo.Assembly));
 
             //kernel.Bind<CocoriCoreModuleLoaderOptions>().ToConstant(new CocoriCoreModuleLoaderOptions(CocoriCore.Mapper.AssemblyInfo.Assembly));
             //kernel.Get<CocoriCoreModuleLoader>();
