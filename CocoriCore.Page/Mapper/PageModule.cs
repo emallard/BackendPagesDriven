@@ -19,6 +19,19 @@ namespace CocoriCore
             Mappings2.Add(PageMapping2.Create(mappingFunc));
         }
 
+        protected void MapForm<TMessage, TResponse, TModel>(Func<TMessage, TResponse, TModel> mappingFunc)
+        {
+            Map(mappingFunc);
+        }
+
+        protected void MapAsyncCall<TPageQuery, TMessage, TResponse, TModel>(
+            Func<TPageQuery, TMessage> pageQueryToMessageFunc,
+            Func<TMessage, TResponse, TModel> resultMappingFunc)
+        {
+            Map(pageQueryToMessageFunc);
+            Map(resultMappingFunc);
+        }
+
         protected void Handle<TMessage, TResponse>(Func<TMessage, TResponse> func) where TMessage : IMessage<TResponse>
         {
             Handlings.Add(PageHandling.Create(func));

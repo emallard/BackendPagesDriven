@@ -11,22 +11,20 @@ namespace Comptes
         public void Test1()
         {
             var user = CreateUser("moi");
-            var pageNouveauPoste = user
+
+            user
                 .Display(new PageAccueilQuery())
                 .Follow(p => p.ListePostes)
-                .Follow(p => p.NouveauPoste);
+                .Follow(p => p.NouveauPoste)
+                .Assert(p => p.Modele.Result.Nom.Should().Be("Voiture"))
 
-            var modele = pageNouveauPoste.Page.Modele.Result;
-            modele.Nom.Should().Be("Voiture");
-
-            var pageListePostes = pageNouveauPoste
-                .Fill(p => p.Modele.Result.Nom, "Bijoux")
+                .Fill(p => p.Modele.Result.Nom, "Alimentation")
                 .Submit(p => p.Creer)
-                .ThenFollow(r => r);
-
-            var postes = pageListePostes.Page.Postes.Result;
-            postes.Length.Should().Be(1);
-            postes[0].Poste.Nom.Should().Be("Bijoux");
+                .ThenFollow(r => r)
+                .Assert(p => p.Postes.Result,
+                    x => x.Length.Should().Be(1),
+                    x => x[0].Poste.Nom.Should().Be("Alimentation")
+                );
         }
     }
 }

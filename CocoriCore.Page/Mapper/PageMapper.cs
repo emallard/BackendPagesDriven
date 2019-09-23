@@ -32,9 +32,15 @@ namespace CocoriCore
             handlings = modules.SelectMany(m => m.Handlings).ToDictionary(x => x.Key, x => x);
         }
 
+        /*
         public Type GetIntermediateType<TPageQuery, TModel>()
         {
             return intermediateType[Tuple.Create(typeof(TPageQuery), typeof(TModel))];
+        }*/
+
+        public Type GetIntermediateType(Type pageQueryType, Type modelType)
+        {
+            return intermediateType[Tuple.Create(pageQueryType, modelType)];
         }
 
         public object Map(Type targetType, object o)

@@ -11,7 +11,7 @@ namespace Comptes
     public class PageListePostes
     {
         public PageNouveauPosteQuery NouveauPoste;
-        public AsyncCall<PageListePostesQuery, PageListePosteItem[]> Postes;
+        public AsyncCall<PageListePosteItem[]> Postes;
     }
 
     public class PageListePosteItem
@@ -24,18 +24,17 @@ namespace Comptes
     {
         public PageListePostesModule()
         {
-            this.Map<PageListePostesQuery, ListQuery<PosteView>>(q => new ListQuery<PosteView>());
-            this.Map<ListQuery<PosteView>, PosteView[], PageListePosteItem[]>((q, r) => r.Select(x => new PageListePosteItem()
-            {
-                Lien = new PagePosteQuery { Id = x.Id.Id },
-                Poste = x
-            }).ToArray());
+            this.MapAsyncCall<PageListePostesQuery, ListQuery<PosteView>, PosteView[], PageListePosteItem[]>(
+                q => new ListQuery<PosteView>(),
+                (q, r) => r.Select(x => new PageListePosteItem()
+                {
+                    Lien = new PagePosteQuery { Id = x.Id.Id },
+                    Poste = x
+                }).ToArray()
+                );
             this.Handle<PageListePostesQuery, PageListePostes>(q => new PageListePostes()
             {
-                Postes = new AsyncCall<PageListePostesQuery, PageListePosteItem[]>()
-                {
-                    PageQuery = q
-                },
+                Postes = new AsyncCall<PageListePosteItem[]>(q),
                 NouveauPoste = new PageNouveauPosteQuery()
             });
         }

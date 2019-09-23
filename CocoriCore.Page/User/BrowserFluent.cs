@@ -77,6 +77,7 @@ namespace CocoriCore.Page
             return result;
         }
 
+        /*
         public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm,
             Action<TMessage> modifyMessage
@@ -90,7 +91,7 @@ namespace CocoriCore.Page
 
             var formResponse = browser.Submit(Page, getForm, command).Result;
             return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
-        }
+        }*/
 
         public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
@@ -99,12 +100,27 @@ namespace CocoriCore.Page
             browser.ApplyBindings((IPageBase)this.Page);
             this.logs.Log(new LogSubmit { Id = this.Id, MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Submit(Page, getForm).Result;
+
             return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
         }
 
         public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, TMember value)
         {
             this.browser.Fill(this.Page, expressionMember, value);
+            return this;
+        }
+
+        public BrowserFluent<TPage> Assert(Action<TPage> action)
+        {
+            action(Page);
+            return this;
+        }
+
+        public BrowserFluent<TPage> Assert<TMember>(Func<TPage, TMember> memberFunc, params Action<TMember>[] actions)
+        {
+            var member = memberFunc(Page);
+            foreach (var a in actions)
+                a(member);
             return this;
         }
     }

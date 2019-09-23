@@ -7,16 +7,22 @@ namespace CocoriCore
         void SetResult(object o);
     }
 
-    public class AsyncCall<TPageGet, T> : IMessage<T>, IAsyncCall
+    public class AsyncCall<T> : IMessage<T>, IAsyncCall
     {
         public bool IsAsyncCall = true;
         public Type _Type;
-        public TPageGet PageQuery;
+        public object PageQuery;
         public T Result;
 
         public AsyncCall()
         {
             _Type = this.GetType();
+        }
+
+        public AsyncCall(object pageQuery)
+        {
+            _Type = this.GetType();
+            PageQuery = pageQuery;
         }
 
         public void SetResult(object o)

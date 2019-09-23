@@ -76,13 +76,14 @@ namespace CocoriCore.Page
             }
         }
 
+        /*/
         public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm, TMessage message) where TMessage : IMessage, new()
         {
             var func = expressionForm.Compile();
             var form = func(page);
             form.Command = message;
             return await ExecuteAsync(form);
-        }
+        }*/
 
         public void ApplyBindings(IPageBase page)
         {

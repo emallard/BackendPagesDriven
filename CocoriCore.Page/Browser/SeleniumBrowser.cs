@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CocoriCore;
@@ -124,12 +127,19 @@ namespace CocoriCore.Page
 
         public void Fill<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember, TMember value)
         {
-            //throw new NotImplementedException();
-            var body = (MemberExpression)expressionMember.Body;
-            var memberInfo = body.Member;
-            var memberName = memberInfo.Name;
+            var expression = expressionMember.Body;
+            var memberInfos = new List<MemberInfo>();
+            while (expression is MemberExpression memberExpression)
+            {
+                var memberInfo = memberExpression.Member;
+                memberInfos.Add(memberInfo);
+                expression = memberExpression.Expression;
+            }
 
-            var elt = driver.FindElement(By.CssSelector("#" + memberName));
+            memberInfos.Reverse();
+            var cssSelector = string.Join(" ", memberInfos.Select(x => "# " + x.Name));
+
+            var elt = driver.FindElement(By.CssSelector(cssSelector));
             if (value != null)
             {
                 elt.SendKeys(value.ToString());
