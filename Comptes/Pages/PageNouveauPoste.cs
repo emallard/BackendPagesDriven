@@ -31,8 +31,8 @@ namespace Comptes
                 Creer = new Form<CreateCommand<PosteCreate>, PageListePostesQuery>()
             });
 
-            this.MapAsyncCall<PageNouveauPosteQuery, ViewQuery<PosteCreateDefault>, PosteCreateDefault, PosteCreateDefault>(
-                pageQuery => new ViewQuery<PosteCreateDefault>(),
+            this.MapAsyncCall<PageNouveauPosteQuery, ByIdQuery<PosteCreateDefault>, PosteCreateDefault, PosteCreateDefault>(
+                pageQuery => new ByIdQuery<PosteCreateDefault>(),
                 (query, response) => response);
 
             this.MapForm<CreateCommand<PosteCreate>, Guid, PageListePostesQuery>(

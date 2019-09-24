@@ -1,6 +1,6 @@
 namespace CocoriCore.Mapper.Comptes
 {
-    class DepenseView : IView<Depense>, IWith<Poste>
+    class DepenseView : IJoin<Depense, Poste>
     {
         public TypedId<Depense> Id { get; set; }
         public TypedId<Poste> IdPoste;

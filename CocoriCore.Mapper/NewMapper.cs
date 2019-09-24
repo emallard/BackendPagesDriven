@@ -71,11 +71,6 @@ namespace CocoriCore
             });
         }
 
-        public void AddFrom<T, U, V>(Func<T, TypedId<U>> idU, Action<T, U> actionU, Func<T, TypedId<V>> idV, Action<T, V> actionV) where T : IView<U>, IWith<V>
-        {
-            throw new NotImplementedException();
-        }
-
 
         public IEntity CreateEntity(object o)
         {
@@ -125,6 +120,11 @@ namespace CocoriCore
             var mapping = ViewMappings.First(x => x.ToType == typeof(T) && x.FromType == null);
             mapping.MapAction(null, view);
             return view;
+        }
+
+        public void AddJoin<T, U, V>(Func<T, TypedId<U>> idU, Action<T, U> actionU, Func<T, TypedId<V>> idV, Action<T, V> actionV) where T : IJoin<U, V>
+        {
+            throw new NotImplementedException();
         }
     }
 }

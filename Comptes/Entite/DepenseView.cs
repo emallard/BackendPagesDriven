@@ -2,7 +2,7 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class DepenseView : IView<Depense>, IWith<Poste>
+    public class DepenseView : IJoin<Depense, Poste>
     {
         public TypedId<Depense> Id { get; set; }
         public TypedId<Poste> IdPoste;

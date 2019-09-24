@@ -17,11 +17,15 @@ namespace CocoriCore.Mapper
             sb.AppendLine("    rankdir=\"LR\"");
             sb.AppendLine("    node [margin=\"0.50,0.055\"]");
 
-            sb.AppendLine(SubgraphEntities(graph.Nodes.Where(n => n.Type.IsAssignableTo<IEntity>()), "entities"));
-            sb.AppendLine(SubgraphEntities(graph.Nodes.Where(n => n.Type.IsAssignableToGeneric(typeof(IView<>))), "views"));
+            sb.AppendLine(SubgraphEntities(graph.Nodes.Where(n => n.Type.IsAssignableTo<IEntity>()), "entities", "record"));
+            sb.AppendLine(SubgraphEntities(graph.Nodes.Where(n =>
+                n.Type.IsAssignableToGeneric(typeof(IView<>))
+                || n.Type.IsAssignableToGeneric(typeof(IJoin<,>))
+                ), "views", "Mrecord"));
             sb.AppendLine(SubgraphEntities(graph.Nodes.Where(n =>
                 n.Type.IsAssignableToGeneric(typeof(ICreate<>))
-                || n.Type.IsAssignableToGeneric(typeof(IUpdate<>))), "writes"));
+                || n.Type.IsAssignableToGeneric(typeof(IUpdate<>))
+                ), "writes", "Mrecord"));
 
             foreach (var e in graph.Edges)
                 sb.AppendLine("    " + StrEdge(e));
@@ -32,7 +36,7 @@ namespace CocoriCore.Mapper
             return CmdDot(sb.ToString());
         }
 
-        private string SubgraphEntities(IEnumerable<MapperNode> nodes, string name)
+        private string SubgraphEntities(IEnumerable<MapperNode> nodes, string name, string shape)
         {
             var entityNodes = nodes
                 .Select(n => "       " + StrNode(n) + "\n")
@@ -41,7 +45,7 @@ namespace CocoriCore.Mapper
             return
                   "    subgraph " + name + " {" + "\n"
                 + "        rank=same" + "\n"
-                + "        node [shape=\"Mrecord\"]" + "\n"
+                + "        node [shape=\"" + shape + "\"]" + "\n"
                 + "        rank_" + name + " [style=\"invis\"]" + "\n"
                 + entityStr
                 + "    }";

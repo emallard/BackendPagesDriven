@@ -10,11 +10,11 @@ namespace CocoriCore
         void AddView<T, U>(Action<T, U> action) where U : IView<T>;
         void AddView<U>(Action<U> action);
 
-        void AddFrom<T, U, V>(
+        void AddJoin<T, U, V>(
             Func<T, TypedId<U>> idU,
             Action<T, U> actionU,
             Func<T, TypedId<V>> idV,
-            Action<T, V> actionV) where T : IView<U>, IWith<V>;
+            Action<T, V> actionV) where T : IJoin<U, V>;
 
         IEntity CreateEntity(object o);
         Type GetUpdateEntityType<T>();

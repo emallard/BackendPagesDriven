@@ -42,6 +42,7 @@ namespace CocoriCore.Mapper
                 || t.IsAssignableToGeneric(typeof(IView<>))
                 || t.IsAssignableToGeneric(typeof(ICreate<>))
                 || t.IsAssignableToGeneric(typeof(IUpdate<>))
+                || t.IsAssignableToGeneric(typeof(IJoin<,>))
             ).ToArray();
             var nodes =
                 entityTypes.Select(t => new MapperNode()
@@ -77,6 +78,20 @@ namespace CocoriCore.Mapper
                         From = n,
                         To = nodes.First(x => x.Type == n.Type.GetGenericArguments(typeof(IUpdate<>))[0])
                     });
+
+                if (n.Type.IsAssignableToGeneric(typeof(IJoin<,>)))
+                {
+                    edges.Add(new MapperEdge()
+                    {
+                        From = nodes.First(x => x.Type == n.Type.GetGenericArguments(typeof(IJoin<,>))[0]),
+                        To = n
+                    });
+                    edges.Add(new MapperEdge()
+                    {
+                        From = nodes.First(x => x.Type == n.Type.GetGenericArguments(typeof(IJoin<,>))[1]),
+                        To = n
+                    });
+                }
             }
             return edges;
         }

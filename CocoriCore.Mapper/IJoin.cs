@@ -1,6 +1,6 @@
 namespace CocoriCore
 {
-    public interface IWith<U>
+    public interface IJoin<U, T>
     {
 
     }

@@ -21,7 +21,7 @@ namespace CocoriCore.Mapper.Comptes
                 }
             });
 
-            var posteView = await this.ExecuteAsync(new ViewQuery<PosteView>()
+            var posteView = await this.ExecuteAsync(new ByIdQuery<PosteView>()
             {
                 Id = id
             });
@@ -38,7 +38,7 @@ namespace CocoriCore.Mapper.Comptes
                 }
             });
 
-            posteView = await this.ExecuteAsync(new ViewQuery<PosteView>()
+            posteView = await this.ExecuteAsync(new ByIdQuery<PosteView>()
             {
                 Id = id
             });
