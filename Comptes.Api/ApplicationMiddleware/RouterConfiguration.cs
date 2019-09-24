@@ -17,10 +17,14 @@ namespace Comptes.Api
             var builder = new RouterOptionsBuilder();
 
             builder.Get<PageAccueilQuery>().SetPath("api");
+
             builder.Get<PageListePostesQuery>().SetPath("api/postes");
             builder.Get<PageNouveauPosteQuery>().SetPath("api/postes/nouveau");
             builder.Get<PagePosteQuery>().SetPath(x => $"api/postes/{x.Id}");
 
+            builder.Get<PageListeDepensesQuery>().SetPath("api/depenses");
+            builder.Get<PageNouvelleDepenseQuery>().SetPath("api/depenses/nouvelle");
+            builder.Get<PageDepenseQuery>().SetPath(x => $"api/depenses/{x.Id}");
 
             builder.Post<Call>().SetPath("api/call").UseBody();
             builder.Get<HtmlMessage>().SetPath("api/page").UseQuery();
