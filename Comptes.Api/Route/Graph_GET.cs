@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CocoriCore;
+using CocoriCore.Mapper;
 using CocoriCore.Page;
 
 namespace Comptes.Api
@@ -16,11 +17,20 @@ namespace Comptes.Api
     {
         private readonly PageGraphBuilder builder;
         private readonly PageGraphFormatter formatter;
+        private readonly MapperGraphBuilder mapperGraphBuilder;
+        private readonly MapperGraphFormatter mapperGraphFormatter;
 
-        public Graph_GETHandler(PageGraphBuilder builder, PageGraphFormatter formatter)
+        public Graph_GETHandler(
+            PageGraphBuilder builder,
+            PageGraphFormatter formatter,
+            MapperGraphBuilder mapperGraphBuilder,
+            MapperGraphFormatter mapperGraphFormatter
+            )
         {
             this.builder = builder;
             this.formatter = formatter;
+            this.mapperGraphBuilder = mapperGraphBuilder;
+            this.mapperGraphFormatter = mapperGraphFormatter;
         }
 
         public override async Task<SvgResponse> ExecuteAsync(Graph_GET message)
@@ -28,17 +38,26 @@ namespace Comptes.Api
             await Task.CompletedTask;
 
             string svg = "";
-            Func<PageNode, bool> predicate = x => true; ;
-            if (message.Q == "users")
+
+            if (message.Q == "mapper")
             {
-                predicate = x => x.ParameterizedUrl == "/api"
-                              || x.ParameterizedUrl.StartsWith("/api/users");
+                var assembly = Comptes.AssemblyInfo.Assembly;
+                var graph = mapperGraphBuilder.Build(assembly);
+                svg = mapperGraphFormatter.Format(graph);
             }
+            else
+            {
+                Func<PageNode, bool> predicate = x => true; ;
+                if (message.Q == "users")
+                {
+                    predicate = x => x.ParameterizedUrl == "/api"
+                                  || x.ParameterizedUrl.StartsWith("/api/users");
+                }
 
-            var assembly = Comptes.AssemblyInfo.Assembly;
-            var graph = builder.Build(assembly, predicate);
-            svg = formatter.LinksAndForms(graph);
-
+                var assembly = Comptes.AssemblyInfo.Assembly;
+                var graph = builder.Build(assembly, predicate);
+                svg = formatter.LinksAndForms(graph);
+            }
 
             return new SvgResponse()
             {
