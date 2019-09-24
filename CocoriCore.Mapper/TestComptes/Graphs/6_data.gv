@@ -1,0 +1,50 @@
+digraph G {
+    rankdir="LR"
+    node [margin="0.30,0.055"]
+
+    subgraph ecritures {
+        rank=same
+        rank_ecritures [style="invis"]
+        node [shape="Mrecord"]
+        DepenseUpdate [label="{{DepenseUpdate | Id \n IdPoste \n Description \n Montant}}"]
+        DepenseCreate [label="{{DepenseCreate | IdPoste \n Description \n Montant}}"]
+        PosteUpdate [label="{{PosteUpdate | Id \n Nom}}"]
+        PosteCreate [label="{{PosteCreate | Nom}}"]
+    }
+
+    subgraph entites {
+        rank=same
+        node [shape="record"]
+        rank_entites [style="invis"]
+        Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
+        Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]
+    }
+
+    subgraph entitesView {
+        rank=same
+        node [shape="Mrecord"]
+        rank_entitesView [style="invis"]
+        DepenseView [label="{{DepenseView | Id \n IdPoste \n NomPoste \n Description \n Montant}}"]
+        PosteView [label="{{PosteView | Id \n Nom}}"]
+        IdLabelPoste [label="{{IdLabel\<Poste\> | Id \n Label}}"]
+    }
+
+    subgraph others {
+        rank=same
+        node [shape="Mrecord"]
+        rank_others [style="invis"]
+        DefaultDepense [label="{{DefaultDepense | IdPoste \n NomPoste \n Description \n Montant}}"]
+    }
+
+    subgraph {
+        edge [style="invis"]
+        
+        rank_others -> rank_ecritures -> rank_entites -> rank_entitesView
+    }
+
+    {DepenseUpdate, DepenseCreate } -> Depense 
+    {Depense, Poste} -> DepenseView
+    {PosteCreate, PosteUpdate} -> Poste
+    Poste -> PosteView
+    Poste -> IdLabelPoste
+}

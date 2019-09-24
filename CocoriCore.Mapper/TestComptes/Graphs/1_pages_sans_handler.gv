@@ -1,0 +1,65 @@
+digraph G {
+    rankdir="LR"
+
+
+    subgraph _cluster_entites {
+        node [shape="record"]
+        Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
+        Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]
+    }
+    
+    subgraph {
+        rank=same
+        node [shape="Mrecord"]
+        DepenseUpdateLecture [label="{{DepenseUpdateLecture | IdLabel\<Poste\> \n NomPoste \n Description \n Montant}}"]
+        IdLabelPoste [label="{{IdLabel\<Poste\>}}"]
+        PosteUpdateLecture [label="{{PosteUpdateLecture | Id \n Nom \n}}"]
+        ListeDepenseItem [label="{{ListeDepenseItem | NomPoste \n Description \n Montant}}"]
+    }
+
+    subgraph {
+        node [shape="Mrecord"]
+        PosteUpdateEcriture [label="{{PosteUpdateEcriture | IdPoste \n Nom}}"]
+        DepenseUpdateEcriture [label="{{DepenseUpdateEcriture | Id \n IdPoste \n Description \n Montant}}"]
+    }
+    
+
+    {Depense, Poste} -> DepenseUpdateLecture
+    Poste -> PosteUpdateLecture
+    Poste->IdLabelPoste
+    {Depense, Poste} -> ListeDepenseItem
+
+    subgraph {
+        node [shape="box"]
+        _Depense
+        _Poste
+    }
+
+    DepenseUpdateEcriture -> _Depense
+    PosteUpdateEcriture -> _Poste
+
+
+    subgraph {
+        rank=same
+        node [shape="box", fillcolor="#45aaff", style=filled]
+        CreerDepense 
+        ModifierDepense
+        VoirDepense
+        VoirPoste
+        CreerPoste
+        ModifierPoste
+        ListeDepenses
+    }
+
+    IdLabelPoste -> CreerDepense [arrowhead="crow"]
+    CreerDepense -> DepenseUpdateEcriture
+    DepenseUpdateLecture -> ModifierDepense -> DepenseUpdateEcriture
+    IdLabelPoste -> ModifierDepense [arrowhead="crow"]
+    DepenseUpdateLecture -> VoirDepense
+
+    CreerPoste -> PosteUpdateEcriture
+    PosteUpdateLecture -> ModifierPoste -> PosteUpdateEcriture
+    PosteUpdateLecture -> VoirPoste
+    ListeDepenseItem -> ListeDepenses [arrowhead="crow"]
+
+}

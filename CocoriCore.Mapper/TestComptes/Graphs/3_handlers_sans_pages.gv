@@ -1,0 +1,79 @@
+digraph G {
+    rankdir="LR"
+
+
+    subgraph entites {
+        rank=same
+        node [shape="record"]
+        rank_entites [style="invis"]
+        Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
+        Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]
+    }
+    
+    subgraph requetes
+    {
+        rank=same
+        node [shape="Mrecord"]
+        rank_requetes [style="invis"]
+        ListeDepensesQuery [label="{{ListeDepensesQuery}}"]
+        DepenseUpdateQuery [label="{{DepenseUpdateQuery | IdDepense}}"]
+        PosteUpdateQuery [label="{{PosteUpdateQuery | IdPoste}}"]
+        ListePostesQuery
+    }
+    subgraph queryHandlers{
+        rank=same
+        node [shape="box", fillcolor="#ff8822", style=filled]
+        rank_queryHandlers [style="invis"]
+        ListeDepensesHandler
+        DepenseUpdateHandler
+        ListePostesHandler
+        PosteUpdateHandler
+
+    }
+    subgraph retourRequete{
+        rank=same
+        node [shape="Mrecord"]
+        rank_retourRequete [style="invis"]
+        DepenseUpdate [label="{{DepenseUpdate | IdLabel\<Poste\>[] \n Description \n Montant}}"]
+        IdLabelPoste [label="{{IdLabel\<Poste\>[]}}"]
+        PosteUpdate [label="{{PosteUpdate | Id \n Nom \n}}"]
+        ListeDepenseItem [label="{{ListeDepenseItem[] | IdDepense \n NomPoste \n Description \n Montant}}"]
+    }
+
+    subgraph commandes {
+        rank = same
+        node [shape="Mrecord"]
+        rank_commandes [style="invis"]
+        CreateOrUpdatePosteCommand [label="{{CreateOrUpdatePosteCommand | IdPoste \n Nom}}"]
+        CreateOrUpdateDepenseCommand [label="{{CreateOrUpdateDepenseCommand | Id \n IdPoste \n Description \n Montant}}"]
+    }
+
+    subgraph commandHandlers{
+        rank=same
+        node [shape="box", fillcolor="#ff8822", style=filled]
+        rank_commandHandlers [style="invis"]
+        CreateOrUpdateDepenseHandler
+        CreateOrUpdatePosteHandler
+    }
+
+
+    subgraph {
+        edge [style="invis"]
+        rank_commandes -> rank_commandHandlers -> rank_entites -> rank_requetes -> rank_queryHandlers -> rank_retourRequete
+    }
+    
+    {ListeDepensesQuery, Depense, Poste} -> ListeDepensesHandler
+    ListeDepensesHandler -> ListeDepenseItem
+   
+    {DepenseUpdateQuery, Depense} -> DepenseUpdateHandler -> DepenseUpdate
+    Poste -> PosteUpdateQuery -> PosteUpdateHandler -> PosteUpdate
+    Poste-> DepenseUpdateHandler
+    Poste -> ListePostesQuery -> ListePostesHandler -> IdLabelPoste
+    
+
+    
+
+
+    CreateOrUpdateDepenseCommand -> CreateOrUpdateDepenseHandler -> Depense
+    CreateOrUpdatePosteCommand -> CreateOrUpdatePosteHandler -> Poste
+}

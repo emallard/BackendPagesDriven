@@ -1,0 +1,19 @@
+digraph G {
+    rankdir="LR"
+    node [shape="Mrecord", fillcolor="#45aaff", style=filled]
+    Home -> {ListerPostes, ListerDepenses}
+
+
+    ListerDepenses [label="{{ListerDepenses | ListeDepenseQuery}}"]
+    VoirDepense [label="{{VoirDepense | VoirDepenseQuery}}"]
+    ModifierDepense [label="{{ModifierDepense | ModifierDepenseQuery}}"]
+    ListerPostes [label="{{ListerPostes | ListerPostesQuery}}"]
+    VoirPoste [label="{{VoirPoste | VoirPosteQuery}}"]
+    ModifierPoste [label="{{ModifierPoste | ModifierPosteQuery}}"]
+
+    ListerDepenses -> VoirDepense -> ModifierDepense
+    ModifierDepense -> ModifierDepenseCommande -> VoirDepense
+
+    ListerPostes -> VoirPoste -> ModifierPoste 
+    ModifierPoste -> ModifierPosteCommande -> VoirPoste
+}

@@ -13,6 +13,9 @@ namespace CocoriCore.Page
         {
             var sb = new StringBuilder();
             sb.AppendLine("digraph G {");
+            sb.AppendLine("    rankdir=\"LR\"");
+            sb.AppendLine("    node [shape=\"box\"]");
+            sb.AppendLine("    node [margin=\"0.50,0.055\"]");
 
             foreach (var n in graph.Nodes.OrderBy(x => x.ParameterizedUrl).ToArray())
                 sb.AppendLine(StrNode(n));

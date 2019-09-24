@@ -1,0 +1,64 @@
+digraph G {
+    rankdir="LR"
+
+
+    subgraph entites {
+        rank=same
+        node [shape="record"]
+        rank_entites [style="invis"]
+        Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
+        Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]
+    }
+    
+    subgraph requetes
+    {
+        rank=same
+        node [shape="Mrecord"]
+        rank_requetes [style="invis"]
+        DepenseListQuery
+        DepenseViewQuery [label="{{DepenseViewQuery | Id}}"]
+        DepenseEditQuery [label="{{DepenseEditQuery | Id}}"]
+        
+        PosteListeQuery
+        PosteViewQuery [label="{{PosteViewQuery | Id}}"]
+        PosteEditQuery [label="{{PosteEditQuery | Id}}"]
+    }
+    
+    subgraph retourRequete{
+        rank=same
+        node [shape="Mrecord"]
+        rank_retourRequete [style="invis"]
+        DepenseListItem [label="{{DepenseListItem[] | IdDepense \n NomPoste \n Description \n Montant}}"]
+        DepenseView [label="{{DepenseView | Id \n NomPoste \n Description \n Montant}}"]
+        PosteView [label="{{PosteView | Id \n Nom}}"]
+        DepenseEdit [label="{{DepenseEdit | IdLabel\<Poste\>[] \n Description \n Montant}}"]
+        PosteListeItem [label="{{PosteListeItem[] | Id \n Nom}}"]
+        PosteEdit [label="{{PosteEdit | Id \n Nom \n}}"]
+        
+    }
+
+    subgraph commandes {
+        rank = same
+        node [shape="Mrecord"]
+        rank_commandes [style="invis"]
+        CreateOrUpdatePosteCommand [label="{{CreateOrUpdatePosteCommand | IdPoste \n Nom}}"]
+        CreateOrUpdateDepenseCommand [label="{{CreateOrUpdateDepenseCommand | Id \n IdPoste \n Description \n Montant}}"]
+    }
+
+    
+    subgraph {
+        edge [style="invis"]
+        rank_commandes -> rank_entites -> rank_requetes -> rank_retourRequete
+    }
+    
+    {Depense, Poste} -> DepenseListQuery -> DepenseListItem
+    {Depense, Poste} -> DepenseViewQuery -> DepenseView
+    {Depense, Poste} -> DepenseEditQuery -> DepenseEdit
+    
+    Poste -> PosteListeQuery -> PosteListeItem
+    Poste -> PosteViewQuery -> PosteView
+    Poste -> PosteEditQuery -> PosteEdit
+
+    CreateOrUpdateDepenseCommand -> Depense
+    CreateOrUpdatePosteCommand -> Poste
+}

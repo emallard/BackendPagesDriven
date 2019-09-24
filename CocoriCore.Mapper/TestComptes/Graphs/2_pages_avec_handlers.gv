@@ -1,0 +1,107 @@
+digraph G {
+    rankdir="LR"
+
+
+    subgraph entites {
+        rank=same
+        node [shape="record"]
+        rank_entites [style="invis"]
+        Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
+        Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]
+    }
+    
+    subgraph requetes
+    {
+        rank=same
+        node [shape="Mrecord"]
+        rank_requetes [style="invis"]
+        ListeDepensesQuery [label="{{ListeDepensesQuery}}"]
+        DepenseUpdateQuery [label="{{DepenseUpdateQuery | IdDepense}}"]
+        ListePostesQuery
+    }
+    subgraph queryHandlers{
+        rank=same
+        node [shape="box", fillcolor="#ff8822", style=filled]
+        rank_queryHandlers [style="invis"]
+        ListeDepensesHandler
+        DepenseUpdateHandler
+        ListePostesHandler
+
+    }
+    subgraph retourRequete{
+        rank=same
+        node [shape="Mrecord"]
+        rank_retourRequete [style="invis"]
+        DepenseUpdate [label="{{DepenseUpdate | IdLabel\<Poste\>[] \n Description \n Montant}}"]
+        IdLabelPoste [label="{{IdLabel\<Poste\>[]}}"]
+        PosteUpdate [label="{{PosteUpdate | Id \n Nom \n}}"]
+        ListeDepenseItem [label="{{ListeDepenseItem[] | IdDepense \n NomPoste \n Description \n Montant}}"]
+    }
+
+    subgraph pages {
+        rank = same
+        node [shape="box", fillcolor="#45aaff", style=filled]
+        rank_pages [style="invis"]
+        PageCreerDepense 
+        PageModifierDepense
+        PageVoirDepense
+        PageVoirPoste
+        PageCreerPoste
+        PageModifierPoste
+        PageListeDepenses
+    }
+
+    subgraph commandes {
+        rank = same
+        node [shape="Mrecord"]
+        rank_commandes [style="invis"]
+        CreateOrUpdatePosteCommand [label="{{CreateOrUpdatePosteCommand | IdPoste \n Nom}}"]
+        CreateOrUpdateDepenseCommand [label="{{CreateOrUpdateDepenseCommand | Id \n IdPoste \n Description \n Montant}}"]
+    }
+
+    subgraph commandHandlers{
+        rank=same
+        node [shape="box", fillcolor="#ff8822", style=filled]
+        CreateOrUpdateDepenseHandler
+        CreateOrUpdatePosteHandler
+    }
+
+    subgraph _entites2 {
+        rank = same
+        node [shape="box"]
+        _Depense
+        _Poste
+    }
+
+    subgraph {
+        edge [style="invis"]
+        rank_entites -> rank_requetes -> rank_queryHandlers -> rank_retourRequete -> rank_pages -> rank_commandes -> rank_retourRequete
+    }
+    
+    {ListeDepensesQuery, Depense, Poste} -> ListeDepensesHandler
+    ListeDepensesHandler -> ListeDepenseItem
+   
+    {DepenseUpdateQuery, Depense} -> DepenseUpdateHandler -> DepenseUpdate
+    Poste -> PosteUpdate
+    Poste->DepenseUpdateHandler
+
+    ListePostesQuery -> ListePostesHandler -> IdLabelPoste
+    
+
+    
+
+
+    CreateOrUpdateDepenseCommand -> CreateOrUpdateDepenseHandler -> _Depense
+    CreateOrUpdatePosteCommand -> CreateOrUpdatePosteHandler -> _Poste
+
+    IdLabelPoste -> PageCreerDepense [arrowhead="crow"]
+    PageCreerDepense -> CreateOrUpdateDepenseCommand
+    DepenseUpdate -> PageModifierDepense -> CreateOrUpdateDepenseCommand
+    DepenseUpdate -> PageVoirDepense
+
+    PageCreerPoste -> CreateOrUpdatePosteCommand
+    PosteUpdate -> PageModifierPoste -> CreateOrUpdatePosteCommand
+    PosteUpdate -> PageVoirPoste
+    ListeDepenseItem -> PageListeDepenses [arrowhead="crow"]
+
+}
