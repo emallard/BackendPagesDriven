@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace CocoriCore.Page
 {
+
     public class UserFluent
     {
         public string Id;
@@ -10,24 +11,27 @@ namespace CocoriCore.Page
         private readonly MailFluent mailFluent;
         private readonly IUserLogger userLogger;
         private readonly SettableClock settableClock;
+        private readonly ICurrentUserLogger currentUserLogger;
 
         public UserFluent(
             IUserLogger userLogger,
-            IBrowser browser,
             IEmailReader emailReader,
-            SettableClock settableClock)
+            SettableClock settableClock,
+            ICurrentUserLogger currentUserLogger,
+            BrowserFluent browserFluent,
+            MailFluent mailFluent)
         {
-            this.browserFluent = new BrowserFluent(userLogger, browser);
-            this.mailFluent = new MailFluent(this, userLogger, emailReader);
+            this.browserFluent = browserFluent;
             this.userLogger = userLogger;
             this.settableClock = settableClock;
+            this.currentUserLogger = currentUserLogger;
+            this.mailFluent = mailFluent;
         }
 
         public UserFluent SetId(string id)
         {
             this.Id = id;
-            this.browserFluent.SetId(id);
-            this.mailFluent.SetId(id);
+            currentUserLogger.SetUserId(id);
             return this;
         }
 

@@ -7,67 +7,48 @@ namespace CocoriCore.Page
 {
     public class MailFluent
     {
-        private string id;
-        private readonly UserFluent userFluent;
-        private readonly IUserLogger userLogger;
+        private readonly Lazy<UserFluent> userFluent;
         private readonly IEmailReader emailReader;
+        private readonly IFactory factory;
 
         public MailFluent(
-            UserFluent userFluent,
-            IUserLogger userLogger,
-            IEmailReader emailReader)
+            Lazy<UserFluent> userFluent,
+            IEmailReader emailReader,
+            IFactory factory)
         {
             this.userFluent = userFluent;
-            this.userLogger = userLogger;
             this.emailReader = emailReader;
-        }
-
-        public MailFluent SetId(string id)
-        {
-            this.id = id;
-            return this;
+            this.factory = factory;
         }
 
         public async Task<MailFluentMessage<T>> Read<T>(string emailAddress)
         {
-            this.userLogger.Log(new LogReadEmail() { Id = this.id });
             var mailMessage = (await this.emailReader.Read<T>(emailAddress)).First();
-            return new MailFluentMessage<T>(
-                this.userFluent,
-                this.userLogger,
-                mailMessage
-            ).SetId(this.id);
+            return factory.Create<MailFluentMessage<T>>().SetMessage(mailMessage);
         }
     }
 
 
     public class MailFluentMessage<TMail>
     {
-        private readonly UserFluent userFluent;
-        private readonly IUserLogger userLogger;
-        public readonly MyMailMessage<TMail> MailMessage;
-
-        private string id;
+        private readonly Lazy<UserFluent> userFluent;
+        public MyMailMessage<TMail> MailMessage;
         public MailFluentMessage(
-            UserFluent userFluent,
-            IUserLogger userLogger,
-            MyMailMessage<TMail> mailMessage)
+            Lazy<UserFluent> userFluent)
         {
             this.userFluent = userFluent;
-            this.userLogger = userLogger;
-            this.MailMessage = mailMessage;
         }
 
-        public MailFluentMessage<TMail> SetId(string id)
+        public MailFluentMessage<TMail> SetMessage(MyMailMessage<TMail> mailMessage)
         {
-            this.id = id;
+            this.MailMessage = mailMessage;
             return this;
         }
 
         public BrowserFluent<TMessage> Follow<TMessage>(Expression<Func<TMail, IMessage<TMessage>>> expressionLink)
         {
             var message = (IMessage<TMessage>)expressionLink.Compile().Invoke(this.MailMessage.Body);
-            return userFluent.Display(message);
+            return userFluent.Value.Display(message);
         }
     }
 }

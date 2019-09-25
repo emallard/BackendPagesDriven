@@ -119,24 +119,37 @@
         }
 
         function formatLog(log) {
-            if (log.IsDisplay)
+            var logType = log.LogType;
+            if (logType == 'LogDisplay')
                 return '<br/>' + log.PageQuery.href.replace('/api/', '/').replace('/api', '/');
-            else if (log.IsFollow)
+            else if (logType == 'LogFollow')
                 return log.PageQuery.href.replace('/api/', '/').replace('/api', '/');
-            else if (log.IsSubmit)
+            else if (logType == 'LogSubmit')
                 return '<span style="margin-left:10px">[' + log.MemberName + ']</span>';
-            else if (log.IsSubmitRedirect)
+            else if (logType == 'LogSubmitRedirect')
                 return log.PageQuery.href.replace('/api/', '/').replace('/api', '/');
-            else if (log.IsScenarioStart)
+            else if (logType == 'LogScenarioStart')
                 return "++ " + log.Name;
-            else if (log.IsScenarioEnd)
+            else if (logType == 'LogIsScenarioEnd')
                 return "++ ";
-            else if (log.IsReadEmail)
+            else if (logType == 'LogSendEmail')
+                return "Send Email ";
+            else if (logType == 'LogReadEmail')
                 return "<br/> [X] Email ";
-            else if (log.IsComment)
+            else if (logType == 'LogComment')
                 return `"${log.Comment}"`;
-            else if (log.IsWait)
+            else if (logType == 'LogIsWait')
                 return "Le temps passe : " + log.Duration;
+            else if (logType == 'LogRepoInsert')
+                return "Insert  " + log.EntityName;
+            else if (logType == 'LogRepoUpdate')
+                return "Update  " + log.EntityName;
+            else if (logType == 'LogRepoLoad')
+                return "Load  " + log.EntityName;
+            else if (logType == 'LogRepoQuery')
+                return "Query  " + log.EntityName;
+            else if (logType == 'LogRepoDelete')
+                return "Delete  " + log.EntityName;
             else
                 return "" + JSON.stringify(log);
         }

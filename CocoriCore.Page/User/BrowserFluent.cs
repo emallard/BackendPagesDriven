@@ -8,7 +8,10 @@ namespace CocoriCore.Page
 
     public class BrowserFluent : BrowserFluent<int>
     {
-        public BrowserFluent(IUserLogger logs, IBrowser browser) : base(logs, browser)
+        public BrowserFluent(ICurrentUserLogger logs,
+            IBrowser browser,
+            IFactory factory) :
+             base(logs, browser, factory)
         {
         }
     }
@@ -16,27 +19,25 @@ namespace CocoriCore.Page
 
     public class BrowserFluent<TPage>
     {
-        public readonly IUserLogger logs;
+        public readonly ICurrentUserLogger logger;
         public readonly IBrowser browser;
+        private readonly IFactory factory;
         public TPage Page;
         public string Id;
 
-        public BrowserFluent(IUserLogger logs, IBrowser browser)
+        public BrowserFluent(
+            ICurrentUserLogger logs,
+            IBrowser browser,
+            IFactory factory)
         {
-            this.logs = logs;
+            this.logger = logs;
             this.browser = browser;
+            this.factory = factory;
         }
 
-        public BrowserFluent<TPage> SetId(string id)
-        {
-            Id = id;
-            return this;
-        }
-
-        public BrowserFluent<TPage> SetPageAndId(TPage page, string id)
+        public BrowserFluent<TPage> SetPageAndId(TPage page)
         {
             Page = page;
-            Id = id;
             return this;
         }
 
@@ -45,34 +46,33 @@ namespace CocoriCore.Page
             if (browser is TestBrowser)
             {
                 var message = expressionMessage.Compile().Invoke(Page);
-                this.logs.Log(new LogFollow
+                this.logger.Log(new LogFollow
                 {
-                    Id = this.Id,
                     MemberName = ((MemberExpression)expressionMessage.Body).Member.Name,
                     PageQuery = (IPageQuery)message
                 });
             }
 
             var nextPage = this.browser.Follow(Page, expressionMessage).Result;
-            return new BrowserFluent<T>(logs, browser).SetPageAndId(nextPage, Id);
+            return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
         public BrowserFluent<T> Display<T>(IMessage<T> message)
         {
-            this.logs.Log(new LogDisplay { Id = this.Id, PageQuery = message });
+            this.logger.Log(new LogDisplay { PageQuery = message });
 
             var nextPage = this.browser.Display(message).Result;
-            return new BrowserFluent<T>(logs, browser).SetPageAndId(nextPage, Id);
+            return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
         public BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPage, TPageTo> scenario)
         {
             var scenarioId = Guid.NewGuid();
-            this.logs.Log(new LogScenarioStart { Id = this.Id, ScenarioId = scenarioId, Name = scenario.GetType().Name });
+            this.logger.Log(new LogScenarioStart { ScenarioId = scenarioId, Name = scenario.GetType().Name });
 
             var result = scenario.Play(this);
 
-            this.logs.Log(new LogScenarioEnd { Id = this.Id, ScenarioId = scenarioId });
+            this.logger.Log(new LogScenarioEnd { ScenarioId = scenarioId });
 
             return result;
         }
@@ -98,10 +98,10 @@ namespace CocoriCore.Page
             where TMessage : IMessage, new()
         {
             browser.ApplyBindings((IPageBase)this.Page);
-            this.logs.Log(new LogSubmit { Id = this.Id, MemberName = ((MemberExpression)getForm.Body).Member.Name });
+            this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Submit(Page, getForm).Result;
 
-            return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
+            return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
         }
 
         public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, TMember value)
@@ -133,36 +133,45 @@ namespace CocoriCore.Page
 
     public class TestBrowserFluentSubmitted<TPage, TPostResponse>
     {
-        private readonly BrowserFluent<TPage> browserFluent;
-        private readonly TPostResponse postResponse;
+        private TPostResponse postResponse;
+        private readonly IFactory factory;
+        private readonly IBrowser browser;
+        private readonly ICurrentUserLogger logger;
 
         public TestBrowserFluentSubmitted(
-            BrowserFluent<TPage> browserFluent,
-            TPostResponse postResponse)
+            IFactory factory,
+            IBrowser browser,
+            ICurrentUserLogger logger)
         {
-            this.browserFluent = browserFluent;
+            this.factory = factory;
+            this.browser = browser;
+            this.logger = logger;
+        }
+
+        public TestBrowserFluentSubmitted<TPage, TPostResponse> SetResponse(TPostResponse postResponse)
+        {
             this.postResponse = postResponse;
+            return this;
         }
 
         public BrowserFluent<T> ThenFollow<T>(Func<TPostResponse, IMessage<T>> getMessage)
         {
             // TODO difference TestBrowser / SeleniumBrowser
-            if (browserFluent.browser is TestBrowser)
+            if (browser is TestBrowser)
             {
                 var message = getMessage(postResponse);
-                browserFluent.logs.Log(new LogSubmitRedirect()
+                logger.Log(new LogSubmitRedirect()
                 {
-                    Id = this.browserFluent.Id,
                     PageQuery = (IPageQuery)message
                 });
 
-                var page = browserFluent.browser.SubmitRedirect(message).Result;
-                return new BrowserFluent<T>(this.browserFluent.logs, this.browserFluent.browser).SetPageAndId(page, this.browserFluent.Id);
+                var page = browser.SubmitRedirect(message).Result;
+                return factory.Create<BrowserFluent<T>>().SetPageAndId(page);
             }
             else
             {
-                var page = browserFluent.browser.SubmitRedirect((IMessage<T>)null).Result;
-                return new BrowserFluent<T>(this.browserFluent.logs, this.browserFluent.browser).SetPageAndId(page, this.browserFluent.Id);
+                var page = browser.SubmitRedirect((IMessage<T>)null).Result;
+                return factory.Create<BrowserFluent<T>>().SetPageAndId(page);
             }
         }
     }

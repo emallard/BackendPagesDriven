@@ -7,7 +7,7 @@ using CocoriCore.Router;
 using Ninject;
 using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.NamedScope;
-
+using Ninject.Extensions.Factory;
 namespace Comptes
 {
     public class TestBase// : IDisposable
@@ -19,6 +19,7 @@ namespace Comptes
             kernel = new StandardKernel();
             kernel.Load(new NamedScopeModule());
             kernel.Load(new ContextPreservationModule());
+            kernel.Load(new FuncModule());
             kernel.Load(new CocoricoreNinjectModule());
             kernel.Bind<IHashService>().To<HashService>().InSingletonScope();
             kernel.Bind<IClock, SettableClock>().To<SettableClock>().InSingletonScope();
@@ -26,7 +27,7 @@ namespace Comptes
             // Repository
             kernel.Bind<IUIDProvider>().To<UIDProvider>().InSingletonScope();
             kernel.Bind<IInMemoryEntityStore>().To<InMemoryEntityStore>().InSingletonScope();
-            kernel.Bind<IRepository>().To<MemoryRepository>().InNamedScope("unitofwork");
+            kernel.Bind<IRepository>().To<RepositorySpy<MemoryRepository>>().InNamedScope("unitofwork");
 
             // messagebus
             kernel.Bind<HandlerFinder>().ToConstant(new HandlerFinder(
@@ -49,10 +50,13 @@ namespace Comptes
                 return null;
             }));
             kernel.Bind<IClaimsProvider, IClaimsWriter>().To<ClaimsProviderAndWriter>().InNamedScope("unitofwork");
+            kernel.Bind<UserFluentFactory>().ToSelf().DefinesNamedScope("user");
+            kernel.Bind<UserFluent>().ToSelf().InNamedScope("user");
+            kernel.Bind<ICurrentUserLogger>().To<CurrentUserLogger>().InNamedScope("user");
+            kernel.Bind<IBrowser>().To<TestBrowser>().InNamedScope("user");
+
             kernel.Bind<IUserLogger, UserLogger>().To<UserLogger>().InSingletonScope();
 
-
-            kernel.Bind<IBrowser>().To<TestBrowser>();
         }
 
         public void WithSeleniumBrowser(RouterOptions routerOptions)
@@ -68,7 +72,7 @@ namespace Comptes
 
         public UserFluent CreateUser(string id)
         {
-            return kernel.Get<UserFluent>().SetId(id);
+            return kernel.Get<UserFluentFactory>().UserFluent.SetId(id);
         }
 
         public object[] GetLogs()
