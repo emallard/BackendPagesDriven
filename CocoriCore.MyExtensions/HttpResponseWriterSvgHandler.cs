@@ -3,7 +3,7 @@ using CocoriCore;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Comptes.Api
+namespace CocoriCore
 {
     public class HttpResponseWriterSvgHandler : IHttpReponseWriterHandler
     {

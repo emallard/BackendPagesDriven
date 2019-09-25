@@ -2,13 +2,13 @@ using System;
 
 namespace CocoriCore
 {
-    public struct TypedId<T>
+    public struct TId<T>
     {
         public Guid Id;
 
         public override bool Equals(object obj)
         {
-            return obj is TypedId<T> id &&
+            return obj is TId<T> id &&
                    Id.Equals(id.Id);
         }
 
@@ -17,12 +17,12 @@ namespace CocoriCore
             return HashCode.Combine(Id);
         }
 
-        public static bool operator ==(TypedId<T> a, TypedId<T> b)
+        public static bool operator ==(TId<T> a, TId<T> b)
         {
             return a.Id == b.Id;
         }
 
-        public static bool operator !=(TypedId<T> a, TypedId<T> b)
+        public static bool operator !=(TId<T> a, TId<T> b)
         {
             return a.Id != b.Id;
         }

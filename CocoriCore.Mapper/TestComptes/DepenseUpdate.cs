@@ -2,8 +2,8 @@ namespace CocoriCore.Mapper.Comptes
 {
     class DepenseUpdate : IUpdate<Depense>
     {
-        public TypedId<Depense> Id { get; set; }
-        public TypedId<Poste> IdPoste;
+        public TId<Depense> Id { get; set; }
+        public TId<Poste> IdPoste;
         public string Description;
         public double Montant;
     }

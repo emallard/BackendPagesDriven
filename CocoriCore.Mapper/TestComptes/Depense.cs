@@ -4,10 +4,10 @@ namespace CocoriCore.Mapper.Comptes
 {
     class Depense : IEntity
     {
-        Guid IEntity.Id { get => Id.Id; set { Id = new TypedId<Depense>() { Id = value }; } }
-        public TypedId<Depense> Id { get; set; }
-        public TypedId<User> IdUtilisateur;
-        public TypedId<Poste> IdPoste;
+        Guid IEntity.Id { get => Id.Id; set { Id = new TId<Depense>() { Id = value }; } }
+        public TId<Depense> Id { get; set; }
+        public TId<User> IdUtilisateur;
+        public TId<Poste> IdPoste;
         public string Description;
         public double Montant;
     }

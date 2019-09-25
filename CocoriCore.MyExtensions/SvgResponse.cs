@@ -1,4 +1,4 @@
-namespace Comptes.Api
+namespace CocoriCore
 {
     public class SvgResponse
     {

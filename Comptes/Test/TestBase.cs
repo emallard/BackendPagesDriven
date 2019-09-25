@@ -70,9 +70,9 @@ namespace Comptes
             return kernel.Get<BrowserFluent<int>>().SetId(id).Display(new Accueil_Page_GET());
         }*/
 
-        public UserFluent CreateUser(string id)
+        public UserFluent CreateUser(string userName)
         {
-            return kernel.Get<UserFluentFactory>().UserFluent.SetId(id);
+            return kernel.Get<UserFluentFactory>().UserFluent.SetUserName(userName);
         }
 
         public object[] GetLogs()

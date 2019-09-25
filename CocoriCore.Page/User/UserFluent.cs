@@ -6,7 +6,7 @@ namespace CocoriCore.Page
 
     public class UserFluent
     {
-        public string Id;
+        public string UserName;
         private readonly BrowserFluent browserFluent;
         private readonly MailFluent mailFluent;
         private readonly IUserLogger userLogger;
@@ -28,9 +28,9 @@ namespace CocoriCore.Page
             this.mailFluent = mailFluent;
         }
 
-        public UserFluent SetId(string id)
+        public UserFluent SetUserName(string id)
         {
-            this.Id = id;
+            this.UserName = id;
             currentUserLogger.SetUserId(id);
             return this;
         }
@@ -47,13 +47,13 @@ namespace CocoriCore.Page
 
         public UserFluent Comment(string comment)
         {
-            this.userLogger.Log(new LogComment() { Id = this.Id, Comment = comment });
+            this.userLogger.Log(new LogComment() { UserName = this.UserName, Comment = comment });
             return this;
         }
 
         public UserFluent Wait(TimeSpan duration)
         {
-            this.userLogger.Log(new LogWait() { Id = this.Id, Duration = duration.ToString() });
+            this.userLogger.Log(new LogWait() { UserName = this.UserName, Duration = duration.ToString() });
             settableClock.Now = settableClock.Now.Add(duration);
             return this;
         }

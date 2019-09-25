@@ -2,6 +2,6 @@ namespace CocoriCore
 {
     public interface IView<T>
     {
-        TypedId<T> Id { get; }
+        TId<T> Id { get; }
     }
 }

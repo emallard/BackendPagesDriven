@@ -2,7 +2,7 @@ namespace CocoriCore.Page
 {
     public class UserLog
     {
-        public string Id;
+        public string UserName;
         public string LogType => GetType().Name;
     }
 }

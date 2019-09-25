@@ -8,8 +8,8 @@ namespace Comptes
         Guid IEntity.Id
         {
             get => Id.Id;
-            set { Id = new TypedId<User>() { Id = value }; }
+            set { Id = new TId<User>() { Id = value }; }
         }
-        public TypedId<User> Id { get; set; }
+        public TId<User> Id { get; set; }
     }
 }

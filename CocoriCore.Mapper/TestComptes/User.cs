@@ -2,6 +2,6 @@ namespace CocoriCore.Mapper.Comptes
 {
     class User
     {
-        public TypedId<User> Id { get; set; }
+        public TId<User> Id { get; set; }
     }
 }

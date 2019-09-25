@@ -1,6 +1,6 @@
 ﻿namespace CocoriCore.Page
 {
-    public class LogSendEmail : UserLog
+    public class LogEmailSend : UserLog
     {
         public IMyMailMessage MailMessage;
     }

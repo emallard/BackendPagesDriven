@@ -25,14 +25,14 @@ namespace CocoriCore.Page
             NewMessages = NewMessages.Where(x => !messages.Contains(x)).ToList();
 
             foreach (var m in NewMessages)
-                this.logger.Log(new LogReadEmail() { MailMessage = m });
+                this.logger.Log(new LogEmailRead() { MailMessage = m });
 
             return messages;
         }
 
         public async Task Send(IMyMailMessage mailMessage)
         {
-            logger.Log(new LogSendEmail() { MailMessage = mailMessage });
+            logger.Log(new LogEmailSend() { MailMessage = mailMessage });
             await Task.CompletedTask;
             NewMessages.Add(mailMessage);
         }

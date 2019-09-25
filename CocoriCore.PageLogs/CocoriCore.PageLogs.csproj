@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+<ItemGroup>
+    <ProjectReference Include="..\CocoriCore\backend\CocoriCore\CocoriCore.csproj" />
+    <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Router\CocoriCore.Router.csproj" />
+    <ProjectReference Include="..\CocoriCore.MyExtensions\CocoriCore.MyExtensions.csproj" />
+    <ProjectReference Include="..\CocoriCore.Page\CocoriCore.Page.csproj" />
+  </ItemGroup>
+</Project>

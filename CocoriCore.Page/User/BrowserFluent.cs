@@ -43,25 +43,26 @@ namespace CocoriCore.Page
 
         public BrowserFluent<T> Follow<T>(Expression<Func<TPage, IMessage<T>>> expressionMessage)
         {
+            var nextPage = this.browser.Follow(Page, expressionMessage).Result;
+
             if (browser is TestBrowser)
             {
                 var message = expressionMessage.Compile().Invoke(Page);
                 this.logger.Log(new LogFollow
                 {
                     MemberName = ((MemberExpression)expressionMessage.Body).Member.Name,
-                    PageQuery = (IPageQuery)message
+                    PageQuery = (IPageQuery)message,
+                    PageResponse = nextPage
                 });
             }
 
-            var nextPage = this.browser.Follow(Page, expressionMessage).Result;
             return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
         public BrowserFluent<T> Display<T>(IMessage<T> message)
         {
-            this.logger.Log(new LogDisplay { PageQuery = message });
-
             var nextPage = this.browser.Display(message).Result;
+            this.logger.Log(new LogDisplay { PageQuery = message, PageResponse = nextPage });
             return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
