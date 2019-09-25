@@ -10,8 +10,10 @@ namespace CocoriCore
         void ApplyBindings();
     }
 
-    public class PageBase<TPage> : IPageBase
+    public class PageBase<TPageQuery, TPage> : IPageBase where TPageQuery : IMessage<TPage>
     {
+        public TPageQuery PageQuery;
+
         public List<PageBinding<TPage>> Bindings = new List<PageBinding<TPage>>();
 
         public void ApplyBindings()
@@ -30,6 +32,10 @@ namespace CocoriCore
         {
             var expression = expr;
             var memberInfos = new List<MemberInfo>();
+
+            if (expression.NodeType == ExpressionType.Convert)
+                expression = ((UnaryExpression)expression).Operand;
+
             while (expression is MemberExpression memberExpression)
             {
                 var memberInfo = memberExpression.Member;
@@ -46,6 +52,10 @@ namespace CocoriCore
         {
             var expression = expr;
             var memberInfos = new List<MemberInfo>();
+
+            if (expression.NodeType == ExpressionType.Convert)
+                expression = ((UnaryExpression)expression).Operand;
+
             while (expression is MemberExpression memberExpression)
             {
                 var memberInfo = memberExpression.Member;

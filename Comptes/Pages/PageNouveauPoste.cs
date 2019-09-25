@@ -10,7 +10,7 @@ namespace Comptes
     {
     }
 
-    public class PageNouveauPoste : PageBase<PageNouveauPoste>
+    public class PageNouveauPoste : PageBase<PageNouveauPosteQuery, PageNouveauPoste>
     {
         public AsyncCall<PosteCreateDefault> Modele;
         public Form<CreateCommand<PosteCreate>, PageListePostesQuery> Creer;
@@ -25,15 +25,12 @@ namespace Comptes
     {
         public PageNouveauPosteModule()
         {
-            Handle<PageNouveauPosteQuery, PageNouveauPoste>(q => new PageNouveauPoste()
-            {
-                Modele = new AsyncCall<PosteCreateDefault>(q),
-                Creer = new Form<CreateCommand<PosteCreate>, PageListePostesQuery>()
-            });
+            HandlePage<PageNouveauPosteQuery, PageNouveauPoste>();
 
-            this.MapAsyncCall<PageNouveauPosteQuery, ByIdQuery<PosteCreateDefault>, PosteCreateDefault, PosteCreateDefault>(
-                pageQuery => new ByIdQuery<PosteCreateDefault>(),
-                (query, response) => response);
+            On<PageNouveauPosteQuery>()
+                .ProvideQuery<ByIdQuery<PosteCreateDefault>>((p, q) => { })
+                .WithResponse<PosteCreateDefault>()
+                .AsModel();
 
             this.MapForm<CreateCommand<PosteCreate>, Guid, PageListePostesQuery>(
                 (q, r) => new PageListePostesQuery()

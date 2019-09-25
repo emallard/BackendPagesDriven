@@ -15,6 +15,12 @@ namespace CocoriCore
                 Key = Tuple.Create(typeof(T1), typeof(T2), typeof(T3))
             };
         }
+
+        public void Init<T1, T2, T3>(Func<T1, T2, T3> func)
+        {
+            Func = (a, b) => func((T1)a, (T2)b);
+            Key = Tuple.Create(typeof(T1), typeof(T2), typeof(T3));
+        }
     }
 
     public class PageMapping2
@@ -29,6 +35,12 @@ namespace CocoriCore
                 Func = (a) => func((T1)a),
                 Key = Tuple.Create(typeof(T1), typeof(T2))
             };
+        }
+
+        public void Init<T1, T2>(Func<T1, T2> func)
+        {
+            Func = (a) => func((T1)a);
+            Key = Tuple.Create(typeof(T1), typeof(T2));
         }
     }
 }

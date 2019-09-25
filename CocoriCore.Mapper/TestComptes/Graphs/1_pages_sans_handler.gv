@@ -2,7 +2,7 @@ digraph G {
     rankdir="LR"
 
 
-    subgraph _cluster_entites {
+    subgraph entites {
         node [shape="record"]
         Depense [label="{{Depense | Id \n IdUtilisateur \n IdPoste \n Description \n Montant}}"]
         Poste [label="{{Poste | Id \n IdUtilisateur \n Nom}}"]

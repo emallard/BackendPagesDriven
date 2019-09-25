@@ -10,14 +10,30 @@ namespace Comptes
     {
     }
 
-    public class PageNouvelleDepense : PageBase<PageNouvelleDepense>
+    public class Select<T> : ISetPageQuery
     {
-        public AsyncCall<DepenseCreateDefault> Modele;
+        public Select()
+        {
+            Source = new AsyncCall<T[]>();
+        }
+
+        public AsyncCall<T[]> Source;
+        public T Selected;
+
+        public void SetPageQuery(object pageQuery)
+        {
+            Source.SetPageQuery(pageQuery);
+        }
+    }
+
+    public class PageNouvelleDepense : PageBase<PageNouvelleDepenseQuery, PageNouvelleDepense>
+    {
+        public Select<PosteView> Poste;
         public Form<CreateCommand<DepenseCreate>, PageListeDepensesQuery> Creer;
 
         public PageNouvelleDepense()
         {
-            //Bind(x => x.Modele.Result.Nom, x => x.Creer.Command.Object.Nom);
+            Bind(x => x.Poste.Selected.Id, x => x.Creer.Command.Object.IdPoste);
         }
     }
 
@@ -25,14 +41,10 @@ namespace Comptes
     {
         public PageNouvelleDepenseModule()
         {
-            Handle<PageNouvelleDepenseQuery, PageNouvelleDepense>(q => new PageNouvelleDepense()
-            {
-                Modele = new AsyncCall<DepenseCreateDefault>(q),
-                Creer = new Form<CreateCommand<DepenseCreate>, PageListeDepensesQuery>()
-            });
+            HandlePage<PageNouvelleDepenseQuery, PageNouvelleDepense>();
 
-            this.MapAsyncCall<PageNouvelleDepenseQuery, ByIdQuery<DepenseCreateDefault>, DepenseCreateDefault, DepenseCreateDefault>(
-                pageQuery => new ByIdQuery<DepenseCreateDefault>(),
+            this.MapAsyncCall<PageNouvelleDepenseQuery, ListQuery<PosteView>, PosteView[], PosteView[]>(
+                pageQuery => new ListQuery<PosteView>(),
                 (query, response) => response);
 
             this.MapForm<CreateCommand<DepenseCreate>, Guid, PageListeDepensesQuery>(

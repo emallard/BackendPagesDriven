@@ -36,7 +36,14 @@ namespace Comptes
             });
 
             /*
-            mapper.AddFrom<DepenseView, Depense, Poste>(
+            mapper.WithRepository()
+            {
+                
+            }
+            */
+
+            /*
+            mapper.AddJoin<DepenseView, Depense, Poste>(
                 x => x.Id,
                 (x, y) =>
                 {

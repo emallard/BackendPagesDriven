@@ -110,6 +110,12 @@ namespace CocoriCore.Page
             return this;
         }
 
+        public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, Func<TPage, TMember> value)
+        {
+            this.browser.Fill(this.Page, expressionMember, value(this.Page));
+            return this;
+        }
+
         public BrowserFluent<TPage> Assert(Action<TPage> action)
         {
             action(Page);

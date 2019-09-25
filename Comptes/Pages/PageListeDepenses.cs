@@ -11,7 +11,7 @@ namespace Comptes
     public class PageListeDepenses
     {
         public PageNouvelleDepenseQuery NouvelleDepense;
-        public AsyncCall<PageListeDepenseItem[]> Depenses;
+        //public AsyncCall<PageListeDepenseItem[]> Depenses;
     }
 
     public class PageListeDepenseItem
@@ -34,7 +34,7 @@ namespace Comptes
                 );
             this.Handle<PageListeDepensesQuery, PageListeDepenses>(q => new PageListeDepenses()
             {
-                Depenses = new AsyncCall<PageListeDepenseItem[]>(q),
+                //Depenses = new AsyncCall<PageListeDepenseItem[]>(q),
                 NouvelleDepense = new PageNouvelleDepenseQuery()
             });
         }

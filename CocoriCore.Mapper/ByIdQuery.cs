@@ -21,13 +21,24 @@ namespace CocoriCore
 
         public override async Task<T> ExecuteAsync(ByIdQuery<T> message)
         {
-            var entityType = mapper.GetViewEntityType<T>();
-            if (entityType == null)
-                return mapper.View<T>();
 
-            IEntity entity = (IEntity)await repository.LoadAsync(entityType, message.Id);
-            var view = mapper.View<T>(entity);
-            return view;
+            if (typeof(T).IsAssignableToGeneric(typeof(IView<>)))
+            {
+                var entityType = mapper.GetViewEntityType<T>();
+                IEntity entity = (IEntity)await repository.LoadAsync(entityType, message.Id);
+                var view = mapper.View<T>(entity);
+                return view;
+            }
+            else if (typeof(T).IsAssignableToGeneric(typeof(IJoin<,>)))
+            {
+                //(var entityType1, var entityType2) = mapper.GetJoinEntityTypes<T>();
+                //IEntity entity1 = (IEntity)await repository.LoadAsync(entityType1, message.Id);
+                throw new NotSupportedException(this.GetType().Name);
+            }
+            else
+            {
+                return mapper.View<T>();
+            }
 
         }
     }

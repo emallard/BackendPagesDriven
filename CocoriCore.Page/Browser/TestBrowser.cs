@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,33 +28,54 @@ namespace CocoriCore.Page
             var func = expressionMessage.Compile();
             var message = func(page);
             var next = await this.ExecuteAsync(message);
-            return await ExecuteAsyncCalls(next);
+            await ExecuteAsyncCalls(next);
+            return next;
         }
 
         public async Task<T> Display<T>(IMessage<T> message)
         {
             var next = await this.ExecuteAsync(message);
-            return await ExecuteAsyncCalls(next);
+            await ExecuteAsyncCalls(next);
+            return next;
         }
 
         public async Task<T> SubmitRedirect<T>(IMessage<T> message)
         {
             var next = await this.ExecuteAsync(message);
-            return await ExecuteAsyncCalls(next);
+            await ExecuteAsyncCalls(next);
+            return next;
         }
 
-        private async Task<T> ExecuteAsyncCalls<T>(T page)
+        private async Task ExecuteAsyncCalls<T>(T page)
         {
-            var mis = page.GetType().GetPropertiesAndFields();
+            await ExecuteAsyncCalls(page, page);
+        }
+        private async Task ExecuteAsyncCalls<T>(T page, object o)
+        {
+            if (o == null)
+                return;
+            var mis = o.GetType().GetPropertiesAndFields();
             foreach (var mi in mis)
             {
-                if (mi.GetMemberType().IsAssignableTo<IAsyncCall>())
+                var memberType = mi.GetMemberType();
+                if (memberType.IsAssignableTo<IAsyncCall>())
                 {
-                    var asyncCall = (IAsyncCall)mi.InvokeGetter(page);
-                    asyncCall.SetResult(await ExecuteAsync((IMessage)mi.InvokeGetter(page)));
+                    var asyncCall = (IAsyncCall)mi.InvokeGetter(o);
+                    asyncCall.SetResult(await ExecuteAsync((IMessage)mi.InvokeGetter(o)));
+                }
+                else
+                {
+                    if (memberType != typeof(string)
+                     && !memberType.IsValueType
+                     && memberType != typeof(Type)
+                     && memberType != typeof(Assembly)
+                     && !memberType.IsAssignableTo(typeof(IEnumerable))
+                    )
+                    {
+                        await ExecuteAsyncCalls(page, mi.InvokeGetter(o));
+                    }
                 }
             }
-            return page;
         }
 
         private async Task<T> ExecuteAsync<T>(IMessage<T> message)

@@ -25,8 +25,13 @@ namespace CocoriCore
             {
                 var pageQueryType = m2.Key.Item1;
                 var messageType = m2.Key.Item2;
-                var modelType = mappings3.Keys.First(x => x.Item1 == messageType).Item3;
-                intermediateType[Tuple.Create(pageQueryType, modelType)] = messageType;
+                var modelTypes = mappings3.Keys
+                    .Where(x => x.Item1 == messageType)
+                    .Select(x => x.Item3)
+                    .ToArray();
+
+                foreach (var modelType in modelTypes)
+                    intermediateType[Tuple.Create(pageQueryType, modelType)] = messageType;
             }
 
             handlings = modules.SelectMany(m => m.Handlings).ToDictionary(x => x.Key, x => x);
