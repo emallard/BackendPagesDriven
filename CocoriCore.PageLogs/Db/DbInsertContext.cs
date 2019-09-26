@@ -1,14 +1,11 @@
-using System;
-
 namespace CocoriCore.PageLogs
 {
-    public class TestPage : EntityBase<TestPage>
+    public class DbInsertContext
     {
         public string TestName;
         public int IndexInTest;
         public string UserName;
         public string PageName;
-        public object PageQueryName;
-        //public string Url;
+        public string MessageName;
     }
 }

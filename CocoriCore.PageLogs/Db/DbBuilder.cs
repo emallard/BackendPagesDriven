@@ -6,13 +6,26 @@ using CocoriCore.Page;
 namespace CocoriCore.PageLogs
 {
 
-    public class LogDatabaseBuilder
+    public partial class DbBuilder
     {
         private readonly IRepository repository;
+        private readonly DbPage dbPage;
+        private readonly DbEmail dbEmail;
+        private readonly DbEntity dbEntity;
+        private readonly DbMessage dbMessage;
 
-        public LogDatabaseBuilder(IRepository repository)
+        public DbBuilder(
+            IRepository repository,
+            DbPage dbPage,
+            DbEmail dbEmail,
+            DbEntity dbEntity,
+            DbMessage dbMessage)
         {
             this.repository = repository;
+            this.dbPage = dbPage;
+            this.dbEmail = dbEmail;
+            this.dbEntity = dbEntity;
+            this.dbMessage = dbMessage;
         }
 
         public async Task AddTest(Type testClass, string methodName, object[] userLogs)
@@ -35,18 +48,38 @@ namespace CocoriCore.PageLogs
 
         public async Task AddLogs(string userName, UserLog[] userLogs, Test test)
         {
-            var context = new InsertContext()
+            var context = new DbInsertContext()
             {
-                Test = test
+                TestName = test.TestName,
+                UserName = userName,
+                IndexInTest = 0
             };
             foreach (var o in userLogs)
                 await AddLog(o, context);
         }
 
-        public async Task AddLog(UserLog o, InsertContext context)
+        public async Task AddLog(UserLog o, DbInsertContext context)
         {
             if (o is LogDisplay logDisplay)
-                await Insert(context, logDisplay);
+                await dbPage.Insert(context, logDisplay);
+            if (o is LogEmailRead logEmailRead)
+                await dbEmail.Insert(context, logEmailRead);
+            if (o is LogEmailSent logEmailSent)
+                await dbEmail.Insert(context, logEmailSent);
+            if (o is LogFollow logFollow)
+                await dbPage.Insert(context, logFollow);
+            if (o is LogMessageBus logMessageBus)
+                await dbMessage.Insert(context, logMessageBus);
+            if (o is LogRepo logRepo)
+                await dbEntity.Insert(context, logRepo);
+            if (o is LogSubmit logSubmit)
+            { }//await dbPage.Insert(context, logDisplay);
+            if (o is LogSubmitRedirect logSubmitRedirect)
+                await dbPage.Insert(context, logSubmitRedirect);
+
+
+
+            context.IndexInTest++;
             /*
             if (o is LogFollow logFollow)
             {
@@ -81,42 +114,5 @@ namespace CocoriCore.PageLogs
             */
 
         }
-
-        private async Task Insert(InsertContext context, LogDisplay l)
-        {
-            var pageType = await GetPageType(l.PageQuery, l.PageResponse);
-            await repository.InsertAsync(new TestPage()
-            {
-                TestId = context.Test.Id,
-                UserId = context.User.Id,
-                PageTypeId = pageType.Id,
-                PageQuery = l.PageQuery,
-                HasAsserts = false,
-            });
-        }
-
-        private async Task<PageType> GetPageType(object pageQuery, object pageResponse)
-        {
-            var pageType = await repository.LoadAsync<PageType>(p => p.QueryType, pageQuery.GetType());
-            if (pageType == null)
-            {
-                pageType = new PageType()
-                {
-                    QueryType = pageQuery.GetType(),
-                    ResponseType = pageResponse.GetType(),
-                    Name = pageResponse.GetType().Name
-                };
-                await repository.InsertAsync(pageType);
-            }
-            return pageType;
-        }
-    }
-
-    public class InsertContext
-    {
-        public Test Test;
-        public TestUser User;
-        public TestPage Page;
-        public TestMessage Handler;
     }
 }

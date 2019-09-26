@@ -37,7 +37,7 @@ namespace Comptes
             kernel.Bind<IPageMapper>().ToConstant(new PageMapper(Comptes.AssemblyInfo.Assembly));
             kernel.Bind<INewMapper>().ToConstant(new NewMapper(Comptes.AssemblyInfo.Assembly));
 
-            kernel.Bind<IMessageBus>().To<Comptes.MessageBus>().InNamedScope("unitofwork");
+            kernel.Bind<IMessageBus>().To<MessageBusSpy<Comptes.MessageBus>>().InNamedScope("unitofwork");
             kernel.Bind<IExecuteHandler>().To<ExecuteHandler>().InNamedScope("unitofwork");
 
             kernel.Bind<IEmailReader, IEmailSender>().To<TestEmailSenderAndReader>().InSingletonScope();

@@ -32,7 +32,7 @@ namespace CocoriCore.Page
 
         public async Task Send(IMyMailMessage mailMessage)
         {
-            logger.Log(new LogEmailSend() { MailMessage = mailMessage });
+            logger.Log(new LogEmailSent() { MailMessage = mailMessage });
             await Task.CompletedTask;
             NewMessages.Add(mailMessage);
         }

@@ -52,7 +52,6 @@ namespace CocoriCore.Page
                 {
                     MemberName = ((MemberExpression)expressionMessage.Body).Member.Name,
                     PageQuery = (IPageQuery)message,
-                    PageResponse = nextPage
                 });
             }
 
@@ -61,8 +60,8 @@ namespace CocoriCore.Page
 
         public BrowserFluent<T> Display<T>(IMessage<T> message)
         {
+            this.logger.Log(new LogDisplay { PageQuery = message });
             var nextPage = this.browser.Display(message).Result;
-            this.logger.Log(new LogDisplay { PageQuery = message, PageResponse = nextPage });
             return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
@@ -161,9 +160,10 @@ namespace CocoriCore.Page
             if (browser is TestBrowser)
             {
                 var message = getMessage(postResponse);
+
                 logger.Log(new LogSubmitRedirect()
                 {
-                    PageQuery = (IPageQuery)message
+                    PageQuery = (IPageQuery)message,
                 });
 
                 var page = browser.SubmitRedirect(message).Result;

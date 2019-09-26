@@ -1,17 +1,19 @@
-using System;
+﻿using System;
+using CocoriCore.Page;
 
 namespace CocoriCore.PageLogs
 {
-    public enum TestEntityOperationType
+    public class TestRepositoryOperation : EntityBase<TestRepositoryOperation>
     {
-        Read,
-        Create,
-        Update,
-        Delete
-    }
+        public string TestName;
+        public int IndexInTest;
+        public string UserName;
+        public string PageName;
+        public string MessageName;
+        public string EntityName;
+        public LogRepoOperation Operation;
 
-    public class TestEntityOperation : EntityBase<TestEntityOperation>
-    {
+        /*
         public TId<Test> TestId;
         public TId<TestUser> TestUserId;
 
@@ -24,8 +26,6 @@ namespace CocoriCore.PageLogs
 
         public TId<EntityType> EntityTypeId;
 
-        TestEntityOperationType Type;
-        /*
         public bool Read;
         public bool Write;
         public bool Update;

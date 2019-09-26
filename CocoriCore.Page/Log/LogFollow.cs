@@ -4,6 +4,5 @@ namespace CocoriCore.Page
     {
         public string MemberName;
         public IPageQuery PageQuery;
-        public object PageResponse;
     }
 }

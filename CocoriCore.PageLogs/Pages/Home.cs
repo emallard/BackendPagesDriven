@@ -9,8 +9,9 @@ namespace CocoriCore.PageLogs
     {
         public AsyncCall<SvgResponse> PageGraph;
         public AsyncCall<SvgResponse> EntityGraph;
+
+        //public AsyncCall<ListQuery<Test>> Tests;
         /*
-        public AsyncCall<TestListReponseItem[]> Tests;
         public AsyncCall<EntityTypeListReponseItem[]> Entities;
         public AsyncCall<PageTypeListReponseItem[]> Pages;
         */

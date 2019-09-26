@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CocoriCore.PageLogs
 {
+
     public class RunTestCommand : IMessage<RunTestResponse>
     {
 
@@ -26,9 +27,9 @@ namespace CocoriCore.PageLogs
     public class RunTestHandler : MessageHandler<RunTestCommand, RunTestResponse>
     {
         private readonly PageLogsConfiguration configuration;
-        private readonly LogDatabaseBuilder databaseBuilder;
+        private readonly DbBuilder databaseBuilder;
 
-        public RunTestHandler(PageLogsConfiguration configuration, LogDatabaseBuilder databaseBuilder)
+        public RunTestHandler(PageLogsConfiguration configuration, DbBuilder databaseBuilder)
         {
             this.configuration = configuration;
             this.databaseBuilder = databaseBuilder;
