@@ -8,7 +8,6 @@ namespace CocoriCore.PageLogs
         public int IndexInTest;
         public string UserName;
         public string PageName;
-        public object PageQueryName;
         //public string Url;
     }
 }

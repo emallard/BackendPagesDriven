@@ -1,0 +1,141 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using CocoriCore.Router;
+
+namespace CocoriCore.Page
+{
+
+    public class PageGraphBuilderFromLogs
+    {
+
+        public PageGraphBuilderFromLogs()
+        {
+        }
+
+        public PageGraph Build(IEnumerable<UserLog[]> userLogs)
+        {
+            var nodes = GetPageNodes(userLogs);
+            var edges = GetPageEdges(userLogs, nodes);
+            return new PageGraph()
+            {
+                Nodes = nodes,
+                Edges = edges
+            };
+        }
+
+        private List<PageNode> GetPageNodes(IEnumerable<UserLog[]> userLogs)
+        {
+            var nodes = new List<PageNode>();
+            foreach (var a in userLogs)
+                foreach (var l in a)
+                    AddPageNodes(l, nodes);
+            return nodes;
+        }
+        private void AddPageNodes(UserLog userLog, List<PageNode> pageNodes)
+        {
+            if (userLog is LogDisplay logDisplay)
+            {
+                if (!pageNodes.Any(x => x.QueryType == logDisplay.PageQuery.GetType()))
+                {
+                    pageNodes.Add(new PageNode()
+                    {
+                        ParameterizedUrl = logDisplay.PageQuery.GetType().Name,
+                        QueryType = logDisplay.PageQuery.GetType(),
+                        IndexedName = "n" + pageNodes.Count
+                    });
+                }
+            }
+            if (userLog is LogFollow logFollow)
+            {
+                if (!pageNodes.Any(x => x.QueryType == logFollow.PageQuery.GetType()))
+                {
+                    pageNodes.Add(new PageNode()
+                    {
+                        ParameterizedUrl = logFollow.PageQuery.GetType().Name,
+                        QueryType = logFollow.PageQuery.GetType(),
+                        IndexedName = "n" + pageNodes.Count
+                    });
+                }
+            }
+            if (userLog is LogSubmitRedirect logSubmitRedirect)
+            {
+                if (!pageNodes.Any(x => x.QueryType == logSubmitRedirect.PageQuery.GetType()))
+                {
+                    pageNodes.Add(new PageNode()
+                    {
+                        ParameterizedUrl = logSubmitRedirect.PageQuery.GetType().Name,
+                        QueryType = logSubmitRedirect.PageQuery.GetType(),
+                        IndexedName = "n" + pageNodes.Count
+                    });
+                }
+            }
+        }
+
+        private List<PageEdge> GetPageEdges(List<PageNode> nodes, List<UserLog[]> userLogs)
+        {
+            var edges = new List<PageEdge>();
+            foreach (var n in nodes)
+            {
+                GetPageEdges(assembly, n, nodes, edges);
+            }
+            return edges;
+        }
+
+        private void GetPageEdges(Assembly assembly, PageNode node, List<PageNode> nodes, List<PageEdge> edges)
+        {
+            foreach (var fi in node.ResponseType.GetPropertiesAndFields())
+            {
+                GetPageEdges(assembly, node, nodes, edges, fi.Name, fi.GetMemberType(), false);
+            }
+        }
+
+        private void GetPageEdges(Assembly assembly, PageNode node, List<PageNode> nodes, List<PageEdge> edges, string memberName, Type memberType, bool isForm)
+        {
+            if (memberType.IsArray)
+            {
+                GetPageEdges(assembly, node, nodes, edges, memberName, memberType.GetElementType(), isForm);
+            }
+            else if (memberType.IsAssignableTo(typeof(IPageQuery)))
+            {
+                var target = nodes.FirstOrDefault(n => n.QueryType == memberType);
+                if (target != null)
+                {
+                    edges.Add(new PageEdge()
+                    {
+                        From = node,
+                        To = target,
+                        Name = memberName,
+                        IsLink = true,
+                        IsForm = isForm
+                    });
+                }
+            }
+            else if (memberType.IsAssignableToGeneric(typeof(Form<,>)))
+            {
+                var formResponseType = memberType.GetGenericArguments(typeof(Form<,>))[1];
+                GetPageEdges(assembly, node, nodes, edges, memberName, formResponseType, true);
+            }
+            else if (memberType.IsAssignableToGeneric(typeof(AsyncCall<>)))
+            {
+                var callResponseType = memberType.GetGenericArguments(typeof(AsyncCall<>))[0];
+                GetPageEdges(assembly, node, nodes, edges, memberName, callResponseType, isForm);
+            }
+            else
+            {
+                if (memberType.Assembly == assembly)
+                {
+                    foreach (var fi in memberType.GetPropertiesAndFields())
+                    {
+                        GetPageEdges(assembly, node, nodes, edges, isForm ? memberName : fi.Name, fi.GetMemberType(), isForm);
+                    }
+                }
+            }
+        }
+    }
+}

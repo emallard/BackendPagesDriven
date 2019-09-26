@@ -7,6 +7,5 @@ namespace CocoriCore.Page
         public bool IsLink;
         public bool IsForm;
         public string Name;
-        public bool Visited = false;
     }
 }

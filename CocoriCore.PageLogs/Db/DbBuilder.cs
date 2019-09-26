@@ -73,7 +73,7 @@ namespace CocoriCore.PageLogs
             if (o is LogRepo logRepo)
                 await dbEntity.Insert(context, logRepo);
             if (o is LogSubmit logSubmit)
-            { }//await dbPage.Insert(context, logDisplay);
+                await dbPage.Insert(context, logSubmit);
             if (o is LogSubmitRedirect logSubmitRedirect)
                 await dbPage.Insert(context, logSubmitRedirect);
 
