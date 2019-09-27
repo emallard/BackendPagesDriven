@@ -8,13 +8,7 @@ namespace CocoriCore.PageLogs
     public class HomePage : PageBase<HomePageQuery, HomePage>
     {
         public AsyncCall<SvgResponse> PageGraph;
-
-        //public AsyncCall<SvgResponse> EntityGraph;
-        //public AsyncCall<ListQuery<Test>> Tests;
-        /*
-        public AsyncCall<EntityTypeListReponseItem[]> Entities;
-        public AsyncCall<PageTypeListReponseItem[]> Pages;
-        */
+        public AsyncCall<string[]> PageNames;
         public Form<RunTestCommand, HomePageQuery> RunTests;
     }
 

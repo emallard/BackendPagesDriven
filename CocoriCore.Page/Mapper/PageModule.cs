@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace CocoriCore
@@ -154,6 +155,27 @@ namespace CocoriCore
             });
             return on;
         }
+
+        public PageModuleOn<TPageQuery> ToModel<TModel>(Func<TQuery, TResponse, TModel> func)
+        {
+            mapping3.Init<TQuery, TResponse, TModel>(func);
+            return on;
+        }
+
+        /*public PageModuleOn<TPageQuery> ToModelArray<TModel>(Action<TQuery, TResponse, TModel> action)
+            where TModel : new()
+        {
+            mapping3.Init<TQuery, TResponse[], TModel[]>((q, r) =>
+            {
+                return r.Select(x =>
+                {
+                    var model = new TModel();
+                    action(q, x, model);
+                    return model;
+                }).ToArray();
+            });
+            return on;
+        }*/
 
         public PageModuleOn<TPageQuery> AsModel()
         {

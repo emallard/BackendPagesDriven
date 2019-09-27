@@ -10,7 +10,7 @@ using Ninject.Extensions.NamedScope;
 using Ninject.Extensions.Factory;
 namespace Comptes
 {
-    public class TestBase// : IDisposable
+    public class TestBase : IPageTest// : IDisposable
     {
         private StandardKernel kernel;
 
@@ -34,7 +34,11 @@ namespace Comptes
                 CocoriCore.Mapper.AssemblyInfo.Assembly,
                 CocoriCore.Page.AssemblyInfo.Assembly,
                 Comptes.AssemblyInfo.Assembly)).InSingletonScope();
-            kernel.Bind<IPageMapper>().ToConstant(new PageMapper(Comptes.AssemblyInfo.Assembly));
+            kernel.Bind<PageMapperConfiguration>().ToConstant(
+                new PageMapperConfiguration(
+                    Comptes.AssemblyInfo.Assembly)
+                );
+            kernel.Bind<IPageMapper>().To<PageMapper>().InSingletonScope();
             kernel.Bind<INewMapper>().ToConstant(new NewMapper(Comptes.AssemblyInfo.Assembly));
 
             kernel.Bind<IMessageBus>().To<MessageBusSpy<Comptes.MessageBus>>().InNamedScope("unitofwork");
@@ -89,6 +93,7 @@ namespace Comptes
         {
             return kernel.Get<T>();
         }
+
 
         /*
         public void Dispose()

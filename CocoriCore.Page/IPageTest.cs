@@ -1,8 +1,10 @@
+using CocoriCore.Router;
+
 namespace CocoriCore
 {
     public interface IPageTest
     {
-        void WithSeleniumBrowser();
+        void WithSeleniumBrowser(RouterOptions routerOptions);
         object[] GetLogs();
     }
 }

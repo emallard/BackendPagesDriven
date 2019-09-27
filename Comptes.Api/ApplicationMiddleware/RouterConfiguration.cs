@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Comptes;
 using CocoriCore.Router;
+using CocoriCore.PageLogs;
 
 namespace Comptes.Api
 {
@@ -33,6 +34,8 @@ namespace Comptes.Api
             builder.Get<Tests_Id_GET>().SetPath(x => $"api/tests/{x.Type}/{x.TestName}").UseQuery();
 
             builder.Get<Graph_GET>().SetPath("api/graph").UseQuery();
+
+            PageLogsRouterConfiguration.Load(builder);
 
             return builder.Options;
         }

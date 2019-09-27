@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace CocoriCore
 {
@@ -13,8 +12,9 @@ namespace CocoriCore
         Dictionary<Tuple<Type, Type>, Type> intermediateType;
         Dictionary<Type, PageHandling> handlings;
 
-        public PageMapper(params Assembly[] assemblies)
+        public PageMapper(PageMapperConfiguration configuration)
         {
+            var assemblies = configuration.Assemblies;
             var moduleTypes = assemblies.SelectMany(a => a.GetTypes().Where(t => t.IsAssignableTo(typeof(PageModule)))).ToArray();
             var modules = moduleTypes.Select(t => Activator.CreateInstance(t)).Cast<PageModule>().ToArray();
             mappings2 = modules.SelectMany(m => m.Mappings2).ToDictionary(x => x.Key, x => x);

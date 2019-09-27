@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Comptes\Comptes.csproj" />
     <ProjectReference Include="..\CocoriCore.Page\CocoriCore.Page.csproj" />
+    <ProjectReference Include="..\CocoriCore.PageLogs\CocoriCore.PageLogs.csproj" />
     <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Ninject\CocoriCore.Ninject.csproj" />
     <ProjectReference Include="..\CocoriCore\backend\CocoriCore\CocoriCore.csproj" />
     <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Router\CocoriCore.Router.csproj" />

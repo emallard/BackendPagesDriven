@@ -9,6 +9,7 @@ using Ninject;
 using Jose;
 using CocoriCore.Router;
 using CocoriCore.Page;
+using CocoriCore.PageLogs;
 
 namespace Comptes.Api
 {
@@ -34,7 +35,12 @@ namespace Comptes.Api
 
             this.Bind<IMessageBus>().To<Comptes.MessageBus>().InNamedScope("unitofwork");
             this.Bind<IExecuteHandler>().To<Comptes.ExecuteHandler>().InNamedScope("unitofwork");
-            this.Bind<IPageMapper>().ToConstant(new PageMapper(Comptes.AssemblyInfo.Assembly));
+            this.Bind<PageMapperConfiguration>().ToConstant(
+                new PageMapperConfiguration(
+                    CocoriCore.PageLogs.AssemblyInfo.Assembly,
+                    Comptes.AssemblyInfo.Assembly)
+                );
+            this.Bind<IPageMapper>().To<PageMapper>().InSingletonScope();
             this.Bind<IClaimsProvider, IClaimsWriter>().To<ClaimsProviderAndWriter>().InNamedScope("unitofwork");
 
             // Middleware
@@ -66,11 +72,9 @@ namespace Comptes.Api
             }).InSingletonScope();
             this.Bind<IClock>().To<Clock>().InSingletonScope();
 
-            /*
-            this.Bind<JWTConfiguration>().ToConstant(new JWTConfiguration("monsecret", JwsAlgorithm.ES256));
-            this.Bind<ITokenService>().To<TokenService>().InSingletonScope();
-            this.Bind<IHttpAuthenticator, IClaimsProvider>().To<JwtAuthenticator>().InNamedScope("unitofwork");
-            */
+            this.Bind<PageLogsConfiguration>().ToConstant(new PageLogsConfiguration(
+                Comptes.AssemblyInfo.Assembly
+            ));
         }
     }
 }
