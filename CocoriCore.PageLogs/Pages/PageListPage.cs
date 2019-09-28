@@ -7,9 +7,9 @@ namespace CocoriCore.PageLogs
 
     }
 
-    public class PageListPage : PageBase<PageListPageQuery, PageListPage>
+    public class PageListPage : PageBase<PageListPageQuery>
     {
-        public AsyncCall<PageListPageItem[]> PageGraph;
+        public AsyncCall<PageGraphQuery, PageListPageItem[]> PageGraph;
     }
 
     public class PageListPageItem
@@ -22,19 +22,17 @@ namespace CocoriCore.PageLogs
     {
         public PageListPageModule()
         {
-            On<PageListPageQuery>()
-                .ProvideQuery<PageListQuery>((p, q) => { })
-                .WithResponse<string[]>()
-                .ToModel<PageListPageItem[]>((q, r) =>
-                    r.Select(x => new PageListPageItem()
-                    {
-                        PageName = x,
-                        Link = new PagePageQuery() { PageName = x }
-                    }).ToArray()
-                );
-
-
-            HandlePage<PageListPageQuery, PageListPage>();
+            HandlePage<PageListPageQuery, PageListPage>()
+                .ForAsyncCall(p => p.PageGraph);
+            /*
+            .MapResponse<string[]>()
+            .ToModel<PageListPageItem[]>((q, r) =>
+                r.Select(x => new PageListPageItem()
+                {
+                    PageName = x,
+                    Link = new PagePageQuery() { PageName = x }
+                }).ToArray()
+            );*/
         }
 
     }

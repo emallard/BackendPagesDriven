@@ -14,15 +14,16 @@ namespace CocoriCore.PageLogs
 
         public async Task Insert(DbInsertContext context, LogMessageBus l)
         {
+            var messageName = l.Message.GetType().GetFriendlyName();
             await repository.InsertAsync(new TestMessage()
             {
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
                 PageName = context.PageName,
-                MessageName = l.Message.GetType().Name
+                MessageName = messageName
             });
-            context.MessageName = l.Message.GetType().Name;
+            context.MessageName = messageName;
         }
     }
 }

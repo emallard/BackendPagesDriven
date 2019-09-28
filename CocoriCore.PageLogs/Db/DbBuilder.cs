@@ -60,6 +60,8 @@ namespace CocoriCore.PageLogs
 
         public async Task AddLog(UserLog o, DbInsertContext context)
         {
+            if (o is LogAsyncCall logAsyncCall)
+                await dbPage.Insert(context, logAsyncCall);
             if (o is LogDisplay logDisplay)
                 await dbPage.Insert(context, logDisplay);
             if (o is LogEmailRead logEmailRead)

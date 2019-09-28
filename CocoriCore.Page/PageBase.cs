@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -8,13 +9,15 @@ namespace CocoriCore
     public interface IPageBase
     {
         void ApplyBindings();
+
+        void AddBinding(string[] from, string[] to);
     }
 
-    public class PageBase<TPageQuery, TPage> : IPageBase where TPageQuery : IMessage<TPage>
+    public class PageBase<TPageQuery> : IPageBase
     {
         public TPageQuery PageQuery;
 
-        public List<PageBinding<TPage>> Bindings = new List<PageBinding<TPage>>();
+        public List<PageBinding> Bindings = new List<PageBinding>();
 
         public void ApplyBindings()
         {
@@ -22,67 +25,77 @@ namespace CocoriCore
                 ApplyBinding(b);
         }
 
-        private void ApplyBinding(PageBinding<TPage> binding)
+        private void ApplyBinding(PageBinding binding)
         {
-            var value = GetValue(binding.From.Body, this);
-            SetValue(binding.To.Body, this, value);
+            var value = GetValue(binding.From, this);
+            SetValue(binding.To, this, value);
         }
 
-        private object GetValue(Expression expr, object o)
+        private object GetValue(string[] memberNames, object o)
         {
-            var expression = expr;
-            var memberInfos = new List<MemberInfo>();
-
-            if (expression.NodeType == ExpressionType.Convert)
-                expression = ((UnaryExpression)expression).Operand;
-
-            while (expression is MemberExpression memberExpression)
+            var currentObject = o;
+            for (var i = memberNames.Length - 1; i >= 0; --i)
             {
-                var memberInfo = memberExpression.Member;
-                memberInfos.Add(memberInfo);
-                expression = memberExpression.Expression;
+                var memberInfo = currentObject.GetType().GetPropertyOrField(memberNames[i], BindingFlags.Instance | BindingFlags.Public);
+                currentObject = memberInfo.InvokeGetter(currentObject);
             }
-            object currentObject = o;
-            for (var i = memberInfos.Count - 1; i >= 0; --i)
-                currentObject = memberInfos[i].InvokeGetter(currentObject);
+
             return currentObject;
         }
 
-        private void SetValue(Expression expr, object o, object value)
+        private void SetValue(string[] memberNames, object o, object value)
         {
-            var expression = expr;
-            var memberInfos = new List<MemberInfo>();
-
-            if (expression.NodeType == ExpressionType.Convert)
-                expression = ((UnaryExpression)expression).Operand;
-
-            while (expression is MemberExpression memberExpression)
+            object currentObject = o;
+            for (var i = memberNames.Length - 1; i > 0; --i)
             {
-                var memberInfo = memberExpression.Member;
-                memberInfos.Add(memberInfo);
-                expression = memberExpression.Expression;
+                var memberInfo = currentObject.GetType().GetPropertyOrField(memberNames[i], BindingFlags.Instance | BindingFlags.Public);
+                currentObject = memberInfo.InvokeGetter(currentObject);
             }
 
-            object currentObject = o;
-            for (var i = memberInfos.Count - 1; i > 0; --i)
-                currentObject = memberInfos[i].InvokeGetter(currentObject);
-
-            memberInfos[0].InvokeSetter(currentObject, value);
+            var memberInfoSet = currentObject.GetType().GetPropertyOrField(memberNames[0], BindingFlags.Instance | BindingFlags.Public);
+            memberInfoSet.InvokeSetter(currentObject, value);
         }
 
-        public void Bind(Expression<Func<TPage, object>> from, Expression<Func<TPage, object>> to)
+        public void AddBinding(string[] from, string[] to)
         {
-            Bindings.Add(new PageBinding<TPage>()
+            Bindings.Add(new PageBinding()
             {
                 From = from,
                 To = to
             });
         }
+
+        public void Bind<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        {
+            page.AddBinding(GetMemberNames(from.Body), GetMemberNames(to.Body));
+        }
+
+
+        private string[] GetMemberNames(Expression expr)
+        {
+            var expression = expr;
+            var memberInfos = new List<MemberInfo>();
+
+            if (expression.NodeType == ExpressionType.Convert)
+                expression = ((UnaryExpression)expression).Operand;
+
+            while (expression is MemberExpression memberExpression)
+            {
+                var memberInfo = memberExpression.Member;
+                memberInfos.Add(memberInfo);
+                expression = memberExpression.Expression;
+            }
+
+            var names = memberInfos.Select(x => x.Name).ToArray();
+            if (names.Length == 0)
+                throw new Exception("Error while parsing expression for member names");
+            return names;
+        }
     }
 
-    public class PageBinding<TPage>
+    public class PageBinding
     {
-        public Expression<Func<TPage, object>> From;
-        public Expression<Func<TPage, object>> To;
+        public string[] From;
+        public string[] To;
     }
 }

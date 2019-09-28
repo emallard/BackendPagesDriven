@@ -10,14 +10,14 @@ namespace Comptes
     {
     }
 
-    public class PageNouveauPoste : PageBase<PageNouveauPosteQuery, PageNouveauPoste>
+    public class PageNouveauPoste : PageBase<PageNouveauPosteQuery>
     {
-        public AsyncCall<PosteCreateDefault> Modele;
+        public AsyncCall<ByIdQuery<PosteCreateDefault>, PosteCreateDefault> Modele;
         public Form<CreateCommand<PosteCreate>, PageListePostesQuery> Creer;
 
         public PageNouveauPoste()
         {
-            Bind(x => x.Modele.Result.Nom, x => x.Creer.Command.Object.Nom);
+            Bind(this, x => x.Modele.Result.Nom, x => x.Creer.Command.Object.Nom);
         }
     }
 
@@ -25,16 +25,15 @@ namespace Comptes
     {
         public PageNouveauPosteModule()
         {
-            HandlePage<PageNouveauPosteQuery, PageNouveauPoste>();
+            HandlePage<PageNouveauPosteQuery, PageNouveauPoste>()
+                .ForAsyncCall(p => p.Modele)
+                .MapResponse<PosteCreateDefault>()
+                .ToSelf()
 
-            On<PageNouveauPosteQuery>()
-                .ProvideQuery<ByIdQuery<PosteCreateDefault>>((p, q) => { })
-                .WithResponse<PosteCreateDefault>()
-                .AsModel();
+                .ForForm(p => p.Creer)
+                .MapResponse<Guid>()
+                .ToModel<PageListePostesQuery>((q, r, m) => { });
 
-            this.MapForm<CreateCommand<PosteCreate>, Guid, PageListePostesQuery>(
-                (q, r) => new PageListePostesQuery()
-            );
         }
     }
 }

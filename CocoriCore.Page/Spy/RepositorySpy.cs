@@ -50,7 +50,7 @@ namespace CocoriCore.Page
 
         public IQueryable<object> Query(Type entityType)
         {
-            logger.Log(new LogRepo(LogRepoOperation.Load, entityType));
+            logger.Log(new LogRepo(LogRepoOperation.Query, entityType));
             return repo.Query(entityType);
         }
 

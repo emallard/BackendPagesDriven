@@ -98,7 +98,7 @@ namespace CocoriCore.Page
             where TMessage : IMessage, new()
         {
             browser.ApplyBindings((IPageBase)this.Page);
-            this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
+            //this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Submit(Page, getForm).Result;
 
             return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);

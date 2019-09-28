@@ -6,21 +6,19 @@ namespace CocoriCore
     {
         void SetResult(object o);
         void SetPageQuery(object pageQuery);
+        void SetMemberName(string name);
+        string GetMemberName();
+        IMessage GetQuery();
     }
 
-    public class AsyncCallDeserializationHelper
-    {
-        public Type _Type;
-        public Type _PageQueryType;
-    }
-
-    public class AsyncCall<T> : IMessage<T>, IAsyncCall, ISetPageQuery
+    public class AsyncCall<TQuery, TModel> : IMessage<TModel>, IAsyncCall where TQuery : IMessage
     {
         public bool IsAsyncCall = true;
         public Type _Type;
         public Type _PageQueryType;
-        public object PageQuery;
-        public T Result;
+        public TQuery Query = Activator.CreateInstance<TQuery>();
+        public TModel Result;
+        public string MemberName;
 
         public AsyncCall()
         {
@@ -35,13 +33,27 @@ namespace CocoriCore
 
         public void SetResult(object o)
         {
-            Result = (T)o;
+            Result = (TModel)o;
         }
 
         public void SetPageQuery(object pageQuery)
         {
-            this.PageQuery = pageQuery;
             _PageQueryType = pageQuery.GetType();
+        }
+
+        public void SetMemberName(string name)
+        {
+            MemberName = name;
+        }
+
+        public IMessage GetQuery()
+        {
+            return Query;
+        }
+
+        public string GetMemberName()
+        {
+            return MemberName;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Comptes
         public Guid Id;
     }
 
-    public class PageDepense : PageBase<PageDepenseQuery, PageDepense>
+    public class PageDepense : PageBase<PageDepenseQuery>
     {
-        public AsyncCall<ByIdQuery<DepenseView>> Depense;
+        public AsyncCall<ByIdQuery<DepenseView>, DepenseView> Depense;
     }
 
     public class PageDepenseModule : PageModule
@@ -30,10 +30,10 @@ namespace Comptes
                 .ThenConstructModel(m, r) => m.Postes = r.Foreach(l => * add link *));
             */
 
-            On<PageDepenseQuery>()
-                .ProvideQuery<ByIdQuery<DepenseView>>((p, q) => q.Id = p.Id)
-                .WithResponse<DepenseView>()
-                .AsModel();
+            HandlePage<PageDepenseQuery, PageDepense>((q, p) => { p.Depense.Query.Id = q.Id; })
+                .ForAsyncCall(p => p.Depense)
+                .MapResponse<DepenseView>()
+                .ToSelf();
 
             /*
             this.Map<PageDepenseQuery, ByIdQuery<DepenseView>>(p => new ByIdQuery<DepenseView>() { Id = p.Id });
@@ -44,7 +44,7 @@ namespace Comptes
                 (q, r) => r
             );*/
 
-            HandlePage<PageDepenseQuery, PageDepense>();
+
         }
     }
 }

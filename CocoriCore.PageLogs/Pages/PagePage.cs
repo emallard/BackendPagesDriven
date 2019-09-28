@@ -5,22 +5,22 @@ namespace CocoriCore.PageLogs
         public string PageName;
     }
 
-    public class PagePage : PageBase<PagePageQuery, PagePage>
+    public class PagePage : PageBase<PagePageQuery>
     {
-        public AsyncCall<PageReport> PageReport;
+        public AsyncCall<PageReportQuery, PageReport> PageReport;
     }
 
     public class PagePageModule : PageModule
     {
         public PagePageModule()
         {
-            On<PagePageQuery>()
-                .ProvideQuery<PageReportQuery>((p, q) => { q.PageName = p.PageName; })
-                .WithResponse<PageReport>()
-                .AsModel();
+            HandlePage<PagePageQuery, PagePage>((q, p) => { p.PageReport.Query.PageName = q.PageName; })
+                .ForAsyncCall(p => p.PageReport)
+                .MapResponse<PageReport>()
+                .ToSelf();
 
 
-            HandlePage<PagePageQuery, PagePage>();
+
         }
 
     }

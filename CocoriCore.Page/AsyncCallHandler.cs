@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 namespace CocoriCore
 {
-    public class AsyncCallHandler<T> : MessageHandler<AsyncCall<T>, T>
+    public class AsyncCallHandler<TQuery, TModel> : MessageHandler<AsyncCall<TQuery, TModel>, TModel>
+        where TQuery : IMessage
     {
         private readonly IExecuteHandler executeHandler;
         private readonly IPageMapper mapper;
@@ -14,12 +15,10 @@ namespace CocoriCore
             this.mapper = mapper;
         }
 
-        public override async Task<T> ExecuteAsync(AsyncCall<T> asyncCallMessage)
+        public override async Task<TModel> ExecuteAsync(AsyncCall<TQuery, TModel> asyncCallMessage)
         {
-            Type type = mapper.GetIntermediateType(asyncCallMessage.PageQuery.GetType(), typeof(T));
-            var message = (IMessage)mapper.Map(type, asyncCallMessage.PageQuery);
-            var response = await executeHandler.ExecuteAsync(message);
-            return mapper.Map<T>(message, response);
+            var response = await executeHandler.ExecuteAsync(asyncCallMessage.Query);
+            return mapper.Map<TModel>(asyncCallMessage.Query, response);
         }
     }
 }

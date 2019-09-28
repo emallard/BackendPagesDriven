@@ -8,7 +8,7 @@ namespace Comptes
     {
     }
 
-    public class PageListeDepenses
+    public class PageListeDepenses : PageBase<PageListeDepensesQuery>
     {
         public PageNouvelleDepenseQuery NouvelleDepense;
         //public AsyncCall<PageListeDepenseItem[]> Depenses;
@@ -24,6 +24,7 @@ namespace Comptes
     {
         public PageListeDepensesModule()
         {
+            /*
             this.MapAsyncCall<PageListeDepensesQuery, ListQuery<DepenseView>, DepenseView[], PageListeDepenseItem[]>(
                 q => new ListQuery<DepenseView>(),
                 (q, r) => r.Select(x => new PageListeDepenseItem()
@@ -32,11 +33,8 @@ namespace Comptes
                     Depense = x
                 }).ToArray()
                 );
-            this.Handle<PageListeDepensesQuery, PageListeDepenses>(q => new PageListeDepenses()
-            {
-                //Depenses = new AsyncCall<PageListeDepenseItem[]>(q),
-                NouvelleDepense = new PageNouvelleDepenseQuery()
-            });
+            */
+            this.HandlePage<PageListeDepensesQuery, PageListeDepenses>((q, p) => { });
         }
     }
 }

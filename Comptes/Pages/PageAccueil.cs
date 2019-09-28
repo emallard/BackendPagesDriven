@@ -7,7 +7,7 @@ namespace Comptes
     {
     }
 
-    public class PageAccueil
+    public class PageAccueil : PageBase<PageAccueilQuery>
     {
         public PageListePostesQuery ListePostes;
         public PageListeDepensesQuery ListeDepenses;
@@ -17,11 +17,7 @@ namespace Comptes
     {
         public PageAccueilModule()
         {
-            Handle<PageAccueilQuery, PageAccueil>(q => new PageAccueil()
-            {
-                ListePostes = new PageListePostesQuery(),
-                ListeDepenses = new PageListeDepensesQuery()
-            });
+            HandlePage<PageAccueilQuery, PageAccueil>();
         }
     }
 }

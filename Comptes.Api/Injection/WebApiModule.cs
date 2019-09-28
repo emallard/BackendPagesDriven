@@ -10,6 +10,7 @@ using Jose;
 using CocoriCore.Router;
 using CocoriCore.Page;
 using CocoriCore.PageLogs;
+using Newtonsoft.Json.Converters;
 
 namespace Comptes.Api
 {
@@ -69,6 +70,7 @@ namespace Comptes.Api
                 var serializer = new JsonSerializer();
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageConverter>());
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<CallConverter>());
+                serializer.Converters.Add(new StringEnumConverter());
                 return serializer;
             }).InSingletonScope();
             this.Bind<IClock>().To<Clock>().InSingletonScope();

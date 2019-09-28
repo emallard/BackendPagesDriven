@@ -7,10 +7,10 @@ namespace CocoriCore.PageLogs
 
     }
 
-    public class HomePage : PageBase<HomePageQuery, HomePage>
+    public class HomePage : PageBase<HomePageQuery>
     {
         //public AsyncCall<string> PageGraph;
-        public AsyncCall<PageListPageItem[]> PageNames;
+        public AsyncCall<PageListQuery, PageListPageItem[]> PageNames;
         public Form<RunTestCommand, HomePageQuery> RunTests;
     }
 
@@ -18,19 +18,35 @@ namespace CocoriCore.PageLogs
     {
         public HomePageModule()
         {
-            On<HomePageQuery>()
+            HandlePage<HomePageQuery, HomePage>((p, q) => { })
+                .ForAsyncCall(p => p.PageNames)
+                .MapResponse<string[]>()
+                .ToModel<PageListPageItem[]>((q, r) =>
+                    r.Select(x => new PageListPageItem()
+                    {
+                        PageName = x,
+                        Link = new PagePageQuery() { PageName = x }
+                    }).ToArray()
+                )
+
+                .ForForm(p => p.RunTests)
+                .MapResponse<RunTestResponse>()
+                .ToModel<HomePageQuery>((c, r, m) => { });
+
+
+            /*On<HomePageQuery>()
                 .ProvideQuery<PageGraphQuery>((p, q) => { })
                 .WithResponse<string>()
                 .AsModel();
 
             On<HomePageQuery>()
                 .ProvideQuery<PageListQuery>((p, q) => { });
-
+            
             MapForm<RunTestCommand, RunTestResponse, HomePageQuery>(
                 (c, r) => new HomePageQuery()
             );
+            */
 
-            HandlePage<HomePageQuery, HomePage>();
         }
 
     }

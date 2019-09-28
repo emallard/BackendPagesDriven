@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace CocoriCore
@@ -9,53 +10,30 @@ namespace CocoriCore
     public class PageModule
     {
         public List<PageMapping3> Mappings3 = new List<PageMapping3>();
-        public List<PageMapping2> Mappings2 = new List<PageMapping2>();
         public List<PageHandling> Handlings = new List<PageHandling>();
 
-        protected void Map<TMessage, TResponse, TModel>(Func<TMessage, TResponse, TModel> mappingFunc)
+        protected PageModuleHandlePage<TPageQuery, TPage> HandlePage<TPageQuery, TPage>(
+            Action<TPageQuery, TPage> action = null
+        )
+            where TPageQuery : IMessage<TPage>
+            where TPage : PageBase<TPageQuery>
         {
-            Mappings3.Add(PageMapping3.Create(mappingFunc));
-        }
-
-        protected void Map<TPageQuery, TMessage>(Func<TPageQuery, TMessage> mappingFunc)
-        {
-            Mappings2.Add(PageMapping2.Create(mappingFunc));
-        }
-
-        protected void MapForm<TMessage, TResponse, TModel>(Func<TMessage, TResponse, TModel> mappingFunc)
-            where TMessage : IMessage<TResponse>
-        {
-            Map(mappingFunc);
-        }
-
-        protected void MapAsyncCall<TPageQuery, TQuery, TResponse, TModel>(
-            Func<TPageQuery, TQuery> pageQueryToMessageFunc,
-            Func<TQuery, TResponse, TModel> resultMappingFunc)
-            where TQuery : IMessage<TResponse>
-        {
-            Map(pageQueryToMessageFunc);
-            Map(resultMappingFunc);
-        }
-
-        protected void Handle<TMessage, TResponse>(Func<TMessage, TResponse> func) where TMessage : IMessage<TResponse>
-        {
-            Handlings.Add(PageHandling.Create(func));
-        }
-
-        protected void HandlePage<TMessage, TResponse>()
-            where TMessage : IMessage<TResponse>
-            where TResponse : PageBase<TMessage, TResponse>
-        {
-            Func<TMessage, TResponse> func = m =>
+            Handlings.Add(new PageHandling()
             {
-                var page = (PageBase<TMessage, TResponse>)Activator.CreateInstance<TResponse>();
-                page.PageQuery = m;
-                CreateFields(m, page);
-                return (TResponse)page;
-            };
+                PageQueryType = typeof(TPageQuery),
+                Func = m =>
+                {
+                    var pageQuery = (TPageQuery)m;
+                    var page = (TPage)Activator.CreateInstance<TPage>();
+                    CreateFields(pageQuery, page);
+                    if (action != null)
+                        action(pageQuery, page);
+                    page.PageQuery = pageQuery;
+                    return page;
+                }
+            });
 
-
-            Handlings.Add(PageHandling.Create(func));
+            return new PageModuleHandlePage<TPageQuery, TPage>(this);
         }
 
         private void CreateFields(object pageQuery, object o)
@@ -73,72 +51,69 @@ namespace CocoriCore
                 var member = Activator.CreateInstance(memberType);
                 mi.InvokeSetter(o, member);
 
-                if (member is ISetPageQuery setPageQuery)
-                    setPageQuery.SetPageQuery(pageQuery);
+                if (member is IForm form)
+                    form.SetMemberName(mi.Name);
+
+                if (member is IAsyncCall asyncCall)
+                    asyncCall.SetMemberName(mi.Name);
             }
         }
-
-
-        protected PageModuleOn<T> On<T>() where T : IPageQuery
-        {
-            return new PageModuleOn<T>(this);
-        }
     }
 
-    public class PageModuleOn<TPageQuery>
+    public class PageModuleHandlePage<TPageQuery, TPage>
     {
         private readonly PageModule module;
 
-        public PageModuleOn(PageModule module)
+        public PageModuleHandlePage(PageModule module)
         {
             this.module = module;
         }
 
-        public PageModuleProvide<TPageQuery, TQuery> ProvideQuery<TQuery>(Action<TPageQuery, TQuery> action) where TQuery : new()
+        public PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel> ForAsyncCall<TQuery, TModel>(
+            Expression<Func<TPage, AsyncCall<TQuery, TModel>>> member)
+            where TQuery : IMessage, new()
         {
-            var mapping2 = new PageMapping2();
-            mapping2.Init<TPageQuery, TQuery>(pageQuery =>
-            {
-                var query = new TQuery();
-                action(pageQuery, query);
-                return query;
-            });
-            module.Mappings2.Add(mapping2);
-            return new PageModuleProvide<TPageQuery, TQuery>(this, module);
+            return new PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel>(this, module);
+        }
+
+
+        public PageModuleProvideQuery<TPageQuery, TPage, TCommand, TModel> ForForm<TCommand, TModel>(
+            Expression<Func<TPage, Form<TCommand, TModel>>> member)
+            where TCommand : IMessage, new()
+        {
+            return new PageModuleProvideQuery<TPageQuery, TPage, TCommand, TModel>(this, module);
         }
     }
 
-    public class PageModuleProvide<TPageQuery, TQuery>
+    public class PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel>
     {
-        private readonly PageModuleOn<TPageQuery> on;
+        private readonly PageModuleHandlePage<TPageQuery, TPage> on;
         private readonly PageModule module;
 
-        public PageModuleProvide(PageModuleOn<TPageQuery> on, PageModule module)
+        public PageModuleProvideQuery(PageModuleHandlePage<TPageQuery, TPage> on, PageModule module)
         {
             this.on = on;
             this.module = module;
         }
 
-        public PageModuleWithResponse<TPageQuery, TQuery, TResponse> WithResponse<TResponse>() //where TQuery : IMessage<TResponse>
+        public PageModuleProvideQueryWithResponse<TPageQuery, TPage, TQuery, TResponse> MapResponse<TResponse>() //where TQuery : IMessage<TResponse>
         {
-            return new PageModuleWithResponse<TPageQuery, TQuery, TResponse>(on, module);
+            return new PageModuleProvideQueryWithResponse<TPageQuery, TPage, TQuery, TResponse>(on, module);
         }
-
-
     }
 
-    public class PageModuleWithResponse<TPageQuery, TQuery, TResponse> // where TQuery : IMessage<TResponse>
+    public class PageModuleProvideQueryWithResponse<TPageQuery, TPage, TQuery, TResponse> // where TQuery : IMessage<TResponse>
     {
-        private PageModuleOn<TPageQuery> on;
+        private PageModuleHandlePage<TPageQuery, TPage> on;
         private readonly PageModule module;
 
-        public PageModuleWithResponse(PageModuleOn<TPageQuery> on, PageModule module)
+        public PageModuleProvideQueryWithResponse(PageModuleHandlePage<TPageQuery, TPage> on, PageModule module)
         {
             this.on = on;
             this.module = module;
         }
 
-        public PageModuleOn<TPageQuery> ToModel<TModel>(Action<TQuery, TResponse, TModel> action)
+        public PageModuleHandlePage<TPageQuery, TPage> ToModel<TModel>(Action<TQuery, TResponse, TModel> action)
             where TModel : new()
         {
             var mapping3 = new PageMapping3();
@@ -152,7 +127,7 @@ namespace CocoriCore
             return on;
         }
 
-        public PageModuleOn<TPageQuery> ToModel<TModel>(Func<TQuery, TResponse, TModel> func)
+        public PageModuleHandlePage<TPageQuery, TPage> ToModel<TModel>(Func<TQuery, TResponse, TModel> func)
         {
             var mapping3 = new PageMapping3();
             mapping3.Init<TQuery, TResponse, TModel>(func);
@@ -160,22 +135,7 @@ namespace CocoriCore
             return on;
         }
 
-        /*public PageModuleOn<TPageQuery> ToModelArray<TModel>(Action<TQuery, TResponse, TModel> action)
-            where TModel : new()
-        {
-            mapping3.Init<TQuery, TResponse[], TModel[]>((q, r) =>
-            {
-                return r.Select(x =>
-                {
-                    var model = new TModel();
-                    action(q, x, model);
-                    return model;
-                }).ToArray();
-            });
-            return on;
-        }*/
-
-        public PageModuleOn<TPageQuery> AsModel()
+        public PageModuleHandlePage<TPageQuery, TPage> ToSelf()
         {
             var mapping3 = new PageMapping3();
             mapping3.Init<TQuery, TResponse, TResponse>((q, r) => r);

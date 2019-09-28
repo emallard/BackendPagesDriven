@@ -21,7 +21,7 @@ namespace CocoriCore.PageLogs
                 PageName = l.PageQuery.GetType().Name
             });
             context.PageName = l.PageQuery.GetType().Name;
-            context.SubmitName = null;
+            context.PageMemberName = null;
             context.MessageName = null;
         }
 
@@ -49,7 +49,7 @@ namespace CocoriCore.PageLogs
             });
 
             context.PageName = l.PageQuery.GetType().Name;
-            context.SubmitName = null;
+            context.PageMemberName = null;
             context.MessageName = null;
         }
 
@@ -64,7 +64,7 @@ namespace CocoriCore.PageLogs
                 ToPageName = l.PageQuery.GetType().Name,
                 IsForm = true,
                 IsLink = false,
-                MemberName = context.SubmitName
+                MemberName = context.PageMemberName
             });
             context.IndexInTest++;
 
@@ -76,14 +76,20 @@ namespace CocoriCore.PageLogs
                 PageName = l.PageQuery.GetType().Name,
             });
             context.PageName = l.PageQuery.GetType().Name;
-            context.SubmitName = null;
+            context.PageMemberName = null;
             context.MessageName = null;
         }
 
         public async Task Insert(DbInsertContext context, LogSubmit l)
         {
             await Task.CompletedTask;
-            context.SubmitName = l.MemberName;
+            context.PageMemberName = l.MemberName;
+        }
+
+        public async Task Insert(DbInsertContext context, LogAsyncCall l)
+        {
+            await Task.CompletedTask;
+            context.PageMemberName = l.MemberName;
         }
     }
 }

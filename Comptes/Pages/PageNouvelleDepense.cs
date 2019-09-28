@@ -10,15 +10,15 @@ namespace Comptes
     {
     }
 
-    public class Select<T> : ISetPageQuery
+    public class Select<TQuery, TModel> where TQuery : IMessage
     {
         public Select()
         {
-            Source = new AsyncCall<T[]>();
+            Source = new AsyncCall<TQuery, TModel[]>();
         }
 
-        public AsyncCall<T[]> Source;
-        public T Selected;
+        public AsyncCall<TQuery, TModel[]> Source;
+        public TModel Selected;
 
         public void SetPageQuery(object pageQuery)
         {
@@ -26,14 +26,14 @@ namespace Comptes
         }
     }
 
-    public class PageNouvelleDepense : PageBase<PageNouvelleDepenseQuery, PageNouvelleDepense>
+    public class PageNouvelleDepense : PageBase<PageNouvelleDepenseQuery>
     {
-        public Select<PosteView> Poste;
+        public Select<ListQuery<PosteView>, PosteView> Poste;
         public Form<CreateCommand<DepenseCreate>, PageListeDepensesQuery> Creer;
 
         public PageNouvelleDepense()
         {
-            Bind(x => x.Poste.Selected.Id, x => x.Creer.Command.Object.IdPoste);
+            Bind(this, x => x.Poste.Selected.Id, x => x.Creer.Command.Object.IdPoste);
         }
     }
 
@@ -41,15 +41,14 @@ namespace Comptes
     {
         public PageNouvelleDepenseModule()
         {
-            HandlePage<PageNouvelleDepenseQuery, PageNouvelleDepense>();
+            HandlePage<PageNouvelleDepenseQuery, PageNouvelleDepense>()
+                .ForForm(p => p.Creer)
+                .MapResponse<Guid>()
+                .ToModel<PageListeDepensesQuery>((c, r, m) => { })
 
-            this.MapAsyncCall<PageNouvelleDepenseQuery, ListQuery<PosteView>, PosteView[], PosteView[]>(
-                pageQuery => new ListQuery<PosteView>(),
-                (query, response) => response);
-
-            this.MapForm<CreateCommand<DepenseCreate>, Guid, PageListeDepensesQuery>(
-                (q, r) => new PageListeDepensesQuery()
-            );
+                .ForAsyncCall(p => p.Poste.Source)
+                .MapResponse<PosteView[]>()
+                .ToSelf();
         }
     }
 }

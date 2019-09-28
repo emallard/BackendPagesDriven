@@ -5,9 +5,9 @@ namespace CocoriCore.PageLogs
 
     }
 
-    public class TestsPage : PageBase<TestsPageQuery, TestsPage>
+    public class TestsPage : PageBase<TestsPageQuery>
     {
-        public AsyncCall<SvgResponse> PageGraph;
+        public AsyncCall<PageGraphQuery, SvgResponse> PageGraph;
     }
 
     public class TestsPageModule : PageModule

@@ -104,9 +104,9 @@ namespace CocoriCore.Page
                 var formResponseType = memberType.GetGenericArguments(typeof(Form<,>))[1];
                 GetPageEdges(assembly, node, nodes, edges, memberName, formResponseType, true);
             }
-            else if (memberType.IsAssignableToGeneric(typeof(AsyncCall<>)))
+            else if (memberType.IsAssignableToGeneric(typeof(AsyncCall<,>)))
             {
-                var callResponseType = memberType.GetGenericArguments(typeof(AsyncCall<>))[0];
+                var callResponseType = memberType.GetGenericArguments(typeof(AsyncCall<,>))[1];
                 GetPageEdges(assembly, node, nodes, edges, memberName, callResponseType, isForm);
             }
             else

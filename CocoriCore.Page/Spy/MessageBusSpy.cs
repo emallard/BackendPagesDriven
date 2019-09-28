@@ -17,9 +17,24 @@ namespace CocoriCore.Page
 
         public async Task<object> ExecuteAsync(IMessage message)
         {
+            var loggedMessage = message;
+
+            if (message is IAsyncCall asyncCall)
+            {
+                logger.Log(new LogAsyncCall() { MemberName = asyncCall.GetMemberName() });
+                loggedMessage = asyncCall.GetQuery();
+            }
+
+            if (message is IForm form)
+            {
+                logger.Log(new LogSubmit() { MemberName = form.GetMemberName() });
+                loggedMessage = form.GetCommand();
+            }
+
+
             logger.Log(new LogMessageBus()
             {
-                Message = message
+                Message = loggedMessage
             });
 
             var response = await messageBus.ExecuteAsync(message);

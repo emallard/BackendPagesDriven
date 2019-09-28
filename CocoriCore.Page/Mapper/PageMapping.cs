@@ -2,6 +2,7 @@ using System;
 
 namespace CocoriCore
 {
+
     public class PageMapping3
     {
         public Tuple<Type, Type, Type> Key { get; set; }
