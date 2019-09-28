@@ -69,7 +69,6 @@ namespace Comptes.Api
                 var serializer = new JsonSerializer();
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageConverter>());
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<CallConverter>());
-                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<AsyncCallConverter>());
                 return serializer;
             }).InSingletonScope();
             this.Bind<IClock>().To<Clock>().InSingletonScope();
