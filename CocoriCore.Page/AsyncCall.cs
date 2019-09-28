@@ -5,12 +5,20 @@ namespace CocoriCore
     public interface IAsyncCall
     {
         void SetResult(object o);
+        void SetPageQuery(object pageQuery);
+    }
+
+    public class AsyncCallDeserializationHelper
+    {
+        public Type _Type;
+        public Type _PageQueryType;
     }
 
     public class AsyncCall<T> : IMessage<T>, IAsyncCall, ISetPageQuery
     {
         public bool IsAsyncCall = true;
         public Type _Type;
+        public Type _PageQueryType;
         public object PageQuery;
         public T Result;
 
@@ -22,7 +30,7 @@ namespace CocoriCore
         public AsyncCall(object pageQuery)
         {
             _Type = this.GetType();
-            PageQuery = pageQuery;
+            this.SetPageQuery(pageQuery);
         }
 
         public void SetResult(object o)
@@ -33,6 +41,7 @@ namespace CocoriCore
         public void SetPageQuery(object pageQuery)
         {
             this.PageQuery = pageQuery;
+            _PageQueryType = pageQuery.GetType();
         }
     }
 }

@@ -9,7 +9,6 @@ namespace CocoriCore.PageLogs
 
     public class RunTestCommand : IMessage<RunTestResponse>
     {
-
     }
 
     public class RunTestResponse
@@ -40,7 +39,10 @@ namespace CocoriCore.PageLogs
             await Task.CompletedTask;
             var sb = new List<string>();
 
-            var types = configuration.Assemblies.SelectMany(x => x.GetTypes().SelectMany(t =>
+            var types = configuration.Assemblies.SelectMany(
+                x => x.GetTypes()
+                      .Where(t => t.IsAssignableTo<IPageTest>())
+                      .SelectMany(t =>
             {
                 var methods = t.GetMethods().Where(m => m.GetCustomAttributes(typeof(Xunit.FactAttribute), false).Length > 0).ToArray();
                 return methods.Select(m => new TestItem

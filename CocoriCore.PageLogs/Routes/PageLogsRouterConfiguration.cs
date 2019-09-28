@@ -15,9 +15,8 @@ namespace CocoriCore.PageLogs
         public static void Load(RouterOptionsBuilder builder)
         {
             builder.Get<HomePageQuery>().SetPath("api/pagelogs");
-            builder.Get<HomePageQuery>().SetPath("api/pagelogs/tests");
-            builder.Get<HomePageQuery>().SetPath("api/pagelogs/entites");
-            builder.Get<HomePageQuery>().SetPath("api/pagelogs/pages");
+            builder.Get<PageListPageQuery>().SetPath("api/pagelogs/pages");
+            builder.Get<PagePageQuery>().SetPath(x => $"api/pagelogs/page/{x.PageName}");
         }
     }
 }

@@ -71,8 +71,10 @@ namespace CocoriCore.PageLogs
             pageReport.TestNames =
                 (await repository.Query<TestPage>().Where(x => x.PageName == pageName)
                 .Select(x => x.TestName)
+                .ToArrayAsync())
                 .Distinct()
-                .ToArrayAsync());
+                .ToArray();
+
 
             return pageReport;
         }

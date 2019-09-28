@@ -4,11 +4,11 @@ using CocoriCore.Page;
 
 namespace CocoriCore.PageLogs
 {
-    public class PageGraphQuery : IMessage<SvgResponse>
+    public class PageGraphQuery : IMessage<string>
     {
     }
 
-    public class PageGraphHandler : MessageHandler<PageGraphQuery, SvgResponse>
+    public class PageGraphHandler : MessageHandler<PageGraphQuery, string>
     {
         private readonly IRepository repository;
         private readonly PageGraphFormatter pageGraphFormatter;
@@ -21,9 +21,10 @@ namespace CocoriCore.PageLogs
             this.pageGraphFormatter = pageGraphFormatter;
         }
 
-        public override Task<SvgResponse> ExecuteAsync(PageGraphQuery message)
+        public override async Task<string> ExecuteAsync(PageGraphQuery message)
         {
-            throw new Exception();
+            await Task.CompletedTask;
+            return "<svg></svg>";
         }
     }
 }

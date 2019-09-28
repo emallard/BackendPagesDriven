@@ -17,7 +17,9 @@ namespace CocoriCore
 
         public string ToUrl(IMessage message)
         {
-            var route = routerOptions.AllRoutes.First(r => r.MessageType == message.GetType());
+            var route = routerOptions.AllRoutes.FirstOrDefault(r => r.MessageType == message.GetType());
+            if (route == null)
+                throw new Exception("Did you forget to add route for " + message.GetType().FullName);
 
             String url = route.ParameterizedUrl;
             foreach (var p in route.UrlParameters)

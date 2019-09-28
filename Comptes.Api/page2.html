@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <meta charset="UTF8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
@@ -20,6 +21,7 @@
     <script>
         var _page = null;
 
+
         async function init() {
             let myHeaders = new Headers();
             myHeaders.append('Content-Type', 'application/json');
@@ -36,9 +38,8 @@
 
             let html = format(_page);
             document.getElementById('content').innerHTML = html;
-            asyncCalls(_page);
             registerOnSubmits(_page);
-
+            asyncCalls(_page);
         }
 
         init();
@@ -54,12 +55,12 @@
                 });
 
             return await response.json();
-
         }
 
         async function pagecall(callObj) {
             let response = await call(callObj);
             console.log(response);
+
             if (response['href'] != null) {
                 console.log('redirect to : ' + response['href']);
                 document.location.href = response['href'].replace('/api', '');
@@ -77,14 +78,15 @@
                     document.getElementById(k).innerHTML += format(response);
                 }
             }
-
-            document.getElementById('content').innerHTML += '<div id="asyncCallsDone" style="display:none"></div>';
         }
 
         function format(obj) {
             let html = '';
 
-            if (Array.isArray(obj)) {
+            if (typeof (obj) == 'string') {
+                html += obj;
+            }
+            else if (Array.isArray(obj)) {
                 html += "<ul>"
                 for (let elt of obj)
                     html += "<li>" + format(elt) + '</li>';
@@ -153,15 +155,21 @@
         }
 
         function registerOnSubmit(idForm, form) {
-            document.getElementById(idForm).addEventListener('submit', async (evt) => {
+            console.log('[TEST] register on submit ' + idForm);
+            document.getElementById(idForm).addEventListener('submit', (evt) => {
+                //alert('a');
                 evt.preventDefault();
+
                 let keys = Object.keys(form.Command);
                 for (let k of keys) {
                     form.Command[k] = document.getElementById(k).value;
                 }
-                console.log('submit ' + idForm, form.Message);
+
+                console.log('submit ' + idForm);
                 pagecall(form);
+                return false;
             });
+
         }
 
     </script>

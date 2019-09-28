@@ -23,8 +23,18 @@ namespace CocoriCore
         {
             JObject jObject = JObject.Load(reader);
             var call = jObject.ToObject<Call>();
-            var newObj = jObject.ToObject(call._Type);
-            return newObj;
+            if (call._Type.IsAssignableTo(typeof(IAsyncCall)))
+            {
+                var helper = jObject.ToObject<AsyncCallDeserializationHelper>();
+                var asyncCall = (IAsyncCall)jObject.ToObject(helper._Type);
+                asyncCall.SetPageQuery(jObject["PageQuery"].ToObject(helper._PageQueryType));
+                return asyncCall;
+            }
+            else
+            {
+                var newObj = jObject.ToObject(call._Type);
+                return newObj;
+            }
         }
 
 

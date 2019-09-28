@@ -81,53 +81,47 @@ namespace CocoriCore
 
         protected PageModuleOn<T> On<T>() where T : IPageQuery
         {
-
-            var mapping2 = new PageMapping2();
-            var mapping3 = new PageMapping3();
-            Mappings2.Add(mapping2);
-            Mappings3.Add(mapping3);
-            return new PageModuleOn<T>(mapping2, mapping3);
+            return new PageModuleOn<T>(this);
         }
     }
 
     public class PageModuleOn<TPageQuery>
     {
-        private readonly PageMapping2 mapping2;
-        private readonly PageMapping3 mapping3;
+        private readonly PageModule module;
 
-        public PageModuleOn(PageMapping2 mapping2, PageMapping3 mapping3)
+        public PageModuleOn(PageModule module)
         {
-            this.mapping2 = mapping2;
-            this.mapping3 = mapping3;
+            this.module = module;
         }
 
         public PageModuleProvide<TPageQuery, TQuery> ProvideQuery<TQuery>(Action<TPageQuery, TQuery> action) where TQuery : new()
         {
-
-            this.mapping2.Init<TPageQuery, TQuery>(pageQuery =>
+            var mapping2 = new PageMapping2();
+            mapping2.Init<TPageQuery, TQuery>(pageQuery =>
             {
                 var query = new TQuery();
                 action(pageQuery, query);
                 return query;
             });
-            return new PageModuleProvide<TPageQuery, TQuery>(this, mapping3);
+            module.Mappings2.Add(mapping2);
+            return new PageModuleProvide<TPageQuery, TQuery>(this, module);
         }
     }
 
     public class PageModuleProvide<TPageQuery, TQuery>
     {
         private readonly PageModuleOn<TPageQuery> on;
-        private readonly PageMapping3 mapping3;
+        private readonly PageModule module;
 
-        public PageModuleProvide(PageModuleOn<TPageQuery> on, PageMapping3 mapping3)
+        public PageModuleProvide(PageModuleOn<TPageQuery> on, PageModule module)
         {
             this.on = on;
-            this.mapping3 = mapping3;
+            this.module = module;
         }
 
         public PageModuleWithResponse<TPageQuery, TQuery, TResponse> WithResponse<TResponse>() //where TQuery : IMessage<TResponse>
         {
-            return new PageModuleWithResponse<TPageQuery, TQuery, TResponse>(on, mapping3);
+            return new PageModuleWithResponse<TPageQuery, TQuery, TResponse>(on, module);
         }
 
 
@@ -136,29 +130,33 @@ namespace CocoriCore
     public class PageModuleWithResponse<TPageQuery, TQuery, TResponse> // where TQuery : IMessage<TResponse>
     {
         private PageModuleOn<TPageQuery> on;
-        private PageMapping3 mapping3;
+        private readonly PageModule module;
 
-        public PageModuleWithResponse(PageModuleOn<TPageQuery> on, PageMapping3 mapping3)
+        public PageModuleWithResponse(PageModuleOn<TPageQuery> on, PageModule module)
         {
             this.on = on;
-            this.mapping3 = mapping3;
+            this.module = module;
         }
 
         public PageModuleOn<TPageQuery> ToModel<TModel>(Action<TQuery, TResponse, TModel> action)
             where TModel : new()
         {
+            var mapping3 = new PageMapping3();
             mapping3.Init<TQuery, TResponse, TModel>((q, r) =>
             {
                 var model = new TModel();
                 action(q, r, model);
                 return model;
             });
+            module.Mappings3.Add(mapping3);
             return on;
         }
 
         public PageModuleOn<TPageQuery> ToModel<TModel>(Func<TQuery, TResponse, TModel> func)
         {
+            var mapping3 = new PageMapping3();
             mapping3.Init<TQuery, TResponse, TModel>(func);
+            module.Mappings3.Add(mapping3);
             return on;
         }
 
@@ -179,7 +177,9 @@ namespace CocoriCore
 
         public PageModuleOn<TPageQuery> AsModel()
         {
+            var mapping3 = new PageMapping3();
             mapping3.Init<TQuery, TResponse, TResponse>((q, r) => r);
+            module.Mappings3.Add(mapping3);
             return on;
         }
     }

@@ -19,7 +19,8 @@ namespace CocoriCore.PageLogs
         }
         public override async Task<string[]> ExecuteAsync(PageListQuery message)
         {
-            return await repository.Query<TestPage>().Select(x => x.PageName).Distinct().ToArrayAsync();
+            return (await repository.Query<TestPage>().ToArrayAsync())
+                .Select(x => x.PageName).Distinct().ToArray();
         }
     }
 }
