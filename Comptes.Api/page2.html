@@ -24,7 +24,7 @@
 
         async function init() {
             let myHeaders = new Headers();
-            myHeaders.append('Content-Type', 'application/json');
+            //myHeaders.append('Content-Type', 'application/json');
             let pageGet = '/api' + document.location.pathname + document.location.search;//document.location.href.replace('/pages', '/api');
             let response = await fetch(pageGet,
                 {
@@ -54,6 +54,8 @@
                     body: JSON.stringify(callObj)
                 });
 
+            //let contentType = response.headers.get('Content-Type');
+            //console.log('contentType ' + contentType)
             return await response.json();
         }
 
@@ -80,11 +82,15 @@
             }
         }
 
+
         function format(obj) {
             let html = '';
 
             if (typeof (obj) == 'string') {
                 html += obj;
+            }
+            else if (obj["IsSvg"]) {
+                html += obj["Svg"];
             }
             else if (Array.isArray(obj)) {
                 html += "<ul>"
@@ -98,6 +104,8 @@
                 for (let k of keys) {
                     let x = obj[k];
                     if (x == null) { }
+                    else if (x["IsSvg"])
+                        html += li(k + " : " + x["Svg"] + '<br/>');
                     else if (x["IsAsyncCall"])
                         html += `<li id="${k}">${k} : <br/></li>`;
                     else if (x["IsCall"]) { }

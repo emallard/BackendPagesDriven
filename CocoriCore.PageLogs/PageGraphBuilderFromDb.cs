@@ -36,11 +36,13 @@ namespace CocoriCore.PageLogs
 
         private async Task<List<PageNode>> GetPageNodesAsync()
         {
-            var pageNames = await repository
+            var pageNames = (await repository
                                     .Query<TestPage>()
                                     .Select(x => x.PageName)
+                                    .ToArrayAsync())
                                     .Distinct()
-                                    .ToArrayAsync();
+                                    .ToArray();
+
             return pageNames.Select(x => new PageNode()
             {
                 ParameterizedUrl = x,
@@ -52,7 +54,11 @@ namespace CocoriCore.PageLogs
         private async Task<List<PageEdge>> GetPageEdgesAsync(List<PageNode> nodes)
         {
             var edges = new List<PageEdge>();
-            var testNames = await repository.Query<Test>().Select(x => x.TestName).Distinct().ToArrayAsync();
+            var testNames = (await repository.Query<Test>()
+                                             .Select(x => x.TestName)
+                                             .ToArrayAsync())
+                                             .Distinct()
+                                             .ToArray();
             foreach (var t in testNames)
                 await AddPageEdgesAsync(t, nodes, edges);
             return edges;
@@ -80,6 +86,7 @@ namespace CocoriCore.PageLogs
                         IsLink = x.IsLink,
                         IsForm = x.IsForm
                     };
+                    edges.Add(edge);
                 }
             }
         }

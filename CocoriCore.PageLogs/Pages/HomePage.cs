@@ -12,14 +12,17 @@ namespace CocoriCore.PageLogs
         public Form<RunTestCommand, HomePageQuery> RunTests;
         public AsyncCall<PageListQuery, PageListPageItem[]> PageNames;
         public AsyncCall<EntityListQuery, EntityListPageItem[]> EntityNames;
-
+        public PageGraphPageQuery ViewPageGraph;
     }
 
     public class HomePageModule : PageModule
     {
         public HomePageModule()
         {
-            HandlePage<HomePageQuery, HomePage>((p, q) => { })
+            HandlePage<HomePageQuery, HomePage>((q, p) =>
+            {
+                p.ViewPageGraph = new PageGraphPageQuery();
+            })
 
                 .ForAsyncCall(p => p.PageNames)
                 .MapResponse<string[]>()

@@ -14,13 +14,13 @@ namespace CocoriCore.PageLogs
     {
         public EntityPageModule()
         {
-            HandlePage<EntityPageQuery, EntityPage>((q, p) => { p.EntityReport.Query.EntityName = q.EntityName; })
+            HandlePage<EntityPageQuery, EntityPage>((q, p) =>
+            {
+                p.EntityReport.Query.EntityName = q.EntityName;
+            })
                 .ForAsyncCall(p => p.EntityReport)
                 .MapResponse<EntityReport>()
                 .ToSelf();
-
-
-
         }
 
     }
