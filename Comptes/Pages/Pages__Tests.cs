@@ -48,8 +48,8 @@ namespace Comptes
                 .Assert(p => p.Poste.Source.Result.Should().ContainSingle(x => x.Nom == "Voiture"))
 
                 .Fill(p => p.Poste.Selected, p => p.Poste.Source.Result.First())
-                .Fill(p => p.Creer.Command.Object.Description, "Plein d'essence")
-                .Fill(p => p.Creer.Command.Object.Montant, 30)
+                .Fill(p => p.Creer.Command.Description, "Plein d'essence")
+                .Fill(p => p.Creer.Command.Montant, 30)
                 .Submit(p => p.Creer)
                 /*
                 .ThenFollow(r => r)

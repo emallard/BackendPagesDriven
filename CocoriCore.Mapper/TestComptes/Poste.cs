@@ -7,10 +7,10 @@ namespace CocoriCore.Mapper.Comptes
         Guid IEntity.Id
         {
             get => Id.Id;
-            set { Id = new TId<Poste>() { Id = value }; }
+            set { Id = new ID<Poste>() { Id = value }; }
         }
-        public TId<Poste> Id { get; set; }
-        public TId<User> IdUtilisateur;
+        public ID<Poste> Id { get; set; }
+        public ID<User> IdUtilisateur;
         public string Nom;
     }
 }

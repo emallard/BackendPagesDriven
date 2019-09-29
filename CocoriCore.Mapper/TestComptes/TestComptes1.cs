@@ -33,7 +33,7 @@ namespace CocoriCore.Mapper.Comptes
             {
                 Object = new PosteUpdate()
                 {
-                    Id = new TId<Poste>() { Id = id },
+                    Id = new ID<Poste>() { Id = id },
                     Nom = "Bijoux"
                 }
             });

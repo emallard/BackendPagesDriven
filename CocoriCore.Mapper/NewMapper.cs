@@ -39,7 +39,7 @@ namespace CocoriCore
             });
         }
 
-        public void AddUpdate<T, U>(Func<T, TId<U>> idFunc, Action<T, U> action) where T : IUpdate<U>
+        public void AddUpdate<T, U>(Func<T, ID<U>> idFunc, Action<T, U> action) where T : IUpdate<U>
         {
             UpdateMappings.Add(new NewMapperUpdateMapping()
             {
@@ -122,7 +122,7 @@ namespace CocoriCore
             return view;
         }
 
-        public void AddJoin<T, U, V>(Func<T, TId<U>> idU, Action<T, U> actionU, Func<T, TId<V>> idV, Action<T, V> actionV) where T : IJoin<U, V>
+        public void AddJoin<T, U, V>(Func<T, ID<U>> idU, Action<T, U> actionU, Func<T, ID<V>> idV, Action<T, V> actionV) where T : IJoin<U, V>
         {
             throw new NotImplementedException();
         }

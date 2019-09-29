@@ -109,8 +109,12 @@
                         html += li(k + " : <br/>" + format(x));
                     else if (typeof (x) == 'object')
                         html += li(k + ' : <br/>' + format(x));
-                    else
-                        html += li(k + " : " + x + '<br/>');
+                    else {
+                        let xstr = "" + x;
+                        xstr = xstr.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;')
+                        html += li(k + " : " + xstr + '<br/>');
+                    }
+
                 }
                 html += "</ul>"
             }

@@ -9,9 +9,10 @@ namespace CocoriCore.PageLogs
 
     public class HomePage : PageBase<HomePageQuery>
     {
-        //public AsyncCall<string> PageGraph;
-        public AsyncCall<PageListQuery, PageListPageItem[]> PageNames;
         public Form<RunTestCommand, HomePageQuery> RunTests;
+        public AsyncCall<PageListQuery, PageListPageItem[]> PageNames;
+        public AsyncCall<EntityListQuery, EntityListPageItem[]> EntityNames;
+
     }
 
     public class HomePageModule : PageModule
@@ -19,6 +20,7 @@ namespace CocoriCore.PageLogs
         public HomePageModule()
         {
             HandlePage<HomePageQuery, HomePage>((p, q) => { })
+
                 .ForAsyncCall(p => p.PageNames)
                 .MapResponse<string[]>()
                 .ToModel<PageListPageItem[]>((q, r) =>
@@ -26,6 +28,16 @@ namespace CocoriCore.PageLogs
                     {
                         PageName = x,
                         Link = new PagePageQuery() { PageName = x }
+                    }).ToArray()
+                )
+
+                .ForAsyncCall(p => p.EntityNames)
+                .MapResponse<string[]>()
+                .ToModel<EntityListPageItem[]>((q, r) =>
+                    r.Select(x => new EntityListPageItem()
+                    {
+                        EntityName = x,
+                        Link = new EntityPageQuery() { EntityName = x }
                     }).ToArray()
                 )
 

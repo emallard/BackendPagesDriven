@@ -29,11 +29,11 @@ namespace Comptes
     public class PageNouvelleDepense : PageBase<PageNouvelleDepenseQuery>
     {
         public Select<ListQuery<PosteView>, PosteView> Poste;
-        public Form<CreateCommand<DepenseCreate>, PageListeDepensesQuery> Creer;
+        public Form<DepenseCreateCommand, PageListeDepensesQuery> Creer;
 
         public PageNouvelleDepense()
         {
-            Bind(this, x => x.Poste.Selected.Id, x => x.Creer.Command.Object.IdPoste);
+            Bind(this, x => x.Poste.Selected.Id, x => x.Creer.Command.IdPoste);
         }
     }
 
@@ -43,7 +43,7 @@ namespace Comptes
         {
             HandlePage<PageNouvelleDepenseQuery, PageNouvelleDepense>()
                 .ForForm(p => p.Creer)
-                .MapResponse<Guid>()
+                .MapResponse<ID<Depense>>()
                 .ToModel<PageListeDepensesQuery>((c, r, m) => { })
 
                 .ForAsyncCall(p => p.Poste.Source)

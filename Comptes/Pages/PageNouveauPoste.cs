@@ -13,11 +13,11 @@ namespace Comptes
     public class PageNouveauPoste : PageBase<PageNouveauPosteQuery>
     {
         public AsyncCall<ByIdQuery<PosteCreateDefault>, PosteCreateDefault> Modele;
-        public Form<CreateCommand<PosteCreate>, PageListePostesQuery> Creer;
+        public Form<PosteCreateCommand, PageListePostesQuery> Creer;
 
         public PageNouveauPoste()
         {
-            Bind(this, x => x.Modele.Result.Nom, x => x.Creer.Command.Object.Nom);
+            Bind(this, x => x.Modele.Result.Nom, x => x.Creer.Command.Nom);
         }
     }
 
@@ -31,7 +31,7 @@ namespace Comptes
                 .ToSelf()
 
                 .ForForm(p => p.Creer)
-                .MapResponse<Guid>()
+                .MapResponse<ID<Poste>>()
                 .ToModel<PageListePostesQuery>((q, r, m) => { });
 
         }

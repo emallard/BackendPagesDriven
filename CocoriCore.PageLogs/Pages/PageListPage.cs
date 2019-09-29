@@ -24,15 +24,6 @@ namespace CocoriCore.PageLogs
         {
             HandlePage<PageListPageQuery, PageListPage>()
                 .ForAsyncCall(p => p.PageGraph);
-            /*
-            .MapResponse<string[]>()
-            .ToModel<PageListPageItem[]>((q, r) =>
-                r.Select(x => new PageListPageItem()
-                {
-                    PageName = x,
-                    Link = new PagePageQuery() { PageName = x }
-                }).ToArray()
-            );*/
         }
 
     }

@@ -17,6 +17,7 @@ namespace CocoriCore.PageLogs
             builder.Get<HomePageQuery>().SetPath("api/pagelogs");
             builder.Get<PageListPageQuery>().SetPath("api/pagelogs/pages");
             builder.Get<PagePageQuery>().SetPath(x => $"api/pagelogs/page/{x.PageName}");
+            builder.Get<EntityPageQuery>().SetPath(x => $"api/pagelogs/entity/{x.EntityName}");
         }
     }
 }

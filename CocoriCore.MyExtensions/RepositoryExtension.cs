@@ -4,7 +4,7 @@ namespace CocoriCore
 {
     public static class RepositoryExtension
     {
-        public static async Task<T> LoadAsync<T>(this IRepository repository, TId<T> id) where T : class, IEntity
+        public static async Task<T> LoadAsync<T>(this IRepository repository, ID<T> id) where T : class, IEntity
         {
             return await repository.LoadAsync<T>(id.Id);
         }

@@ -12,27 +12,10 @@ namespace Comptes
         {
             mapper.AddView<PosteCreateDefault>(x => x.Nom = "Voiture");
 
-            mapper.AddCreate<PosteCreate, Poste>((x, y) =>
-            {
-                y.Nom = x.Nom;
-            });
-
-            mapper.AddUpdate<PosteUpdate, Poste>(x => x.Id, (x, y) =>
-            {
-                y.Nom = x.Nom;
-            });
-
             mapper.AddView<Poste, PosteView>((x, y) =>
             {
                 y.Id = x.Id;
                 y.Nom = x.Nom;
-            });
-
-            mapper.AddCreate<DepenseCreate, Depense>((x, y) =>
-            {
-                y.Description = x.Description;
-                y.Montant = x.Montant;
-                y.IdPoste = x.IdPoste;
             });
 
             /*
