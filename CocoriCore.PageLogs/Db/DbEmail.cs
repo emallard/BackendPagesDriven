@@ -20,7 +20,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
-                EmailName = l.MailMessage.Body.GetType().Name
+                EmailName = l.MailMessage.Body.GetType().FullName
             });
         }
 
@@ -33,7 +33,7 @@ namespace CocoriCore.PageLogs
                 UserName = context.UserName,
                 PageName = context.PageName,
                 MessageName = context.MessageName,
-                EmailName = l.MailMessage.Body.GetType().Name
+                EmailName = l.MailMessage.Body.GetType().FullName
             });
         }
     }

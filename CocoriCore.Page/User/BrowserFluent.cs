@@ -118,12 +118,14 @@ namespace CocoriCore.Page
 
         public BrowserFluent<TPage> Assert(Action<TPage> action)
         {
+            this.logger.Log(new LogAssert());
             action(Page);
             return this;
         }
 
         public BrowserFluent<TPage> Assert<TMember>(Func<TPage, TMember> memberFunc, params Action<TMember>[] actions)
         {
+            this.logger.Log(new LogAssert());
             var member = memberFunc(Page);
             foreach (var a in actions)
                 a(member);

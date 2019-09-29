@@ -26,9 +26,9 @@ namespace CocoriCore.PageLogs
     public class RunTestHandler : MessageHandler<RunTestCommand, RunTestResponse>
     {
         private readonly PageLogsConfiguration configuration;
-        private readonly DbBuilder databaseBuilder;
+        private readonly Db databaseBuilder;
 
-        public RunTestHandler(PageLogsConfiguration configuration, DbBuilder databaseBuilder)
+        public RunTestHandler(PageLogsConfiguration configuration, Db databaseBuilder)
         {
             this.configuration = configuration;
             this.databaseBuilder = databaseBuilder;

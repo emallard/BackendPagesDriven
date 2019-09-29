@@ -1,26 +1,26 @@
 namespace CocoriCore.PageLogs
 {
-    public class TestsPageQuery : IPageQuery<TestsPage>
+    public class TestListPageQuery : IPageQuery<TestListPage>
     {
 
     }
 
-    public class TestsPage : PageBase<TestsPageQuery>
+    public class TestListPage : PageBase<TestListPageQuery>
     {
-        public AsyncCall<PageGraphQuery, SvgResponse> PageGraph;
+        public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
     }
 
-    public class TestsPageModule : PageModule
+    public class TestListPageItem
     {
-        public TestsPageModule()
+        public TestPageQuery Link;
+        public string TestName;
+    }
+
+    public class TestListPageModule : PageModule
+    {
+        public TestListPageModule()
         {
-            /*
-            On<TestsPageQuery>()
-                .ProvideQuery<PageGraphQuery>((p, q) => { })
-                .WithResponse<SvgResponse>()
-                .ToModel<SvgResponse>((q, r, m) => { });*/
-
-            HandlePage<TestsPageQuery, TestsPage>();
+            HandlePage<TestListPageQuery, TestListPage>();
         }
     }
 }

@@ -27,7 +27,7 @@ namespace CocoriCore
             { typeof(void), "void" }
         };
 
-        public static string GetFriendlyName(this Type type)
+        public static string GetFriendlyFullName(this Type type)
         {
             string friendlyName;
             if (_typeToFriendlyName.TryGetValue(type, out friendlyName))
@@ -35,7 +35,7 @@ namespace CocoriCore
                 return friendlyName;
             }
 
-            friendlyName = type.Name;
+            friendlyName = type.FullName;
             if (type.IsGenericType)
             {
                 int backtick = friendlyName.IndexOf('`');
@@ -47,7 +47,7 @@ namespace CocoriCore
                 Type[] typeParameters = type.GetGenericArguments();
                 for (int i = 0; i < typeParameters.Length; i++)
                 {
-                    string typeParamName = typeParameters[i].GetFriendlyName();
+                    string typeParamName = typeParameters[i].GetFriendlyFullName();
                     friendlyName += (i == 0 ? typeParamName : ", " + typeParamName);
                 }
                 friendlyName += ">";
@@ -55,7 +55,7 @@ namespace CocoriCore
 
             if (type.IsArray)
             {
-                return type.GetElementType().GetFriendlyName() + "[]";
+                return type.GetElementType().GetFriendlyFullName() + "[]";
             }
 
             return friendlyName;

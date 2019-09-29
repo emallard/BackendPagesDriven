@@ -6,7 +6,7 @@ using CocoriCore.Page;
 namespace CocoriCore.PageLogs
 {
 
-    public partial class DbBuilder
+    public partial class Db
     {
         private readonly IRepository repository;
         private readonly DbPage dbPage;
@@ -14,7 +14,7 @@ namespace CocoriCore.PageLogs
         private readonly DbEntity dbEntity;
         private readonly DbMessage dbMessage;
 
-        public DbBuilder(
+        public Db(
             IRepository repository,
             DbPage dbPage,
             DbEmail dbEmail,
@@ -60,6 +60,8 @@ namespace CocoriCore.PageLogs
 
         public async Task AddLog(UserLog o, DbInsertContext context)
         {
+            if (o is LogAssert logAssert)
+                await dbPage.Insert(context, logAssert);
             if (o is LogAsyncCall logAsyncCall)
                 await dbPage.Insert(context, logAsyncCall);
             if (o is LogDisplay logDisplay)

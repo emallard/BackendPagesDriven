@@ -7,5 +7,6 @@ namespace CocoriCore.PageLogs
         public string TestName;
         public Type TestClass;
         public string TestMethod;
+        public object[] Logs;
     }
 }

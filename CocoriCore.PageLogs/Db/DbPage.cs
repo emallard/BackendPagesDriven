@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using CocoriCore.Page;
 
@@ -13,14 +14,17 @@ namespace CocoriCore.PageLogs
         }
         public async Task Insert(DbInsertContext context, LogDisplay l)
         {
-            await repository.InsertAsync(new TestPage()
+            var page = new TestPage()
             {
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
-                PageName = l.PageQuery.GetType().Name
-            });
-            context.PageName = l.PageQuery.GetType().Name;
+                PageName = l.PageQuery.GetType().FullName
+            };
+
+            await repository.InsertAsync(page);
+            context.PageName = page.PageName;
+            context.Page = page;
             context.PageMemberName = null;
             context.MessageName = null;
         }
@@ -33,22 +37,26 @@ namespace CocoriCore.PageLogs
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
                 PageName = context.PageName,
-                ToPageName = l.PageQuery.GetType().Name,
+                ToPageName = l.PageQuery.GetType().FullName,
                 MemberName = l.MemberName,
                 IsForm = false,
                 IsLink = true
             });
             context.IndexInTest++;
 
-            await repository.InsertAsync(new TestPage()
+            var page = new TestPage()
             {
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
-                PageName = l.PageQuery.GetType().Name
-            });
+                PageName = l.PageQuery.GetType().FullName
+            };
 
-            context.PageName = l.PageQuery.GetType().Name;
+
+            await repository.InsertAsync(page);
+
+            context.PageName = page.PageName;
+            context.Page = page;
             context.PageMemberName = null;
             context.MessageName = null;
         }
@@ -61,21 +69,24 @@ namespace CocoriCore.PageLogs
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
                 PageName = context.PageName,
-                ToPageName = l.PageQuery.GetType().Name,
+                ToPageName = l.PageQuery.GetType().FullName,
                 IsForm = true,
                 IsLink = false,
                 MemberName = context.PageMemberName
             });
             context.IndexInTest++;
 
-            await repository.InsertAsync(new TestPage()
+            var page = new TestPage()
             {
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
-                PageName = l.PageQuery.GetType().Name,
-            });
-            context.PageName = l.PageQuery.GetType().Name;
+                PageName = l.PageQuery.GetType().FullName,
+            };
+
+            await repository.InsertAsync(page);
+            context.PageName = page.PageName;
+            context.Page = page;
             context.PageMemberName = null;
             context.MessageName = null;
         }
@@ -90,6 +101,13 @@ namespace CocoriCore.PageLogs
         {
             await Task.CompletedTask;
             context.PageMemberName = l.MemberName;
+        }
+
+        public async Task Insert(DbInsertContext context, LogAssert l)
+        {
+            var page = context.Page;
+            page.HasAssert = true;
+            await repository.UpdateAsync(page);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace CocoriCore.PageLogs
         public int IndexInTest;
         public string UserName;
         public string PageName;
+        public TestPage Page;
         public string PageMemberName;
         public string MessageName;
     }

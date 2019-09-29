@@ -10,8 +10,9 @@ namespace CocoriCore.PageLogs
     public class HomePage : PageBase<HomePageQuery>
     {
         public Form<RunTestCommand, HomePageQuery> RunTests;
-        public AsyncCall<PageListQuery, PageListPageItem[]> PageNames;
-        public AsyncCall<EntityListQuery, EntityListPageItem[]> EntityNames;
+        public AsyncCall<PageListQuery, PageListPageItem[]> Pages;
+        public AsyncCall<EntityListQuery, EntityListPageItem[]> Entities;
+        public AsyncCall<TestListQuery, TestListPageItem[]> Tests;
         public PageGraphPageQuery ViewPageGraph;
     }
 
@@ -24,7 +25,7 @@ namespace CocoriCore.PageLogs
                 p.ViewPageGraph = new PageGraphPageQuery();
             })
 
-                .ForAsyncCall(p => p.PageNames)
+                .ForAsyncCall(p => p.Pages)
                 .MapResponse<string[]>()
                 .ToModel<PageListPageItem[]>((q, r) =>
                     r.Select(x => new PageListPageItem()
@@ -34,13 +35,23 @@ namespace CocoriCore.PageLogs
                     }).ToArray()
                 )
 
-                .ForAsyncCall(p => p.EntityNames)
+                .ForAsyncCall(p => p.Entities)
                 .MapResponse<string[]>()
                 .ToModel<EntityListPageItem[]>((q, r) =>
                     r.Select(x => new EntityListPageItem()
                     {
                         EntityName = x,
                         Link = new EntityPageQuery() { EntityName = x }
+                    }).ToArray()
+                )
+
+                .ForAsyncCall(p => p.Tests)
+                .MapResponse<string[]>()
+                .ToModel<TestListPageItem[]>((q, r) =>
+                    r.Select(x => new TestListPageItem()
+                    {
+                        TestName = x,
+                        Link = new TestPageQuery() { TestName = x }
                     }).ToArray()
                 )
 
