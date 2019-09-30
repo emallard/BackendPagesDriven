@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Ninject;
 using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.NamedScope;
@@ -49,6 +50,13 @@ namespace Comptes.Api
             var unitOfWorkFactory = kernel.Get<IUnitOfWorkFactory>();
             app.UseWebSockets();
 
+            var currentDir = Directory.GetCurrentDirectory();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(currentDir, "Comptes.Api/wwwroot")),
+                //RequestPath = ""
+            });
+
             app.Use(async (ctx, next) =>
             {
                 if (ctx.Request.Path.Value.StartsWith("/api"))
@@ -78,7 +86,7 @@ namespace Comptes.Api
                 else
                 {
                     ctx.Response.ContentType = "text/html";
-                    await ctx.Response.WriteAsync(File.ReadAllText("Comptes.Api/page2.html"));
+                    await ctx.Response.WriteAsync(File.ReadAllText("Comptes.Api/page3.html"));
                 }
 
                 //await next();

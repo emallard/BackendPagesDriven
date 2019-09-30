@@ -16,6 +16,7 @@ namespace CocoriCore
     public class PageBase<TPageQuery> : IPageBase
     {
         public TPageQuery PageQuery;
+        public Type PageType;
 
         public List<PageBinding> Bindings = new List<PageBinding>();
 

@@ -38,6 +38,11 @@
 
             let html = format(_page);
             document.getElementById('content').innerHTML = html;
+
+            let pageType = _page.PageType.substring(0, _page.PageType.indexOf(",")).replace(/[.]/g, '-');
+            pageTypeName = pageType.substring(pageType.lastIndexOf('-') + 1);
+            document.getElementById('content').classList.add(pageTypeName);
+            document.getElementById('content').classList.add(pageType);
             registerOnSubmits(_page);
             asyncCalls(_page);
         }
@@ -107,12 +112,12 @@
                     else if (x["IsSvg"])
                         html += li(k + " : " + x["Svg"] + '<br/>');
                     else if (x["IsAsyncCall"])
-                        html += `<li id="${k}">${k} : <br/></li>`;
+                        html += `<li class="${k}">${k} : <br/></li>`;
                     else if (x["IsCall"]) { }
                     else if (x["IsForm"])
                         html += li(formatForm(k, x));
                     else if (x["href"])
-                        html += li(`<a id="${k}" href="${x['href'].replace('/api', '')}"> ${k} </a><br/>`);
+                        html += li(`<a class="${k}" href="${x['href'].replace('/api', '')}"> ${k} </a><br/>`);
                     else if (Array.isArray(x))
                         html += li(k + " : <br/>" + format(x));
                     else if (typeof (x) == 'object')

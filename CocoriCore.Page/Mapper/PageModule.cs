@@ -29,6 +29,7 @@ namespace CocoriCore
                     if (action != null)
                         action(pageQuery, page);
                     page.PageQuery = pageQuery;
+                    page.PageType = page.GetType();
                     return page;
                 }
             });
