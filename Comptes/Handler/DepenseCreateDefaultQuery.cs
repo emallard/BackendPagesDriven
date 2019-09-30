@@ -12,8 +12,7 @@ namespace Comptes
 
     public class DepenseCreateDefaultValueResponse
     {
-        public ID<Poste> IdPoste;
-        public string NomPoste;
+        public PosteListResponseItem Poste;
     }
 
     public class DepenseCreateDefaultValueHandler : MessageHandler<DepenseCreateDefaultValueQuery, DepenseCreateDefaultValueResponse>
@@ -31,8 +30,11 @@ namespace Comptes
             if (poste != null)
                 return new DepenseCreateDefaultValueResponse()
                 {
-                    IdPoste = poste.Id,
-                    NomPoste = poste.Nom
+                    Poste = new PosteListResponseItem()
+                    {
+                        Id = poste.Id,
+                        Nom = poste.Nom
+                    }
                 };
             else
                 return new DepenseCreateDefaultValueResponse()

@@ -18,6 +18,7 @@ namespace Comptes
 
         public NouveauPostePage()
         {
+            //BindInit(this, x => x.DefaultValue.Result.Nom, x => x.Creer.Command.Nom);
             Bind(this, x => x.DefaultValue.Result.Nom, x => x.Creer.Command.Nom);
         }
     }

@@ -71,6 +71,7 @@ namespace Comptes.Api
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageConverter>());
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<CallConverter>());
                 serializer.Converters.Add(new StringEnumConverter());
+                serializer.Converters.Add(new IDConverter());
                 return serializer;
             }).InSingletonScope();
             this.Bind<IClock>().To<Clock>().InSingletonScope();

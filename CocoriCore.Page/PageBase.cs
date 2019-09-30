@@ -11,6 +11,7 @@ namespace CocoriCore
         void ApplyBindings();
 
         void AddBinding(string[] from, string[] to);
+        void AddInit(string[] from, string[] to);
     }
 
     public class PageBase<TPageQuery> : IPageBase
@@ -19,6 +20,7 @@ namespace CocoriCore
         public Type PageType;
 
         public List<PageBinding> Bindings = new List<PageBinding>();
+        public List<PageBinding> Inits = new List<PageBinding>();
 
         public void ApplyBindings()
         {
@@ -66,11 +68,24 @@ namespace CocoriCore
             });
         }
 
+        public void AddInit(string[] from, string[] to)
+        {
+            Inits.Add(new PageBinding()
+            {
+                From = from,
+                To = to
+            });
+        }
+
         public void Bind<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
         {
             page.AddBinding(GetMemberNames(from.Body), GetMemberNames(to.Body));
         }
 
+        public void Init<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        {
+            page.AddInit(GetMemberNames(from.Body), GetMemberNames(to.Body));
+        }
 
         private string[] GetMemberNames(Expression expr)
         {

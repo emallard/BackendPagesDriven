@@ -2,10 +2,9 @@
 
 <head>
     <meta charset="UTF8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/bootstrap.min.css">
     <script src="/render.js"></script>
-    <script src="/pages.js"></script>
+    <script src="/renderSpecific.js"></script>
 </head>
 
 <body>
@@ -42,12 +41,12 @@
             let pageType = _page.PageType.substring(0, _page.PageType.indexOf(",")).replace(/[.]/g, '-');
             pageTypeName = pageType.substring(pageType.lastIndexOf('-') + 1);
 
-            let html = render(_page, pageTypeName);
+            let html = `${pageTypeName}<br/>` + render(_page, pageTypeName);
             document.getElementById('content').innerHTML = html;
             document.getElementById('content').classList.add(pageTypeName);
             document.getElementById('content').classList.add(pageType);
 
-            //registerOnSubmits();
+            registerOnSubmits();
             callAsyncCalls();
         }
 
@@ -110,7 +109,7 @@
 
                 let keys = Object.keys(form.Command);
                 for (let k of keys) {
-                    form.Command[k] = document.getElementById(k).value;
+                    form.Command[k] = document.getElementById(idForm + "." + k).value;
                 }
 
                 console.log('submit ' + idForm);

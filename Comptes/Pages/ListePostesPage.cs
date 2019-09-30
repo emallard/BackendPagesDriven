@@ -29,7 +29,7 @@ namespace Comptes
                 .MapResponse<PosteListResponseItem[]>()
                 .ToModel<ListePostePageItem[]>((q, r) => r.Select(x => new ListePostePageItem()
                 {
-                    Lien = new PostePageQuery { Id = x.Id.Id },
+                    Lien = new PostePageQuery { Id = x.Id },
                     Poste = x
                 }).ToArray());
         }

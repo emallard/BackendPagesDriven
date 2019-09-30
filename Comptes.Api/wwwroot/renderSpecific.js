@@ -9,3 +9,8 @@ addRenderer(
 addRenderer(
     (x, h) => h == "HomePage.Tests.[]",
     (x, h) => `<a href="${href(x.Link)}">${x.TestName}</a>`);
+
+
+addRenderer(
+    (x, h) => h == "ListePostesPage.Postes.[]",
+    (x, h) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);

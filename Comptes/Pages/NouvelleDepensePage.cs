@@ -12,11 +12,13 @@ namespace Comptes
 
     public class NouvelleDepensePage : PageBase<NouvelleDepensePageQuery>
     {
+        public AsyncCall<DepenseCreateDefaultValueQuery, DepenseCreateDefaultValueResponse> DefaultValue;
         public Select<PosteListQuery, PosteListResponseItem> Poste;
         public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
 
         public NouvelleDepensePage()
         {
+            Init(this, x => x.DefaultValue.Result.Poste, x => x.Poste.Selected);
             Bind(this, x => x.Poste.Selected.Id, x => x.Creer.Command.IdPoste);
         }
     }
@@ -35,7 +37,12 @@ namespace Comptes
 
                 .ForAsyncCall(p => p.Poste.Source)
                 .MapResponse<PosteListResponseItem[][]>()
+                .ToSelf()
+
+                .ForAsyncCall(p => p.DefaultValue)
+                .MapResponse<DepenseCreateDefaultValueResponse>()
                 .ToSelf();
+
         }
     }
 }

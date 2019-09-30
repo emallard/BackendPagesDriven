@@ -46,19 +46,19 @@ function field(h) {
 
 function renderForm(x, h) {
     return `<form class = "${h}">
-                ${renderInputs(x)}
+                ${renderInputs(x, h)}
                 <button  type="submit" class="btn btn-primary">${field(h)}</button>
             </form>`;
 }
 
-function renderInputs(form) {
+function renderInputs(form, h) {
     let html = '';
     let keys = Object.keys(form.Command);
     for (let k of keys) {
         //console.log('    input : ' + k);
         html += `<div class="form-group">
                     <label for="${k}">${k}</label>
-                    <input class="form-control" class="${k}"></input>
+                    <input class="form-control" id="${h}.${k}" class="${h}.${k}"></input>
                 </div>`;
     }
     return html;
