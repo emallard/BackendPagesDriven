@@ -14,18 +14,17 @@ namespace Comptes
             var user = CreateUser("moi");
 
             user
-                .Display(new PageAccueilQuery())
+                .Display(new AccueilPageQuery())
                 .Follow(p => p.ListePostes)
                 .Follow(p => p.NouveauPoste)
-                .Assert(p => p.Modele.Result.Nom.Should().Be("Voiture"))
+                .Assert(p => p.DefaultValue.Result.Nom.Should().Be("Voiture"))
 
-                .Fill(p => p.Modele.Result.Nom, "Alimentation")
+                .Fill(p => p.DefaultValue.Result.Nom, "Alimentation")
                 .Submit(p => p.Creer)
                 .ThenFollow(r => r)
                 .Assert(p => p.Postes.Result,
-                    x => x.Length.Should().Be(1),
-                    x => x[0].Poste.Nom.Should().Be("Alimentation")
-                );
+                        x => x.Length.Should().Be(1),
+                        x => x[0].Poste.Nom.Should().Be("Alimentation"));
         }
 
         [Fact]
@@ -34,14 +33,14 @@ namespace Comptes
             var user = CreateUser("moi");
 
             user
-                .Display(new PageAccueilQuery())
+                .Display(new AccueilPageQuery())
                 .Follow(p => p.ListePostes)
                 .Follow(p => p.NouveauPoste)
-                .Fill(p => p.Modele.Result.Nom, "Voiture")
+                .Fill(p => p.DefaultValue.Result.Nom, "Voiture")
                 .Submit(p => p.Creer)
                 .ThenFollow(r => r)
 
-                .Display(new PageAccueilQuery())
+                .Display(new AccueilPageQuery())
                 .Follow(p => p.ListeDepenses)
                 .Follow(p => p.NouvelleDepense)
 

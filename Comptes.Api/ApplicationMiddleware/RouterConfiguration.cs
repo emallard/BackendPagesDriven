@@ -17,15 +17,19 @@ namespace Comptes.Api
         {
             var builder = new RouterOptionsBuilder();
 
-            builder.Get<PageAccueilQuery>().SetPath("api");
+            builder.SetPatternForType("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", typeof(ID<Poste>));
+            builder.SetPatternForType("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", typeof(ID<Depense>));
+
+
+            builder.Get<AccueilPageQuery>().SetPath("api");
 
             builder.Get<PageListePostesQuery>().SetPath("api/postes");
-            builder.Get<PageNouveauPosteQuery>().SetPath("api/postes/creer");
-            builder.Get<PagePosteQuery>().SetPath(x => $"api/postes/{x.Id}");
+            builder.Get<NouveauPostePageQuery>().SetPath("api/postes/creer");
+            builder.Get<PostePageQuery>().SetPath(x => $"api/postes/{x.Id}");
 
-            builder.Get<PageListeDepensesQuery>().SetPath("api/depenses");
-            builder.Get<PageNouvelleDepenseQuery>().SetPath("api/depenses/creer");
-            builder.Get<PageDepenseQuery>().SetPath(x => $"api/depenses/{x.Id}");
+            builder.Get<ListeDepensesPageQuery>().SetPath("api/depenses");
+            builder.Get<NouvelleDepensePageQuery>().SetPath("api/depenses/creer");
+            builder.Get<DepensePageQuery>().SetPath(x => $"api/depenses/{x.Id}");
 
             builder.Post<Call>().SetPath("api/call").UseBody();
             builder.Get<HtmlMessage>().SetPath("api/page").UseQuery();
@@ -37,6 +41,7 @@ namespace Comptes.Api
 
             PageLogsRouterConfiguration.Load(builder);
 
+            var options = builder.Options;
             return builder.Options;
         }
     }

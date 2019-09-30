@@ -3,17 +3,17 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PagePosteQuery : IPageQuery<PagePoste>
+    public class PostePageQuery : IPageQuery<PostePage>
     {
         public Guid Id;
     }
 
-    public class PagePoste
+    public class PostePage
     {
 
     }
 
-    public class PagePosteModule
+    public class PostePageModule
     {
 
     }

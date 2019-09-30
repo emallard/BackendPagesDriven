@@ -70,23 +70,35 @@ namespace CocoriCore
             this.module = module;
         }
 
-        public PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel> ForAsyncCall<TQuery, TModel>(
+        public PageModuleProvideQuery<TPageQuery, TPage, TQuery> ForAsyncCall<TQuery, TModel>(
             Expression<Func<TPage, AsyncCall<TQuery, TModel>>> member)
             where TQuery : IMessage, new()
         {
-            return new PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel>(this, module);
+            return new PageModuleProvideQuery<TPageQuery, TPage, TQuery>(this, module);
+        }
+
+        public PageModuleProvideQuery<TPageQuery, TPage, TQuery> ForAsyncCall<TQuery, TModel>()
+            where TQuery : IMessage, new()
+        {
+            return new PageModuleProvideQuery<TPageQuery, TPage, TQuery>(this, module);
         }
 
 
-        public PageModuleProvideQuery<TPageQuery, TPage, TCommand, TModel> ForForm<TCommand, TModel>(
+        public PageModuleProvideQuery<TPageQuery, TPage, TCommand> ForForm<TCommand, TModel>(
             Expression<Func<TPage, Form<TCommand, TModel>>> member)
             where TCommand : IMessage, new()
         {
-            return new PageModuleProvideQuery<TPageQuery, TPage, TCommand, TModel>(this, module);
+            return new PageModuleProvideQuery<TPageQuery, TPage, TCommand>(this, module);
+        }
+
+        public PageModuleProvideQuery<TPageQuery, TPage, TCommand> ForForm<TCommand, TModel>()
+            where TCommand : IMessage, new()
+        {
+            return new PageModuleProvideQuery<TPageQuery, TPage, TCommand>(this, module);
         }
     }
 
-    public class PageModuleProvideQuery<TPageQuery, TPage, TQuery, TModel>
+    public class PageModuleProvideQuery<TPageQuery, TPage, TQuery>
     {
         private readonly PageModuleHandlePage<TPageQuery, TPage> on;
         private readonly PageModule module;
