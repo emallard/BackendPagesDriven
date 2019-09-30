@@ -6,13 +6,12 @@ function addRenderer(predicate, func) {
 }
 
 function render(x, h) {
+    //console.log("render " + h);
     guard++;
-    if (guard > 100) {
+    if (guard > 1000) {
         console.log("GUARD");
         return "";
     }
-
-    console.log("render " + h);
     let found = null;
     for (let renderer of renderers) {
         if (renderer.predicate(x, h))
@@ -22,7 +21,6 @@ function render(x, h) {
 }
 
 function renderArrayAsList(x, h) {
-    console.log('renderArrayAsList ', x);
     let html = `<ul>`;
     for (let elt of x)
         html += "<li>" + render(elt, h + '.[]') + '</li>';
@@ -66,6 +64,10 @@ function renderInputs(form) {
     return html;
 }
 
+function href(x) {
+    return x['href'].replace('/api', '');
+}
+
 addRenderer(
     (x, h) => typeof (x) == 'object',
     (x, h) => renderObjectAsList(x, h));
@@ -79,7 +81,7 @@ addRenderer(
     (x, h) => x["IsAsyncCall"],
     (x, h) => {
         addAsyncCall(x, h);
-        return `<div class="${h}"><br/></div>`;
+        return `<div class="${h}"></div>`;
     });
 addRenderer(
     (x, h) => x["IsForm"],
@@ -89,7 +91,7 @@ addRenderer(
     });
 addRenderer(
     (x, h) => x["href"],
-    (x, h) => `<a href="${x['href'].replace('/api', '')}"> ${field(h)} </a><br/>`);
+    (x, h) => `<a href="${href(x)}"> ${field(h)} </a><br/>`);
 addRenderer(
     (x, h) => x.IsSvg,
     (x, h) => `${field(h)} :<br/> ${x.Svg}`);
