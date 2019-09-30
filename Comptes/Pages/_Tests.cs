@@ -19,7 +19,7 @@ namespace Comptes
                 .Follow(p => p.NouveauPoste)
                 .Assert(p => p.DefaultValue.Result.Nom.Should().Be("Voiture"))
 
-                .Fill(p => p.DefaultValue.Result.Nom, "Alimentation")
+                .Fill(p => p.Creer.Command.Nom, "Alimentation")
                 .Submit(p => p.Creer)
                 .ThenFollow(r => r)
                 .Assert(p => p.Postes.Result,
@@ -36,7 +36,7 @@ namespace Comptes
                 .Display(new AccueilPageQuery())
                 .Follow(p => p.ListePostes)
                 .Follow(p => p.NouveauPoste)
-                .Fill(p => p.DefaultValue.Result.Nom, "Voiture")
+                .Fill(p => p.Creer.Command.Nom, "Voiture")
                 .Submit(p => p.Creer)
                 .ThenFollow(r => r)
 

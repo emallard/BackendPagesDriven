@@ -9,9 +9,12 @@ function render(x, h) {
     //console.log("render " + h);
     guard++;
     if (guard > 1000) {
-        console.log("GUARD");
+        console.log("GUARD TOO MANY CALLS : " + guard);
         return "";
     }
+
+    if (x == null)
+        return 'null';
     let found = null;
     for (let renderer of renderers) {
         if (renderer.predicate(x, h))

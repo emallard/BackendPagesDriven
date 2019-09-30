@@ -20,7 +20,7 @@ namespace Comptes
             await Task.CompletedTask;
             return new PosteCreateDefaultValueResponse()
             {
-                Nom = "Voitures"
+                Nom = "Voiture"
             };
         }
     }

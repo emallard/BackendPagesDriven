@@ -36,7 +36,7 @@ namespace Comptes
                 .ToModel<ListeDepensesPageQuery>((c, r, m) => { })
 
                 .ForAsyncCall(p => p.Poste.Source)
-                .MapResponse<PosteListResponseItem[][]>()
+                .MapResponse<PosteListResponseItem[]>()
                 .ToSelf()
 
                 .ForAsyncCall(p => p.DefaultValue)

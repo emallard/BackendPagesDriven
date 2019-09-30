@@ -12,13 +12,13 @@ namespace Comptes
 
     public class PosteUpdatePage : PageBase<PosteUpdatePageQuery>
     {
-        public AsyncCall<PosteCreateDefaultValueQuery, PosteCreateDefaultValueResponse> DefaultValue;
+        //public AsyncCall<PosteCreateDefaultValueQuery, PosteCreateDefaultValueResponse> DefaultValue;
 
-        public Form<PosteCreateCommand, PosteListPageQuery> Creer;
+        public Form<PosteUpdateCommand, PosteListPageQuery> Enregistrer;
 
         public PosteUpdatePage()
         {
-            Init(this, x => x.DefaultValue.Result.Nom, x => x.Creer.Command.Nom);
+            //Init(this, x => x.DefaultValue.Result.Nom, x => x.Enregistrer.Command.Nom);
         }
     }
 
@@ -27,12 +27,12 @@ namespace Comptes
         public PosteUpdatePageModule()
         {
             HandlePage<PosteUpdatePageQuery, PosteUpdatePage>()
-                .ForAsyncCall(p => p.DefaultValue)
-                .MapResponse<PosteCreateDefaultValueResponse>()
-                .ToSelf()
+                //.ForAsyncCall(p => p.DefaultValue)
+                //.MapResponse<PosteCreateDefaultValueResponse>()
+                //.ToSelf()
 
-                .ForForm(p => p.Creer)
-                .MapResponse<ID<Poste>>()
+                .ForForm(p => p.Enregistrer)
+                .MapResponse<Void>()
                 .ToModel<PosteListPageQuery>((q, r, m) => { });
 
         }
