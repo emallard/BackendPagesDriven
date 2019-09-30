@@ -48,6 +48,7 @@ namespace CocoriCore.PageLogs
         {
 
             var pageReport = new PageReport();
+            pageReport.PageName = pageName;
 
             var operationGroups = (await repository.Query<TestRepositoryOperation>()
                 .Where(x => x.PageName == pageName)

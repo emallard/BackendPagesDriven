@@ -3,123 +3,136 @@
 <head>
     <meta charset="UTF8">
     <link rel="stylesheet" href="/bootstrap.min.css">
-    <script src="/render.js"></script>
-    <script src="/renderSpecific.js"></script>
+    <link rel="stylesheet" href="/jquery.dataTables.min.css">
+
 </head>
 
 <body>
+
+    <script src="/jquery-3.3.1.js"></script>
+    <script src="/jquery.dataTables.min.js"></script>
+    <script src="/render.js"></script>
+    <script src="/renderSpecific.js"></script>
     <!--
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Navbar</a>
     </nav>
     -->
     <div class="container">
+        <div id='pagename'></div>
         <div id='content'>
 
         </div>
-    </div>
-
-    <script>
-        var _page = null;
 
 
-        async function init() {
-            let myHeaders = new Headers();
-            //myHeaders.append('Content-Type', 'application/json');
-            let pageGet = '/api' + document.location.pathname + document.location.search;//document.location.href.replace('/pages', '/api');
-            let response = await fetch(pageGet,
-                {
-                    headers: myHeaders,
-                    method: 'GET'
-                });
-
-            let txt = await response.text();
-            _page = JSON.parse(txt);
-            console.log(_page);
+        <script>
+            var _page = null;
 
 
-            let pageType = _page.PageType.substring(0, _page.PageType.indexOf(",")).replace(/[.]/g, '-');
-            pageTypeName = pageType.substring(pageType.lastIndexOf('-') + 1);
+            async function init() {
+                let myHeaders = new Headers();
+                //myHeaders.append('Content-Type', 'application/json');
+                let pageGet = '/api' + document.location.pathname + document.location.search;//document.location.href.replace('/pages', '/api');
+                let response = await fetch(pageGet,
+                    {
+                        headers: myHeaders,
+                        method: 'GET'
+                    });
 
-            let html = `${pageTypeName}<br/>` + render(_page, pageTypeName);
-            document.getElementById('content').innerHTML = html;
-            document.getElementById('content').classList.add(pageTypeName);
-            document.getElementById('content').classList.add(pageType);
+                let txt = await response.text();
+                _page = JSON.parse(txt);
+                console.log(_page);
 
-            registerOnSubmits();
-            callAsyncCalls();
-        }
 
-        init();
+                let pageType = _page.PageType.substring(0, _page.PageType.indexOf(",")).replace(/[.]/g, '-');
+                pageTypeName = pageType.substring(pageType.lastIndexOf('-') + 1);
 
-        async function call(callObj) {
-            let myHeaders = new Headers();
-            myHeaders.append('Content-Type', 'application/json');
-            let response = await fetch('/api/call',
-                {
-                    headers: myHeaders,
-                    method: 'POST',
-                    body: JSON.stringify(callObj)
-                });
+                document.getElementById('pagename').innerHTML = pageTypeName;
 
-            //let contentType = response.headers.get('Content-Type');
-            //console.log('contentType ' + contentType)
-            return await response.json();
-        }
+                renderTo(_page, pageTypeName, document.getElementById('content'));
 
-        async function formCall(callObj) {
-            let response = await call(callObj);
-            console.log(response);
+                document.getElementById('content').classList.add(pageTypeName);
+                document.getElementById('content').classList.add(pageType);
 
-            if (response['href'] != null) {
-                console.log('redirect to : ' + response['href']);
-                document.location.href = response['href'].replace('/api', '');
+                //registerOnSubmits();
+                //callAsyncCalls();
+                //callAfterRender();
             }
-        }
 
-        let asyncCalls = [];
-        function addAsyncCall(x, h) {
-            asyncCalls.push({ x: x, h: h });
-        }
+            init();
 
-        async function callAsyncCalls() {
-            for (let a of asyncCalls) {
-                let response = await call(a.x);
-                a.x.Result = response;
-                document.getElementsByClassName(a.h)[0].innerHTML += render(response, a.h);
+            async function call(callObj) {
+                let myHeaders = new Headers();
+                myHeaders.append('Content-Type', 'application/json');
+                let response = await fetch('/api/call',
+                    {
+                        headers: myHeaders,
+                        method: 'POST',
+                        body: JSON.stringify(callObj)
+                    });
+
+                //let contentType = response.headers.get('Content-Type');
+                //console.log('contentType ' + contentType)
+                return await response.json();
             }
-        }
 
-        let forms = [];
-        function addForm(x, h) {
-            forms.push({ x: x, h: h });
-        }
+            async function formCall(callObj) {
+                let response = await call(callObj);
+                console.log(response);
 
-        function registerOnSubmits() {
-            for (let f of forms) {
-                registerOnSubmit(f.x, f.h);
-            }
-        }
-
-        function registerOnSubmit(form, idForm) {
-            console.log('register on submit ' + idForm);
-            document.getElementsByClassName(idForm)[0].addEventListener('submit', (evt) => {
-                //alert('a');
-                evt.preventDefault();
-
-                let keys = Object.keys(form.Command);
-                for (let k of keys) {
-                    form.Command[k] = document.getElementById(idForm + "." + k).value;
+                if (response['href'] != null) {
+                    console.log('redirect to : ' + response['href']);
+                    document.location.href = response['href'].replace('/api', '');
                 }
+            }
 
-                console.log('submit ' + idForm);
-                formCall(form);
-                return false;
-            });
 
-        }
+            /*
+                    let asyncCalls = [];
+                    function addAsyncCall(x, h) {
+                        asyncCalls.push({ x: x, h: h });
+                    }
 
-    </script>
+                    async function callAsyncCalls() {
+                        for (let a of asyncCalls) {
+                            let response = await call(a.x);
+                            a.x.Result = response;
+                            renderTo(response, a.h, document.getElementById(a.h).innerHTML);
+                        }
+                    }
+            */
+
+            /*
+            let forms = [];
+            function addForm(x, h) {
+                forms.push({ x: x, h: h });
+            }
+
+            function registerOnSubmits() {
+                for (let f of forms) {
+                    registerOnSubmit(f.x, f.h);
+                }
+            }
+
+            function registerOnSubmit(form, idForm) {
+                console.log('register on submit ' + idForm);
+                document.getElementsByClassName(idForm)[0].addEventListener('submit', (evt) => {
+                    //alert('a');
+                    evt.preventDefault();
+
+                    let keys = Object.keys(form.Command);
+                    for (let k of keys) {
+                        form.Command[k] = document.getElementById(idForm + "." + k).value;
+                    }
+
+                    console.log('submit ' + idForm);
+                    formCall(form);
+                    return false;
+                });
+
+            }*/
+
+        </script>
 </body>
 
 </html>

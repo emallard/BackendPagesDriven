@@ -21,7 +21,7 @@ namespace CocoriCore.PageLogs
 
     public class EntityReportItem
     {
-        public LogRepoOperation OperationType;
+        public LogRepoOperation Operation;
         public string MessageName;
         public string PageName;
         public string[] TestNames;
@@ -54,7 +54,7 @@ namespace CocoriCore.PageLogs
                 operationGroups
                     .Select(x => new EntityReportItem()
                     {
-                        OperationType = x.Key.Item1,
+                        Operation = x.Key.Item1,
                         MessageName = x.Key.Item2,
                         PageName = x.Key.Item3,
                         TestNames = x.Select(t => t.TestName).Distinct().ToArray()

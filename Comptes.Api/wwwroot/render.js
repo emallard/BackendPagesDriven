@@ -5,8 +5,31 @@ function addRenderer(predicate, func) {
     renderers.push({ predicate: predicate, func: func })
 }
 
-function render(x, h) {
-    //console.log("render " + h);
+class Renderer {
+    constructor() {
+        this.afterRenders = [];
+    }
+
+    afterRender(f) {
+        this.afterRenders.push(f);
+    }
+
+    callAfterRender() {
+        for (let f of this.afterRenders) {
+            console.log('call after render');
+            f();
+        }
+    }
+}
+
+function renderTo(x, h, elt) {
+    let renderer = new Renderer();
+    elt.innerHTML = render(x, h, renderer);
+    setTimeout(() => renderer.callAfterRender(), 0);
+}
+
+function render(x, h, r) {
+    console.log("render " + h);
     guard++;
     if (guard > 1000) {
         console.log("GUARD TOO MANY CALLS : " + guard);
@@ -17,26 +40,36 @@ function render(x, h) {
         return 'null';
     let found = null;
     for (let renderer of renderers) {
-        if (renderer.predicate(x, h))
+        if (renderer.predicate(x, h, r))
             found = renderer;
     }
-    return found.func(x, h);
+    return found.func(x, h, r);
 }
 
-function renderArrayAsList(x, h) {
+function renderArrayAsList(x, h, r) {
     let html = `<ul>`;
     for (let elt of x)
-        html += "<li>" + render(elt, h + '.[]') + '</li>';
+        html += "<li>" + render(elt, h + '.[]', r) + '</li>';
     html += "</ul>"
     return html;
 }
 
+function renderArrayAsDatatable(x, h, r, options) {
+    r.afterRender(() => {
+        console.log('renderArrayAsDatatable : ' + document.getElementById(h), options);
+        $(document.getElementById(h)).dataTable(
+            options
+        )
+    });
+    return `<table id="${h}"></table>`
+}
 
-function renderObjectAsList(x, h) {
+
+function renderObjectAsList(x, h, r) {
     let html = `<ul>`;
     let keys = Object.keys(x);
     for (let k of keys)
-        html += `<li>${k} : ${render(x[k], h + '.' + k)}</li>`;
+        html += `<li>${k} : ${render(x[k], h + '.' + k, r)}</li>`;
     html += "</ul>"
     return html;
 }
@@ -47,10 +80,23 @@ function field(h) {
     return f;
 }
 
-function renderForm(x, h) {
-    return `<form class = "${h}">
-                ${renderInputs(x, h)}
-                <button  type="submit" class="btn btn-primary">${field(h)}</button>
+function renderForm(x, h, r) {
+    r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
+        evt.preventDefault();
+
+        let keys = Object.keys(x.Command);
+        for (let k of keys) {
+            x.Command[k] = document.getElementById(h + "." + k).value;
+        }
+
+        console.log('submit ' + h);
+        formCall(x);
+        return false;
+    }));
+
+    return `<form id="${h}">
+                ${renderInputs(x, h, r)}
+                <button type="submit" class="btn btn-primary">${field(h)}</button>
             </form>`;
 }
 
@@ -72,32 +118,35 @@ function href(x) {
 }
 
 addRenderer(
-    (x, h) => typeof (x) == 'object',
-    (x, h) => renderObjectAsList(x, h));
+    (x, h, r) => typeof (x) == 'object',
+    (x, h, r) => renderObjectAsList(x, h, r));
 addRenderer(
-    (x, h) => Array.isArray(x),
-    (x, h) => renderArrayAsList(x, h));
+    (x, h, r) => Array.isArray(x),
+    (x, h, r) => renderArrayAsList(x, h, r));
 addRenderer(
-    (x, h) => typeof (x) == 'string',
-    (x, h) => `${x}`);
+    (x, h, r) => typeof (x) == 'string',
+    (x, h, r) => `${x}`);
 addRenderer(
-    (x, h) => x["IsAsyncCall"],
-    (x, h) => {
-        addAsyncCall(x, h);
-        return `<div class="${h}"></div>`;
+    (x, h, r) => x["IsAsyncCall"],
+    (x, h, r) => {
+        r.afterRender(async () => {
+            let response = await call(x);
+            x.Result = response;
+            renderTo(response, h, document.getElementById(h));
+        });
+        return `<div id="${h}"></div>`;
     });
 addRenderer(
-    (x, h) => x["IsForm"],
-    (x, h) => {
-        addForm(x, h);
-        return renderForm(x, h)
+    (x, h, r) => x["IsForm"],
+    (x, h, r) => {
+        return renderForm(x, h, r)
     });
 addRenderer(
-    (x, h) => x["href"],
-    (x, h) => `<a href="${href(x)}"> ${field(h)} </a><br/>`);
+    (x, h, r) => x["href"],
+    (x, h, r) => `<a href="${href(x)}"> ${field(h)} </a><br/>`);
 addRenderer(
-    (x, h) => x.IsSvg,
-    (x, h) => `${field(h)} :<br/> ${x.Svg}`);
+    (x, h, r) => x.IsSvg,
+    (x, h, r) => `${field(h)} :<br/> ${x.Svg}`);
 
 
 
