@@ -9,7 +9,7 @@ namespace Comptes
 
     public class AccueilPage : PageBase<AccueilPageQuery>
     {
-        public PageListePostesQuery ListePostes;
+        public PosteListPageQuery ListePostes;
         public ListeDepensesPageQuery ListeDepenses;
     }
 

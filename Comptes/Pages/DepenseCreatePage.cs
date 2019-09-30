@@ -6,28 +6,28 @@ using CocoriCore;
 namespace Comptes
 {
 
-    public class NouvelleDepensePageQuery : IPageQuery<NouvelleDepensePage>
+    public class DepenseCreatePageQuery : IPageQuery<DepenseCreatePage>
     {
     }
 
-    public class NouvelleDepensePage : PageBase<NouvelleDepensePageQuery>
+    public class DepenseCreatePage : PageBase<DepenseCreatePageQuery>
     {
         public AsyncCall<DepenseCreateDefaultValueQuery, DepenseCreateDefaultValueResponse> DefaultValue;
         public Select<PosteListQuery, PosteListResponseItem> Poste;
         public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
 
-        public NouvelleDepensePage()
+        public DepenseCreatePage()
         {
             Init(this, x => x.DefaultValue.Result.Poste, x => x.Poste.Selected);
             Bind(this, x => x.Poste.Selected.Id, x => x.Creer.Command.IdPoste);
         }
     }
 
-    public class NouvelleDepensePageModule : PageModule
+    public class DepenseCreatePageModule : PageModule
     {
-        public NouvelleDepensePageModule()
+        public DepenseCreatePageModule()
         {
-            HandlePage<NouvelleDepensePageQuery, NouvelleDepensePage>((q, p) =>
+            HandlePage<DepenseCreatePageQuery, DepenseCreatePage>((q, p) =>
             {
                 p.Poste.Source.Query = new PosteListQuery();
             })

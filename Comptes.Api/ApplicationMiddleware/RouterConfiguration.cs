@@ -23,13 +23,13 @@ namespace Comptes.Api
 
             builder.Get<AccueilPageQuery>().SetPath("api");
 
-            builder.Get<PageListePostesQuery>().SetPath("api/postes");
-            builder.Get<NouveauPostePageQuery>().SetPath("api/postes/creer");
-            builder.Get<PostePageQuery>().SetPath(x => $"api/postes/{x.Id}");
+            builder.Get<PosteListPageQuery>().SetPath("api/postes");
+            builder.Get<PosteCreatePageQuery>().SetPath("api/postes/creer");
+            builder.Get<PosteViewPageQuery>().SetPath(x => $"api/postes/{x.Id}");
 
             builder.Get<ListeDepensesPageQuery>().SetPath("api/depenses");
-            builder.Get<NouvelleDepensePageQuery>().SetPath("api/depenses/creer");
-            builder.Get<DepensePageQuery>().SetPath(x => $"api/depenses/{x.Id}");
+            builder.Get<DepenseCreatePageQuery>().SetPath("api/depenses/creer");
+            builder.Get<DepenseViewPageQuery>().SetPath(x => $"api/depenses/{x.Id}");
 
             builder.Post<Call>().SetPath("api/call").UseBody();
             builder.Get<HtmlMessage>().SetPath("api/page").UseQuery();

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Comptes
 {
-    public class Pages__Tests : TestBase
+    public class Pages_Tests : TestBase
     {
         [Fact]
         public void CreerPoste()

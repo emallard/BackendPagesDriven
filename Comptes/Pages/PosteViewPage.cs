@@ -3,21 +3,21 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PostePageQuery : IPageQuery<PostePage>
+    public class PosteViewPageQuery : IPageQuery<PosteViewPage>
     {
         public ID<Poste> Id;
     }
 
-    public class PostePage : PageBase<PostePageQuery>
+    public class PosteViewPage : PageBase<PosteViewPageQuery>
     {
         public AsyncCall<PosteViewQuery, PosteViewResponse> Poste;
     }
 
-    public class PostePageModule : PageModule
+    public class PosteViewPageModule : PageModule
     {
-        public PostePageModule()
+        public PosteViewPageModule()
         {
-            HandlePage<PostePageQuery, PostePage>((q, p) =>
+            HandlePage<PosteViewPageQuery, PosteViewPage>((q, p) =>
             {
                 p.Poste.Query.Id = q.Id;
             })

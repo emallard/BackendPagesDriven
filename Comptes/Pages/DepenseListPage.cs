@@ -4,25 +4,25 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class ListeDepensesPageQuery : IPageQuery<ListeDepensesPage>
+    public class ListeDepensesPageQuery : IPageQuery<DepenseListPage>
     {
     }
 
-    public class ListeDepensesPage : PageBase<ListeDepensesPageQuery>
+    public class DepenseListPage : PageBase<ListeDepensesPageQuery>
     {
-        public NouvelleDepensePageQuery NouvelleDepense;
-        public AsyncCall<DepenseListQuery, ListeDepensePageItem[]> Depenses;
+        public DepenseCreatePageQuery NouvelleDepense;
+        public AsyncCall<DepenseListQuery, DepenseListPageItem[]> Depenses;
     }
 
-    public class ListeDepensePageItem
+    public class DepenseListPageItem
     {
-        public DepensePageQuery Lien;
+        public DepenseViewPageQuery Lien;
         public DepenseListResponseItem Depense;
     }
 
-    public class ListeDepensesPageModule : PageModule
+    public class DepenseListPageModule : PageModule
     {
-        public ListeDepensesPageModule()
+        public DepenseListPageModule()
         {
             /*
             this.MapAsyncCall<PageListeDepensesQuery, ListQuery<DepenseView>, DepenseView[], PageListeDepenseItem[]>(
@@ -34,12 +34,12 @@ namespace Comptes
                 }).ToArray()
                 );
             */
-            this.HandlePage<ListeDepensesPageQuery, ListeDepensesPage>((q, p) => { })
+            this.HandlePage<ListeDepensesPageQuery, DepenseListPage>((q, p) => { })
                 .ForAsyncCall(x => x.Depenses)
                 .MapResponse<DepenseListResponseItem[]>()
-                .ToModel<ListeDepensePageItem[]>((q, r) => r.Select(x => new ListeDepensePageItem()
+                .ToModel<DepenseListPageItem[]>((q, r) => r.Select(x => new DepenseListPageItem()
                 {
-                    Lien = new DepensePageQuery() { Id = x.Id },
+                    Lien = new DepenseViewPageQuery() { Id = x.Id },
                     Depense = x
                 }).ToArray());
         }
