@@ -31,7 +31,6 @@ namespace Comptes
 
             // messagebus
             kernel.Bind<HandlerFinder>().ToConstant(new HandlerFinder(
-                CocoriCore.Mapper.AssemblyInfo.Assembly,
                 CocoriCore.Page.AssemblyInfo.Assembly,
                 Comptes.AssemblyInfo.Assembly)).InSingletonScope();
             kernel.Bind<PageMapperConfiguration>().ToConstant(
@@ -39,7 +38,7 @@ namespace Comptes
                     Comptes.AssemblyInfo.Assembly)
                 );
             kernel.Bind<IPageMapper>().To<PageMapper>().InSingletonScope();
-            kernel.Bind<INewMapper>().ToConstant(new NewMapper(Comptes.AssemblyInfo.Assembly));
+            //kernel.Bind<INewMapper>().ToConstant(new NewMapper(Comptes.AssemblyInfo.Assembly));
 
             kernel.Bind<IMessageBus>().To<MessageBusSpy<Comptes.MessageBus>>().InNamedScope("unitofwork");
             kernel.Bind<IExecuteHandler>().To<ExecuteHandler>().InNamedScope("unitofwork");

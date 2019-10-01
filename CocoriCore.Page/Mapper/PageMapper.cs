@@ -22,6 +22,8 @@ namespace CocoriCore
 
         public TTarget Map<TTarget>(object o, object p)
         {
+            if (p.GetType() == typeof(TTarget))
+                return (TTarget)p;
             var found = mappings3[Tuple.Create(o.GetType(), p.GetType(), typeof(TTarget))];
             return (TTarget)found.Func(o, p);
         }

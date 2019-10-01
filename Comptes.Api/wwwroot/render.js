@@ -37,7 +37,7 @@ function render(x, h, r) {
     }
 
     if (x == null)
-        return 'null';
+        return '';
     let found = null;
     for (let renderer of renderers) {
         if (renderer.predicate(x, h, r))
@@ -66,6 +66,39 @@ function renderArrayAsDatatable(x, h, r, options) {
     return `<table id="${h}"></table>`
 }
 
+function renderArrayAsDatatable2(x, h, r, options) {
+    r.afterRender(() => {
+        $(document.getElementById(h)).dataTable(
+
+        )
+    });
+    return renderArrayAsTable(x, h, r, options);
+}
+
+function renderArrayAsTable(x, h, r, options) {
+    return `<table class="table" id="${h}">
+                <thead>
+                    ${renderTableHeaders(options)}
+                </thead>
+                <tbody>
+                    ${renderTableRows(x, options)}
+                </tbody>
+            </table>
+            `
+}
+
+function renderTableHeaders(options) {
+    let html = options.columns.map(x => '<th>' + x.title + '</th>').join('');
+    return '<tr>' + html + '</tr>';
+}
+
+function renderTableRows(data, options, h, r) {
+    return data.map(x => renderTableRow(x, options)).join('');
+}
+
+function renderTableRow(data, options, h, r) {
+    return '<tr>' + options.columns.map(o => '<td>' + render(data[o.data], h, r) + '</td>').join('') + '</tr>';
+}
 
 function renderObjectAsList(x, h, r) {
     let html = `<ul>`;
@@ -154,7 +187,9 @@ addRenderer(
     (x, h, r) => `<a href="${href(x)}"> ${field(h)} </a><br/>`);
 addRenderer(
     (x, h, r) => x.IsSvg,
-    (x, h, r) => `${field(h)} :<br/> ${x.Svg}`);
+    (x, h, r) => `${x.Svg}`);
 
-
+addRenderer(
+    (x, h, r) => x.IsLinkModel,
+    (x, h, r) => `<a href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
 

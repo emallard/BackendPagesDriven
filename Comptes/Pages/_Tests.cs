@@ -24,7 +24,10 @@ namespace Comptes
                 .ThenFollow(r => r)
                 .Assert(p => p.Postes.Result,
                         x => x.Length.Should().Be(1),
-                        x => x[0].Poste.Nom.Should().Be("Alimentation"));
+                        x => x[0].Poste.Nom.Should().Be("Alimentation"))
+
+                .Follow(p => p.Postes.Result[0].Lien)
+                .Follow(p => p.Modifier);
         }
 
         [Fact]

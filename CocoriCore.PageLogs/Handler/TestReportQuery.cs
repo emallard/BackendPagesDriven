@@ -42,9 +42,9 @@ namespace CocoriCore.PageLogs
     public class PagePathRedirection : IPagePathItem
     {
         public int IndexInTest;
-        public string PageFrom;
+        public LinkModel PageFrom;
         public string PageFromMemberName;
-        public string PageTo;
+        public LinkModel PageTo;
         public bool PageToHasAssert;
     }
 
@@ -105,13 +105,24 @@ namespace CocoriCore.PageLogs
                 }
                 if (item is TestPageRedirection redirection)
                 {
+                    LinkModel pageFrom = null;
+                    if (redirection.FromPageName != null)
+                        pageFrom = new LinkModel(
+                                        new PagePageQuery() { PageName = redirection.FromPageName },
+                                        redirection.FromPageName
+                                        );
+                    var pageTo = new LinkModel(
+                                    new PagePageQuery() { PageName = redirection.ToPageName },
+                                    redirection.ToPageName
+                                    );
+
                     pathItems.Add(
                         new PagePathRedirection()
                         {
                             IndexInTest = redirection.IndexInTest,
                             PageFromMemberName = redirection.MemberName,
-                            PageFrom = redirection.FromPageName,
-                            PageTo = redirection.ToPageName,
+                            PageFrom = pageFrom,
+                            PageTo = pageTo,
                             PageToHasAssert = redirection.ToPageHasAssert
                         }
                     );

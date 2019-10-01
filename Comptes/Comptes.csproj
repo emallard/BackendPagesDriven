@@ -22,7 +22,6 @@
     <ProjectReference Include="..\CocoriCore\backend\CocoriCore.TestUtils\CocoriCore.TestUtils.csproj" />
     <ProjectReference Include="..\CocoriCore\backend\CocoriCore.Ninject\CocoriCore.Ninject.csproj" />
     <ProjectReference Include="..\CocoriCore.Page\CocoriCore.Page.csproj" />
-    <ProjectReference Include="..\CocoriCore.Mapper\CocoriCore.Mapper.csproj" />
     <ProjectReference Include="..\CocoriCore.MyExtensions\CocoriCore.MyExtensions.csproj" />
   </ItemGroup>
 

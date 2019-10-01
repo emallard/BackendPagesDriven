@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CocoriCore;
-using CocoriCore.Mapper;
+//using CocoriCore.Mapper;
 using CocoriCore.Page;
 
 namespace Comptes.Api
@@ -17,20 +17,20 @@ namespace Comptes.Api
     {
         private readonly PageGraphBuilder builder;
         private readonly PageGraphFormatter formatter;
-        private readonly MapperGraphBuilder mapperGraphBuilder;
-        private readonly MapperGraphFormatter mapperGraphFormatter;
+        //private readonly MapperGraphBuilder mapperGraphBuilder;
+        //private readonly MapperGraphFormatter mapperGraphFormatter;
 
         public Graph_GETHandler(
             PageGraphBuilder builder,
-            PageGraphFormatter formatter,
-            MapperGraphBuilder mapperGraphBuilder,
-            MapperGraphFormatter mapperGraphFormatter
+            PageGraphFormatter formatter
+            //MapperGraphBuilder mapperGraphBuilder,
+            //MapperGraphFormatter mapperGraphFormatter
             )
         {
             this.builder = builder;
             this.formatter = formatter;
-            this.mapperGraphBuilder = mapperGraphBuilder;
-            this.mapperGraphFormatter = mapperGraphFormatter;
+            //this.mapperGraphBuilder = mapperGraphBuilder;
+            //this.mapperGraphFormatter = mapperGraphFormatter;
         }
 
         public override async Task<SvgResponse> ExecuteAsync(Graph_GET message)
@@ -42,8 +42,8 @@ namespace Comptes.Api
             if (message.Q == "mapper")
             {
                 var assembly = Comptes.AssemblyInfo.Assembly;
-                var graph = mapperGraphBuilder.Build(assembly);
-                svg = mapperGraphFormatter.Format(graph);
+                //var graph = mapperGraphBuilder.Build(assembly);
+                //svg = mapperGraphFormatter.Format(graph);
             }
             else
             {

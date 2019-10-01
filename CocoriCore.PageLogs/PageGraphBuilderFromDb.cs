@@ -74,6 +74,9 @@ namespace CocoriCore.PageLogs
 
             foreach (var x in redirections)
             {
+                if (x.FromPageName == null)
+                    continue;
+
                 if (!edges.Any(e => e.Name == x.MemberName
                                  && e.From.ParameterizedUrl == x.FromPageName
                                  && e.To.ParameterizedUrl == x.ToPageName))

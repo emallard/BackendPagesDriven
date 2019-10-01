@@ -8,6 +8,7 @@ namespace CocoriCore.PageLogs
     public class TestPageResponse : PageBase<TestPageQuery>
     {
         public AsyncCall<TestReportQuery, TestReport> TestReport;
+        public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
     }
 
     public class TestPageModule : PageModule
@@ -17,10 +18,12 @@ namespace CocoriCore.PageLogs
             HandlePage<TestPageQuery, TestPageResponse>((q, p) =>
             {
                 p.TestReport.Query.TestName = q.TestName;
-            })
+            });
+            /*
                 .ForAsyncCall(p => p.TestReport)
                 .MapResponse<TestReport>()
                 .ToSelf();
+            */
         }
 
     }

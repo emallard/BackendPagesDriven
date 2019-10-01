@@ -59,6 +59,12 @@ namespace CocoriCore
                     asyncCall.SetMemberName(mi.Name);
             }
         }
+
+        public PageModuleOnMessage<TMessage> OnMessage<TMessage>()
+        {
+            return new PageModuleOnMessage<TMessage>(this);
+        }
+
     }
 
     public class PageModuleHandlePage<TPageQuery, TPage>
@@ -77,7 +83,7 @@ namespace CocoriCore
             return new PageModuleProvideQuery<TPageQuery, TPage, TQuery>(this, module);
         }
 
-        public PageModuleProvideQuery<TPageQuery, TPage, TQuery> ForAsyncCall<TQuery, TModel>()
+        public PageModuleProvideQuery<TPageQuery, TPage, TQuery> ForAsyncCall<TQuery>()
             where TQuery : IMessage, new()
         {
             return new PageModuleProvideQuery<TPageQuery, TPage, TQuery>(this, module);
@@ -91,7 +97,7 @@ namespace CocoriCore
             return new PageModuleProvideQuery<TPageQuery, TPage, TCommand>(this, module);
         }
 
-        public PageModuleProvideQuery<TPageQuery, TPage, TCommand> ForForm<TCommand, TModel>()
+        public PageModuleProvideQuery<TPageQuery, TPage, TCommand> ForForm<TCommand>()
             where TCommand : IMessage, new()
         {
             return new PageModuleProvideQuery<TPageQuery, TPage, TCommand>(this, module);
@@ -154,6 +160,46 @@ namespace CocoriCore
             mapping3.Init<TQuery, TResponse, TResponse>((q, r) => r);
             module.Mappings3.Add(mapping3);
             return on;
+        }
+    }
+
+    ////////////////////////////////////////
+
+    public class PageModuleOnMessage<TMessage>
+    {
+        private readonly PageModule module;
+
+        public PageModuleOnMessage(PageModule module)
+        {
+            this.module = module;
+        }
+
+        public PageModuleWithResponse<TMessage, TResponse> WithResponse<TResponse>()
+        {
+            return new PageModuleWithResponse<TMessage, TResponse>(module);
+        }
+    }
+
+    public class PageModuleWithResponse<TMessage, TResponse>
+    {
+        private readonly PageModule module;
+
+        public PageModuleWithResponse(PageModule module)
+        {
+            this.module = module;
+        }
+
+        public PageModule BuildModel<TModel>(Action<TMessage, TResponse, TModel> action) where TModel : new()
+        {
+            var mapping3 = new PageMapping3();
+            mapping3.Init<TMessage, TResponse, TModel>((q, r) =>
+            {
+                var model = new TModel();
+                action(q, r, model);
+                return model;
+            });
+            module.Mappings3.Add(mapping3);
+            return module;
         }
     }
 }

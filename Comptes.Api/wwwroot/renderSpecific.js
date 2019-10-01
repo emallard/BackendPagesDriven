@@ -19,11 +19,11 @@ addRenderer(
 addRenderer(
     (x, h, r) => h == "PagePage.PageReport.RepositoryItems",
     (x, h, r) => {
-        return renderArrayAsDatatable(x, h, r,
+        return renderArrayAsDatatable2(x, h, r,
             {
-                bFilter: false,
+                bFilter: true,
                 bPaginate: false,
-                "data": x,
+                bInfo: false,
                 "columns": [
                     { "data": "Operation", "title": "Operation" },
                     { "data": "EntityName", "title": "EntityName" },
@@ -35,10 +35,12 @@ addRenderer(
 addRenderer(
     (x, h, r) => h == "EntityPage.EntityReport.RepositoryItems",
     (x, h, r) => {
-        return renderArrayAsDatatable(x, h, r,
+        return renderArrayAsDatatable2(x, h, r,
             {
+                bFilter: true,
                 bPaginate: false,
-                "data": x,
+                bInfo: false,
+                //"data": x,
                 "columns": [
                     { "data": "Operation", "title": "Operation" },
                     { "data": "MessageName", "title": "MessageName" },
@@ -50,13 +52,11 @@ addRenderer(
 addRenderer(
     (x, h, r) => h == "TestPageResponse.TestReport.Path.Items",
     (x, h, r) => {
-        return renderArrayAsDatatable(x, h, r,
+        return renderArrayAsTable(x, h, r,
             {
-                bPaginate: false,
-                "data": x,
                 "columns": [
 
-                    { "data": "IndexInTest", "title": "Index" },
+                    { "data": "IndexInTest", "title": "#" },
                     { "data": "PageFrom", "title": "From" },
                     { "data": "PageFromMemberName", "title": "Member" },
                     { "data": "PageTo", "title": "To" },
