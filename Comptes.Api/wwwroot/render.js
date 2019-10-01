@@ -86,7 +86,7 @@ function renderForm(x, h, r) {
 
         let keys = Object.keys(x.Command);
         for (let k of keys) {
-            x.Command[k] = document.getElementById(h + "." + k).value;
+            x.Command[k] = document.getElementById(h + ".Command." + k).value;
         }
 
         console.log('submit ' + h);
@@ -95,7 +95,7 @@ function renderForm(x, h, r) {
     }));
 
     return `<form id="${h}">
-                ${renderInputs(x, h, r)}
+                ${renderInputs(x, h + '.Command', r)}
                 <button type="submit" class="btn btn-primary">${field(h)}</button>
             </form>`;
 }
