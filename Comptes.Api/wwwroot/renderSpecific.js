@@ -1,13 +1,13 @@
 
 addRenderer(
-    (x, h, r) => h == "HomePage.Pages.[]",
+    (x, h, r) => (0 <= h.indexOf("HomePage.Pages.Result.[")),
     (x, h, r) => `<a href="${href(x.Link)}">${x.PageName}</a>`);
 
 addRenderer(
-    (x, h, r) => h == "HomePage.Entities.[]",
+    (x, h, r) => (0 <= h.indexOf("HomePage.Entities.Result.[")),
     (x, h, r) => `<a href="${href(x.Link)}">${x.EntityName}</a>`);
 addRenderer(
-    (x, h, r) => h == "HomePage.Tests.[]",
+    (x, h, r) => (0 <= h.indexOf("HomePage.Tests.Result.[")),
     (x, h, r) => `<a href="${href(x.Link)}">${x.TestName}</a>`);
 
 
@@ -50,7 +50,7 @@ addRenderer(
     });
 
 addRenderer(
-    (x, h, r) => h == "TestPageResponse.TestReport.Path.Items",
+    (x, h, r) => h == "TestPageResponse.TestReport.Result.Path.Items",
     (x, h, r) => {
         return renderArrayAsTable(x, h, r,
             {
@@ -64,4 +64,16 @@ addRenderer(
                 ]
             })
     });
+
+addRenderer(
+    (x, h, r) => h == 'TestPageResponse.PageGraph.Result',
+    (x, h, r) => {
+        r.afterRender(() => setTimeout(() =>
+            drawInGraph(
+                _page.TestReport.Result.Path.Items,
+                document.getElementById('TestPageResponse.PageGraph.Result.Svg'))
+            , 1000));
+        return `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`);
+    }
+);
 

@@ -50,8 +50,8 @@ function render(x, h, r) {
 
 function renderArrayAsList(x, h, r) {
     let html = `<ul>`;
-    for (let elt of x)
-        html += "<li>" + render(elt, h + '.[]', r) + '</li>';
+    for (var i = 0; i < x.length; ++i)
+        html += "<li>" + render(x[i], h + `.[${i}]`, r) + '</li>';
     html += "</ul>"
     return html;
 }
@@ -81,7 +81,7 @@ function renderArrayAsTable(x, h, r, options) {
                     ${renderTableHeaders(options)}
                 </thead>
                 <tbody>
-                    ${renderTableRows(x, options)}
+                    ${renderTableRows(x, options, h, r)}
                 </tbody>
             </table>
             `
@@ -93,11 +93,12 @@ function renderTableHeaders(options) {
 }
 
 function renderTableRows(data, options, h, r) {
-    return data.map(x => renderTableRow(x, options)).join('');
+    return data.map((x, i) => renderTableRow(x, options, h + `[${i}].`, r)).join('');
 }
 
 function renderTableRow(data, options, h, r) {
-    return '<tr>' + options.columns.map(o => '<td>' + render(data[o.data], h, r) + '</td>').join('') + '</tr>';
+    let htmls = options.columns.map(column => render(data[column.data], h + column.data, r));
+    return '<tr>' + htmls.map(html => `<td>${html}</td>`).join('') + '</tr>';
 }
 
 function renderObjectAsList(x, h, r) {
@@ -169,13 +170,18 @@ addRenderer(
 addRenderer(
     (x, h, r) => x["IsAsyncCall"],
     (x, h, r) => {
+        let hresult = h + '.Result';
         r.afterRender(async () => {
             let response = await call(x);
             x.Result = response;
-            renderTo(response, h, document.getElementById(h));
+            renderTo(response, hresult, document.getElementById(hresult));
             applyInits();
         });
-        return `<div id="${h}"></div>`;
+        return `<ul>
+                    <li>Result
+                        <div id="${hresult}"></div>
+                    </li>
+                </ul>`;
     });
 addRenderer(
     (x, h, r) => x["IsForm"],
@@ -184,12 +190,12 @@ addRenderer(
     });
 addRenderer(
     (x, h, r) => x["href"],
-    (x, h, r) => `<a href="${href(x)}"> ${field(h)} </a><br/>`);
+    (x, h, r) => `<a id="${h}" href="${href(x)}"> ${field(h)} </a><br/>`);
 addRenderer(
     (x, h, r) => x.IsSvg,
-    (x, h, r) => `${x.Svg}`);
+    (x, h, r) => `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`));
 
 addRenderer(
     (x, h, r) => x.IsLinkModel,
-    (x, h, r) => `<a href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
+    (x, h, r) => `<a "id="${h}" href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
 
