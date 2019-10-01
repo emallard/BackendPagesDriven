@@ -26,15 +26,14 @@ namespace Comptes.Api
             builder.Get<PosteListPageQuery>().SetPath("api/postes");
             builder.Get<PosteCreatePageQuery>().SetPath("api/postes/creer");
             builder.Get<PosteViewPageQuery>().SetPath(x => $"api/postes/{x.Id}");
+            builder.Get<PosteUpdatePageQuery>().SetPath(x => $"api/postes/{x.Id}/modifier");
 
             builder.Get<ListeDepensesPageQuery>().SetPath("api/depenses");
             builder.Get<DepenseCreatePageQuery>().SetPath("api/depenses/creer");
             builder.Get<DepenseViewPageQuery>().SetPath(x => $"api/depenses/{x.Id}");
 
             builder.Post<Call>().SetPath("api/call").UseBody();
-            builder.Get<HtmlMessage>().SetPath("api/page").UseQuery();
-            builder.Get<FavIconMessage>().SetPath("favicon.ico").UseQuery();
-            builder.Get<Tests_GET>().SetPath("api/tests");
+            //builder.Get<FavIconMessage>().SetPath("favicon.ico").UseQuery();
             builder.Get<Tests_Id_GET>().SetPath(x => $"api/tests/{x.Type}/{x.TestName}").UseQuery();
 
             builder.Get<Graph_GET>().SetPath("api/graph").UseQuery();

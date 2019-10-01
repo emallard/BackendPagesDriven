@@ -17,7 +17,7 @@ namespace CocoriCore
     public class PageBase<TPageQuery> : IPageBase
     {
         public TPageQuery PageQuery;
-        public Type PageType;
+        public string PageTypeName;
 
         public List<PageBinding> Bindings = new List<PageBinding>();
         public List<PageBinding> Inits = new List<PageBinding>();
@@ -37,7 +37,7 @@ namespace CocoriCore
         private object GetValue(string[] memberNames, object o)
         {
             var currentObject = o;
-            for (var i = memberNames.Length - 1; i >= 0; --i)
+            for (var i = 0; i < memberNames.Length; i++)
             {
                 var memberInfo = currentObject.GetType().GetPropertyOrField(memberNames[i], BindingFlags.Instance | BindingFlags.Public);
                 currentObject = memberInfo.InvokeGetter(currentObject);
@@ -49,13 +49,13 @@ namespace CocoriCore
         private void SetValue(string[] memberNames, object o, object value)
         {
             object currentObject = o;
-            for (var i = memberNames.Length - 1; i > 0; --i)
+            for (var i = 0; i < memberNames.Length - 1; i++)
             {
                 var memberInfo = currentObject.GetType().GetPropertyOrField(memberNames[i], BindingFlags.Instance | BindingFlags.Public);
                 currentObject = memberInfo.InvokeGetter(currentObject);
             }
 
-            var memberInfoSet = currentObject.GetType().GetPropertyOrField(memberNames[0], BindingFlags.Instance | BindingFlags.Public);
+            var memberInfoSet = currentObject.GetType().GetPropertyOrField(memberNames.Last(), BindingFlags.Instance | BindingFlags.Public);
             memberInfoSet.InvokeSetter(currentObject, value);
         }
 
@@ -101,6 +101,8 @@ namespace CocoriCore
                 memberInfos.Add(memberInfo);
                 expression = memberExpression.Expression;
             }
+
+            memberInfos.Reverse();
 
             var names = memberInfos.Select(x => x.Name).ToArray();
             if (names.Length == 0)

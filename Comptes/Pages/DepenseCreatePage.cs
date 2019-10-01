@@ -12,7 +12,7 @@ namespace Comptes
 
     public class DepenseCreatePage : PageBase<DepenseCreatePageQuery>
     {
-        public AsyncCall<DepenseCreateDefaultValueQuery, DepenseCreateDefaultValueResponse> DefaultValue;
+        public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> DefaultValue;
         public Select<PosteListQuery, PosteListResponseItem> Poste;
         public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
 
@@ -40,7 +40,7 @@ namespace Comptes
                 .ToSelf()
 
                 .ForAsyncCall(p => p.DefaultValue)
-                .MapResponse<DepenseCreateDefaultValueResponse>()
+                .MapResponse<DepenseCreateInitResponse>()
                 .ToSelf();
 
         }

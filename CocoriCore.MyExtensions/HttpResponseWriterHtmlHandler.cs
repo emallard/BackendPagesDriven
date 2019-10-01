@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using CocoriCore;
 using Microsoft.AspNetCore.Http;
 
-namespace Comptes.Api
+namespace CocoriCore
 {
     public class HttpResponseWriterHtmlHandler : IHttpReponseWriterHandler
     {

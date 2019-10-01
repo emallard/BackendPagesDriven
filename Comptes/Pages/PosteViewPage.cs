@@ -11,6 +11,7 @@ namespace Comptes
     public class PosteViewPage : PageBase<PosteViewPageQuery>
     {
         public AsyncCall<PosteViewQuery, PosteViewResponse> Poste;
+        public PosteUpdatePageQuery Modifier;
     }
 
     public class PosteViewPageModule : PageModule
@@ -20,6 +21,7 @@ namespace Comptes
             HandlePage<PosteViewPageQuery, PosteViewPage>((q, p) =>
             {
                 p.Poste.Query.Id = q.Id;
+                p.Modifier.Id = q.Id;
             })
             .ForAsyncCall(p => p.Poste)
             .MapResponse<PosteViewResponse>()

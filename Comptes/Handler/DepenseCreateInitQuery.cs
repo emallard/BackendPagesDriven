@@ -5,30 +5,30 @@ using CocoriCore.Linq.Async;
 
 namespace Comptes
 {
-    public class DepenseCreateDefaultValueQuery : IMessage<DepenseCreateDefaultValueResponse>
+    public class DepenseCreateInitQuery : IMessage<DepenseCreateInitResponse>
     {
 
     }
 
-    public class DepenseCreateDefaultValueResponse
+    public class DepenseCreateInitResponse
     {
         public PosteListResponseItem Poste;
     }
 
-    public class DepenseCreateDefaultValueHandler : MessageHandler<DepenseCreateDefaultValueQuery, DepenseCreateDefaultValueResponse>
+    public class DepenseCreateInitHandler : MessageHandler<DepenseCreateInitQuery, DepenseCreateInitResponse>
     {
         private readonly IRepository repository;
 
-        public DepenseCreateDefaultValueHandler(IRepository repository)
+        public DepenseCreateInitHandler(IRepository repository)
         {
             this.repository = repository;
         }
 
-        public async override Task<DepenseCreateDefaultValueResponse> ExecuteAsync(DepenseCreateDefaultValueQuery message)
+        public async override Task<DepenseCreateInitResponse> ExecuteAsync(DepenseCreateInitQuery message)
         {
             var poste = await repository.Query<Poste>().FirstOrDefaultAsync();
             if (poste != null)
-                return new DepenseCreateDefaultValueResponse()
+                return new DepenseCreateInitResponse()
                 {
                     Poste = new PosteListResponseItem()
                     {
@@ -37,7 +37,7 @@ namespace Comptes
                     }
                 };
             else
-                return new DepenseCreateDefaultValueResponse()
+                return new DepenseCreateInitResponse()
                 {
                 };
 

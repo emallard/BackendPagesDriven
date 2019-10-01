@@ -133,6 +133,7 @@ addRenderer(
             let response = await call(x);
             x.Result = response;
             renderTo(response, h, document.getElementById(h));
+            applyInits();
         });
         return `<div id="${h}"></div>`;
     });

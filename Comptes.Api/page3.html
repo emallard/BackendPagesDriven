@@ -20,9 +20,8 @@
     -->
     <div class="container">
         <div id='pagename'></div>
-        <div id='content'>
-
-        </div>
+        <div id='content'></div>
+        <div id='bindings' style="font-size: 12px"></div>
 
 
         <script>
@@ -43,20 +42,23 @@
                 _page = JSON.parse(txt);
                 console.log(_page);
 
+                let pageTypeName = _page.PageTypeName;
+                pageTypeName = pageTypeName.substring(pageTypeName.lastIndexOf('.') + 1);
+                document.getElementById('pagename').innerHTML = `<b>${pageTypeName}</b>`;
 
-                let pageType = _page.PageType.substring(0, _page.PageType.indexOf(",")).replace(/[.]/g, '-');
-                pageTypeName = pageType.substring(pageType.lastIndexOf('-') + 1);
 
-                document.getElementById('pagename').innerHTML = pageTypeName;
+                let _page2 = {};
+                for (let k of Object.keys(_page)) {
+                    if (k != 'PageQuery' && k != 'Bindings' && k != 'Inits' && k != 'PageTypeName')
+                        _page2[k] = _page[k];
+                }
+                renderTo(_page2, pageTypeName, document.getElementById('content'));
 
-                renderTo(_page, pageTypeName, document.getElementById('content'));
+                let htmlBindings = '';
+                htmlBindings += _page.Inits.map(b => "Init : " + b.From.join('.') + ' =&gt; ' + b.To.join('.')).join('<br/>');
+                htmlBindings += _page.Bindings.map(b => "Bind : " + b.From.join('.') + ' =&gt; ' + b.To.join('.')).join('<br/>');
+                document.getElementById('bindings').innerHTML = htmlBindings;
 
-                document.getElementById('content').classList.add(pageTypeName);
-                document.getElementById('content').classList.add(pageType);
-
-                //registerOnSubmits();
-                //callAsyncCalls();
-                //callAfterRender();
             }
 
             init();
@@ -86,52 +88,32 @@
                 }
             }
 
-
-            /*
-                    let asyncCalls = [];
-                    function addAsyncCall(x, h) {
-                        asyncCalls.push({ x: x, h: h });
-                    }
-
-                    async function callAsyncCalls() {
-                        for (let a of asyncCalls) {
-                            let response = await call(a.x);
-                            a.x.Result = response;
-                            renderTo(response, a.h, document.getElementById(a.h).innerHTML);
-                        }
-                    }
-            */
-
-            /*
-            let forms = [];
-            function addForm(x, h) {
-                forms.push({ x: x, h: h });
-            }
-
-            function registerOnSubmits() {
-                for (let f of forms) {
-                    registerOnSubmit(f.x, f.h);
+            function applyInits() {
+                console.log('applyInits');
+                for (let init of _page.Inits) {
+                    let v = getValue(_page, init.From);
+                    setValue(_page, init.To, v);
                 }
             }
 
-            function registerOnSubmit(form, idForm) {
-                console.log('register on submit ' + idForm);
-                document.getElementsByClassName(idForm)[0].addEventListener('submit', (evt) => {
-                    //alert('a');
-                    evt.preventDefault();
+            function getValue(x, members) {
+                console.log(' get ' + members.join('.'));
+                let y = x;
+                for (let i = 0; i < members.length; ++i)
+                    y = y[members[i]];
 
-                    let keys = Object.keys(form.Command);
-                    for (let k of keys) {
-                        form.Command[k] = document.getElementById(idForm + "." + k).value;
-                    }
+                console.log(' value = ' + y);
+                return y;
+            }
 
-                    console.log('submit ' + idForm);
-                    formCall(form);
-                    return false;
-                });
+            function setValue(x, members, value) {
+                console.log(' set ' + members.join('.') + ' = ' + value);
 
-            }*/
-
+                let y = x;
+                for (let i = 0; i < members.length - 1; ++i)
+                    y = y[members[i]];
+                y[members.length - 1] = value;
+            }
         </script>
 </body>
 
