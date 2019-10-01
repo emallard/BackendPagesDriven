@@ -46,3 +46,22 @@ addRenderer(
                 ]
             })
     });
+
+addRenderer(
+    (x, h, r) => h == "TestPageResponse.TestReport.Path.Items",
+    (x, h, r) => {
+        return renderArrayAsDatatable(x, h, r,
+            {
+                bPaginate: false,
+                "data": x,
+                "columns": [
+
+                    { "data": "IndexInTest", "title": "Index" },
+                    { "data": "PageFrom", "title": "From" },
+                    { "data": "PageFromMemberName", "title": "Member" },
+                    { "data": "PageTo", "title": "To" },
+                    { "data": "PageToHasAssert", "title": "Assert" }
+                ]
+            })
+    });
+

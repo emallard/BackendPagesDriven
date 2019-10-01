@@ -75,13 +75,13 @@ namespace CocoriCore.PageLogs
             foreach (var x in redirections)
             {
                 if (!edges.Any(e => e.Name == x.MemberName
-                                 && e.From.ParameterizedUrl == x.PageName
+                                 && e.From.ParameterizedUrl == x.FromPageName
                                  && e.To.ParameterizedUrl == x.ToPageName))
                 {
                     var edge = new PageEdge()
                     {
                         Name = x.MemberName,
-                        From = nodes.First(n => n.ParameterizedUrl == x.PageName),
+                        From = nodes.First(n => n.ParameterizedUrl == x.FromPageName),
                         To = nodes.First(n => n.ParameterizedUrl == x.ToPageName),
                         IsLink = x.IsLink,
                         IsForm = x.IsForm

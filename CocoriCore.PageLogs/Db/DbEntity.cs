@@ -21,7 +21,7 @@ namespace CocoriCore.PageLogs
                 UserName = context.UserName,
                 PageName = context.PageName,
                 MessageName = context.MessageName,
-                EntityName = l.EntityType.FullName,
+                EntityName = l.EntityType.GetFriendlyName(),
                 Operation = l.Operation
             });
         }

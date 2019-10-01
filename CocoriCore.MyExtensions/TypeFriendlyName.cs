@@ -27,6 +27,40 @@ namespace CocoriCore
             { typeof(void), "void" }
         };
 
+        public static string GetFriendlyName(this Type type)
+        {
+            string friendlyName;
+            if (_typeToFriendlyName.TryGetValue(type, out friendlyName))
+            {
+                return friendlyName;
+            }
+
+            friendlyName = type.Name;
+            if (type.IsGenericType)
+            {
+                int backtick = friendlyName.IndexOf('`');
+                if (backtick > 0)
+                {
+                    friendlyName = friendlyName.Remove(backtick);
+                }
+                friendlyName += "<";
+                Type[] typeParameters = type.GetGenericArguments();
+                for (int i = 0; i < typeParameters.Length; i++)
+                {
+                    string typeParamName = typeParameters[i].GetFriendlyName();
+                    friendlyName += (i == 0 ? typeParamName : ", " + typeParamName);
+                }
+                friendlyName += ">";
+            }
+
+            if (type.IsArray)
+            {
+                return type.GetElementType().GetFriendlyName() + "[]";
+            }
+
+            return friendlyName;
+        }
+
         public static string GetFriendlyFullName(this Type type)
         {
             string friendlyName;

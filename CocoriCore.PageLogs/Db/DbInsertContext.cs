@@ -7,6 +7,7 @@ namespace CocoriCore.PageLogs
         public string UserName;
         public string PageName;
         public TestPage Page;
+        public TestPageRedirection Redirection;
         public string PageMemberName;
         public string MessageName;
     }

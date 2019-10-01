@@ -41,9 +41,11 @@ namespace CocoriCore.PageLogs
 
     public class PagePathRedirection : IPagePathItem
     {
-        public string MemberName;
+        public int IndexInTest;
         public string PageFrom;
+        public string PageFromMemberName;
         public string PageTo;
+        public bool PageToHasAssert;
     }
 
     public class PagePathPageAssert : IPagePathItem
@@ -95,26 +97,26 @@ namespace CocoriCore.PageLogs
                 .Select(x => new WithIndex(x.IndexInTest, x));
 
             var items = pages.Concat(redirections).Concat(emailsRead).OrderBy(x => x.Index).Select(x => x.Object).ToArray();
-            var pathItems = items.Select(x =>
+            var pathItems = new List<PagePathRedirection>();
+            foreach (var item in items)
             {
-                IPagePathItem y;
-                if (x is TestPage testPage)
-                    y = new PagePathPage()
-                    {
-                        PageName = testPage.PageName,
-                        HasAssert = testPage.HasAssert
-                    };
-                else if (x is TestPageRedirection redirection)
-                    y = new PagePathRedirection()
-                    {
-                        MemberName = redirection.MemberName,
-                        PageFrom = redirection.PageName,
-                        PageTo = redirection.ToPageName,
-                    };
-                else
-                    throw new NotSupportedException();
-                return y;
-            });
+                if (item is TestPage page)
+                {
+                }
+                if (item is TestPageRedirection redirection)
+                {
+                    pathItems.Add(
+                        new PagePathRedirection()
+                        {
+                            IndexInTest = redirection.IndexInTest,
+                            PageFromMemberName = redirection.MemberName,
+                            PageFrom = redirection.FromPageName,
+                            PageTo = redirection.ToPageName,
+                            PageToHasAssert = redirection.ToPageHasAssert
+                        }
+                    );
+                }
+            }
 
             testReport.Path = new PagePath()
             {

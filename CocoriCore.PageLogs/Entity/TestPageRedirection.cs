@@ -1,3 +1,5 @@
+using System;
+
 namespace CocoriCore.PageLogs
 {
     public class TestPageRedirection : EntityBase<TestPageRedirection>
@@ -5,11 +7,14 @@ namespace CocoriCore.PageLogs
         public string TestName;
         public int IndexInTest;
         public string UserName;
-        public string PageName;
+        public string FromPageName;
 
         public string MemberName;
-        public string ToPageName;
         public bool IsForm;
         public bool IsLink;
+
+        public string ToPageName;
+        public bool ToPageHasAssert;
+
     }
 }

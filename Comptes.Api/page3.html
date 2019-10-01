@@ -101,18 +101,15 @@
             }
 
             function getValue(x, members) {
-                console.log(' get ' + members.join('.'));
+                //console.log(' get ' + members.join('.'));
                 let y = x;
                 for (let i = 0; i < members.length; ++i)
                     y = y[members[i]];
-
-                console.log(' value = ' + y);
                 return y;
             }
 
             function setValue(x, members, value) {
-                console.log(' set ' + members.join('.') + ' = ' + value);
-
+                //console.log(' set ' + members.join('.') + ' = ' + value);
                 let y = x;
                 for (let i = 0; i < members.length - 1; ++i)
                     y = y[members[i]];
@@ -120,9 +117,8 @@
             }
 
             function setFormInputValue(members, value) {
-
                 let id = _pageTypeName + '.' + members.join('.');
-                console.log(' setInput ' + id + ' = ' + value);
+                console.log(' setInput : ' + id + ' = ' + value);
                 document.getElementById(id).value = value;
             }
 

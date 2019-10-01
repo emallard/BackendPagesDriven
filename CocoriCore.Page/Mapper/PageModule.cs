@@ -29,7 +29,7 @@ namespace CocoriCore
                     if (action != null)
                         action(pageQuery, page);
                     page.PageQuery = pageQuery;
-                    page.PageTypeName = page.GetType().FullName;
+                    page.PageTypeName = page.GetType().GetFriendlyName();
                     return page;
                 }
             });

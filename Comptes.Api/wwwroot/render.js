@@ -15,8 +15,8 @@ class Renderer {
     }
 
     callAfterRender() {
+        console.log('call after render');
         for (let f of this.afterRenders) {
-            console.log('call after render');
             f();
         }
     }
@@ -43,6 +43,8 @@ function render(x, h, r) {
         if (renderer.predicate(x, h, r))
             found = renderer;
     }
+    if (found == null)
+        console.error('not found renderer : ' + h, x);
     return found.func(x, h, r);
 }
 
@@ -116,6 +118,11 @@ function renderInputs(form, h) {
 function href(x) {
     return x['href'].replace('/api', '');
 }
+
+
+addRenderer(
+    (x, h, r) => true,
+    (x, h, r) => '' + x);
 
 addRenderer(
     (x, h, r) => typeof (x) == 'object',
