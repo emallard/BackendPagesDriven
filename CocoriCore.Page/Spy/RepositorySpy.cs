@@ -48,12 +48,6 @@ namespace CocoriCore.Page
             return await repo.LoadAsync(type, id);
         }
 
-        public IQueryable<object> Query(Type entityType)
-        {
-            logger.Log(new LogRepo(LogRepoOperation.Query, entityType));
-            return repo.Query(entityType);
-        }
-
         async Task IRepository.DeleteAsync<TEntity>(TEntity entity)
         {
             logger.Log(new LogRepo(LogRepoOperation.Delete, entity.GetType()));
@@ -91,12 +85,6 @@ namespace CocoriCore.Page
         }
 
         async Task IRepository.UpdateAsync<TEntity>(TEntity entity)
-        {
-            logger.Log(new LogRepo(LogRepoOperation.Update, entity.GetType()));
-            await repo.UpdateAsync(entity);
-        }
-
-        async Task IRepository.UpdateAsync(object entity)
         {
             logger.Log(new LogRepo(LogRepoOperation.Update, entity.GetType()));
             await repo.UpdateAsync(entity);
