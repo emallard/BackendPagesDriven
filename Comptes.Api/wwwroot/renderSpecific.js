@@ -1,3 +1,9 @@
+addRenderer(
+    (x, h, r) => (0 <= h.indexOf("PosteListPage.Postes.Result.[")),
+    (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
+
+
+// PageLogs
 
 addRenderer(
     (x, h, r) => (0 <= h.indexOf("HomePage.Pages.Result.[")),
@@ -12,12 +18,7 @@ addRenderer(
 
 
 addRenderer(
-    (x, h, r) => h == "PosteListPage.Postes.[]",
-    (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
-
-
-addRenderer(
-    (x, h, r) => h == "PagePage.PageReport.RepositoryItems",
+    (x, h, r) => h == "PagePage.PageReport.Result.RepositoryItems",
     (x, h, r) => {
         return renderArrayAsDatatable2(x, h, r,
             {

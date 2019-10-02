@@ -9,9 +9,6 @@ namespace CocoriCore
     public interface IPageBase
     {
         void ApplyBindings();
-
-        void AddBinding(string[] from, string[] to);
-        void AddInit(string[] from, string[] to);
     }
 
     public class PageBase<TPageQuery> : IPageBase
@@ -21,6 +18,7 @@ namespace CocoriCore
 
         public List<PageBinding> Bindings = new List<PageBinding>();
         public List<PageBinding> Inits = new List<PageBinding>();
+        public List<PageBinding> Inputs = new List<PageBinding>();
 
         public void ApplyBindings()
         {
@@ -59,32 +57,31 @@ namespace CocoriCore
             memberInfoSet.InvokeSetter(currentObject, value);
         }
 
-        public void AddBinding(string[] from, string[] to)
+        public void Bind<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
         {
             Bindings.Add(new PageBinding()
             {
-                From = from,
-                To = to
+                From = GetMemberNames(from.Body),
+                To = GetMemberNames(to.Body)
             });
-        }
-
-        public void AddInit(string[] from, string[] to)
-        {
-            Inits.Add(new PageBinding()
-            {
-                From = from,
-                To = to
-            });
-        }
-
-        public void Bind<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
-        {
-            page.AddBinding(GetMemberNames(from.Body), GetMemberNames(to.Body));
         }
 
         public void Init<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
         {
-            page.AddInit(GetMemberNames(from.Body), GetMemberNames(to.Body));
+            Inits.Add(new PageBinding()
+            {
+                From = GetMemberNames(from.Body),
+                To = GetMemberNames(to.Body)
+            });
+        }
+
+        public void Input<T>(T page, Expression<Func<T, object>> member, Expression<Func<T, object>> form) where T : IPageBase
+        {
+            Inputs.Add(new PageBinding()
+            {
+                From = GetMemberNames(member.Body),
+                To = GetMemberNames(form.Body)
+            });
         }
 
         private string[] GetMemberNames(Expression expr)

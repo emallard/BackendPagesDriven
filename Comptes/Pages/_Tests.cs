@@ -61,9 +61,9 @@ namespace Comptes
                 .Follow(p => p.ListeDepenses)
                 .Follow(p => p.NouvelleDepense)
 
-                .Assert(p => p.Poste.Source.Result.Should().ContainSingle(x => x.Nom == "Voiture"))
+                .Assert(p => p.PosteSelect.Source.Result.Should().ContainSingle(x => x.Nom == "Voiture"))
 
-                .Fill(p => p.Poste.Selected, p => p.Poste.Source.Result.First())
+                .Fill(p => p.PosteSelect.Selected, p => p.PosteSelect.Source.Result.First())
                 .Fill(p => p.Creer.Command.Description, "Plein d'essence")
                 .Fill(p => p.Creer.Command.Montant, 30)
                 .Submit(p => p.Creer)

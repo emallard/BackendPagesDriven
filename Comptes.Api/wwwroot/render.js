@@ -110,44 +110,7 @@ function renderObjectAsList(x, h, r) {
     return html;
 }
 
-function field(h) {
-    let split = h.split('.');
-    let f = split[split.length - 1];
-    return f;
-}
 
-function renderForm(x, h, r) {
-    r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
-        evt.preventDefault();
-
-        let keys = Object.keys(x.Command);
-        for (let k of keys) {
-            x.Command[k] = document.getElementById(h + ".Command." + k).value;
-        }
-
-        console.log('submit ' + h);
-        formCall(x);
-        return false;
-    }));
-
-    return `<form id="${h}">
-                ${renderInputs(x, h + '.Command', r)}
-                <button type="submit" class="btn btn-primary">${field(h)}</button>
-            </form>`;
-}
-
-function renderInputs(form, h) {
-    let html = '';
-    let keys = Object.keys(form.Command);
-    for (let k of keys) {
-        //console.log('    input : ' + k);
-        html += `<div class="form-group">
-                    <label for="${k}">${k}</label>
-                    <input class="form-control" id="${h}.${k}" class="${h}.${k}"></input>
-                </div>`;
-    }
-    return html;
-}
 
 function href(x) {
     return x['href'].replace('/api', '');
@@ -157,7 +120,6 @@ function href(x) {
 addRenderer(
     (x, h, r) => true,
     (x, h, r) => '' + x);
-
 addRenderer(
     (x, h, r) => typeof (x) == 'object',
     (x, h, r) => renderObjectAsList(x, h, r));
@@ -185,9 +147,7 @@ addRenderer(
     });
 addRenderer(
     (x, h, r) => x["IsForm"],
-    (x, h, r) => {
-        return renderForm(x, h, r)
-    });
+    (x, h, r) => renderForm2(_page, x, h, r));
 addRenderer(
     (x, h, r) => x["href"],
     (x, h, r) => `<a id="${h}" href="${href(x)}"> ${field(h)} </a><br/>`);
@@ -198,4 +158,6 @@ addRenderer(
 addRenderer(
     (x, h, r) => x.IsLinkModel,
     (x, h, r) => `<a "id="${h}" href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
-
+addRenderer(
+    (x, h, r) => h == '',
+    (x, h, r) => renderPage(x, h, r));

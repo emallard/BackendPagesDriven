@@ -4,6 +4,7 @@ namespace Comptes
 {
     public class Select<TQuery, TModel> where TQuery : IMessage
     {
+        public bool IsSelect => true;
         public Select()
         {
             Source = new AsyncCall<TQuery, TModel[]>();

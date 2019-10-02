@@ -12,7 +12,10 @@
     <script src="/jquery-3.3.1.js"></script>
     <script src="/jquery.dataTables.min.js"></script>
     <script src="/render.js"></script>
+    <script src="/renderForm.js"></script>
+    <script src="/renderPage.js"></script>
     <script src="/renderSpecific.js"></script>
+    <script src="/renderUtils.js"></script>
     <script src="/drawInGraph.js"></script>
     <!--
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,7 +30,6 @@
 
         <script>
             var _page = null;
-            var _pageTypeName = '';
 
             async function init() {
                 let myHeaders = new Headers();
@@ -43,27 +45,7 @@
                 _page = JSON.parse(txt);
                 console.log(_page);
 
-                _pageTypeName = _page.PageTypeName;
-                _pageTypeName = _pageTypeName.substring(_pageTypeName.lastIndexOf('.') + 1);
-                document.getElementById('pagename').innerHTML = `<b>${_pageTypeName}</b>`;
-
-
-                let _page2 = {};
-                for (let k of Object.keys(_page)) {
-                    if (k != 'PageQuery' && k != 'Bindings' && k != 'Inits' && k != 'PageTypeName')
-                        _page2[k] = _page[k];
-                }
-                renderTo(_page2, _pageTypeName, document.getElementById('content'));
-
-                let htmlInits = _page.Inits.map(b => " - " + b.From.join('.') + ' =&gt; ' + b.To.join('.')).join('<br/>');
-                let htmlBindings = _page.Bindings.map(b => " - " + b.From.join('.') + ' =&gt; ' + b.To.join('.')).join('<br/>');
-
-                if (htmlInits.length > 0)
-                    htmlInits = "Inits :<br/>" + htmlInits + "<br/>";
-                if (htmlBindings.length > 0)
-                    htmlBindings = "Bindings :<br/>" + htmlBindings + "<br/>";
-                document.getElementById('bindings').innerHTML = htmlInits + htmlBindings;
-
+                renderTo(_page, '', document.getElementById('content'));
             }
 
             init();
@@ -93,35 +75,9 @@
                 }
             }
 
-            function applyInits() {
-                console.log('applyInits');
-                for (let init of _page.Inits) {
-                    let v = getValue(_page, init.From);
-                    setFormInputValue(init.To, v);
-                }
-            }
 
-            function getValue(x, members) {
-                //console.log(' get ' + members.join('.'));
-                let y = x;
-                for (let i = 0; i < members.length; ++i)
-                    y = y[members[i]];
-                return y;
-            }
 
-            function setValue(x, members, value) {
-                //console.log(' set ' + members.join('.') + ' = ' + value);
-                let y = x;
-                for (let i = 0; i < members.length - 1; ++i)
-                    y = y[members[i]];
-                y[members.length - 1] = value;
-            }
 
-            function setFormInputValue(members, value) {
-                let id = _pageTypeName + '.' + members.join('.');
-                console.log(' setInput : ' + id + ' = ' + value);
-                document.getElementById(id).value = value;
-            }
 
         </script>
 </body>

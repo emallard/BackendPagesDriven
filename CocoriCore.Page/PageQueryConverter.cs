@@ -9,12 +9,12 @@ namespace CocoriCore
 {
 
 
-    public class PageConverter : JsonConverter
+    public class PageQueryConverter : JsonConverter
     {
         private readonly RouterOptions routerOptions;
         private readonly RouteToUrl routeToUrl;
 
-        public PageConverter(RouterOptions routerOptions, RouteToUrl routeToUrl)
+        public PageQueryConverter(RouterOptions routerOptions, RouteToUrl routeToUrl)
         {
             this.routerOptions = routerOptions;
             this.routeToUrl = routeToUrl;

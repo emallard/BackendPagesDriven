@@ -68,7 +68,8 @@ namespace Comptes.Api
             this.Bind<JsonSerializer>().ToMethod(ctx =>
             {
                 var serializer = new JsonSerializer();
-                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageConverter>());
+                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageQueryConverter>());
+                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<FormConverter>());
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<CallConverter>());
                 serializer.Converters.Add(new StringEnumConverter());
                 serializer.Converters.Add(new IDConverter());
