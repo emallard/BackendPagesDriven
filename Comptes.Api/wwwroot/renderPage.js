@@ -1,24 +1,4 @@
-class Page {
-    constructor() {
-        _page = null;
-    }
-    renderTo() { }
 
-    applyOnInits() { }
-
-    applyOnSubmits() { }
-}
-
-_renderConf = new RenderConf();
-class RenderConf {
-    renderers = [];
-}
-
-class RenderContext {
-    page = null;
-    afterRender(callback) { }
-    renderTo(x, h) { }
-}
 
 
 function renderPage(page, h, r) {
