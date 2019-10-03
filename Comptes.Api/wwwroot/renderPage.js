@@ -21,16 +21,16 @@ function renderPage(page, h, r) {
     let page2 = constructPageToRender(page);
 
     return `<b>${pageTypeName}</b>
-            ${render(page2, pageTypeName, r)}
+            ${r.render(page2, pageTypeName)}
             <div style="font-size: 12px">${htmlOnInits + htmlOnSubmits}</div>`;
 }
 
 function constructPageToRender(page) {
     console.log('fields to render :');
-    let inputs = page.Inputs.map(x => x.From.join('.'));
+    let inputs = page.OnSubmits.map(x => x.From[0]);
     let page2 = {};
     for (let k of Object.keys(page)) {
-        if (k == 'PageQuery' || k == 'OnSubmits' || k == 'OnInits' || k == 'Inputs' || k == 'PageTypeName')
+        if (k == 'PageQuery' || k == 'OnSubmits' || k == 'OnInits' || k == 'PageTypeName')
             continue;
         if (-1 != inputs.indexOf(k)) {
             continue;
@@ -41,15 +41,16 @@ function constructPageToRender(page) {
     return page2;
 }
 
-function applyOnInits() {
-    let page = _page;
+function applyOnInits(page) {
     console.log('applyOnInits');
     let pageTypeName = page.PageTypeName;
     pageTypeName = pageTypeName.substring(pageTypeName.lastIndexOf('.') + 1);
 
-    for (let init of _page.OnInits) {
-        let v = getValue(_page, init.From);
-        setFormInputValue(pageTypeName, init.To, v);
+    for (let init of page.OnInits) {
+        if (valueExists(page, init.From)) {
+            let v = getValue(page, init.From);
+            setFormInputValue(pageTypeName, init.To, v);
+        }
     }
 }
 

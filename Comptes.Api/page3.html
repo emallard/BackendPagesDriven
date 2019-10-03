@@ -11,8 +11,9 @@
 
     <script src="/lib/jquery-3.3.1.js"></script>
     <script src="/lib/jquery.dataTables.min.js"></script>
-    <script src="/render.js"></script>
+    <script src="/renderer.js"></script>
     <script src="/renderForm.js"></script>
+    <script src="/renderGeneric.js"></script>
     <script src="/renderPage.js"></script>
     <script src="/renderSpecific.js"></script>
     <script src="/renderUtils.js"></script>
@@ -45,7 +46,8 @@
                 _page = JSON.parse(txt);
                 console.log(_page);
 
-                renderTo(_page, '', document.getElementById('content'));
+                let renderer = new Renderer(_page);
+                renderer.renderTo(_page, '', document.getElementById('content'));
             }
 
             init();
@@ -74,11 +76,6 @@
                     document.location.href = response['href'].replace('/api', '');
                 }
             }
-
-
-
-
-
         </script>
 </body>
 

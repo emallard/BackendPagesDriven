@@ -1,23 +1,23 @@
-addRenderer(
+_renderers.push(
     (x, h, r) => h.startsWith("PosteListPage.Postes.Result.["),
     (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
 
 
 // PageLogs
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h.startsWith("HomePage.Pages.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.PageName}</a>`);
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h.startsWith("HomePage.Entities.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.EntityName}</a>`);
-addRenderer(
+_renderers.push(
     (x, h, r) => h.startsWith("HomePage.Tests.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.TestName}</a>`);
 
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h == "PagePage.PageReport.Result.RepositoryItems",
     (x, h, r) => {
         return renderArrayAsDatatable2(x, h, r,
@@ -33,7 +33,7 @@ addRenderer(
             })
     });
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h == "EntityPage.EntityReport.RepositoryItems",
     (x, h, r) => {
         return renderArrayAsDatatable2(x, h, r,
@@ -50,7 +50,7 @@ addRenderer(
             })
     });
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h == "TestPageResponse.TestReport.Result.Path.Items",
     (x, h, r) => {
         return renderArrayAsTable(x, h, r,
@@ -66,7 +66,7 @@ addRenderer(
             })
     });
 
-addRenderer(
+_renderers.push(
     (x, h, r) => h == 'TestPageResponse.PageGraph.Result',
     (x, h, r) => {
         r.afterRender(() => setTimeout(() =>

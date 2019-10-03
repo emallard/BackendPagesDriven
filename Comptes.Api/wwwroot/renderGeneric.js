@@ -1,57 +1,7 @@
-let guard = 0;
-
-let renderers = [];
-function addRenderer(predicate, func) {
-    renderers.push({ predicate: predicate, func: func })
-}
-
-class Renderer {
-    constructor() {
-        this.afterRenders = [];
-    }
-
-    afterRender(f) {
-        this.afterRenders.push(f);
-    }
-
-    callAfterRender() {
-        console.log('call after render');
-        for (let f of this.afterRenders) {
-            f();
-        }
-    }
-}
-
-function renderTo(x, h, elt) {
-    let renderer = new Renderer();
-    elt.innerHTML = render(x, h, renderer);
-    setTimeout(() => renderer.callAfterRender(), 0);
-}
-
-function render(x, h, r) {
-    console.log("render " + h);
-    guard++;
-    if (guard > 1000) {
-        console.log("GUARD TOO MANY CALLS : " + guard);
-        return "";
-    }
-
-    if (x == null)
-        return '';
-    let found = null;
-    for (let renderer of renderers) {
-        if (renderer.predicate(x, h, r))
-            found = renderer;
-    }
-    if (found == null)
-        console.error('not found renderer : ' + h, x);
-    return found.func(x, h, r);
-}
-
 function renderArrayAsList(x, h, r) {
     let html = `<ul>`;
     for (var i = 0; i < x.length; ++i)
-        html += "<li>" + render(x[i], h + `.[${i}]`, r) + '</li>';
+        html += "<li>" + r.render(x[i], h + `.[${i}]`) + '</li>';
     html += "</ul>"
     return html;
 }
@@ -105,7 +55,7 @@ function renderObjectAsList(x, h, r) {
     let html = `<ul>`;
     let keys = Object.keys(x);
     for (let k of keys)
-        html += `<li>${k} : ${render(x[k], h + '.' + k, r)}</li>`;
+        html += `<li>${k} : ${r.render(x[k], h + '.' + k)}</li>`;
     html += "</ul>"
     return html;
 }
@@ -117,27 +67,26 @@ function href(x) {
 }
 
 
-addRenderer(
+_renderers.push(
     (x, h, r) => true,
     (x, h, r) => '' + x);
-addRenderer(
+_renderers.push(
     (x, h, r) => typeof (x) == 'object',
     (x, h, r) => renderObjectAsList(x, h, r));
-addRenderer(
+_renderers.push(
     (x, h, r) => Array.isArray(x),
     (x, h, r) => renderArrayAsList(x, h, r));
-addRenderer(
+_renderers.push(
     (x, h, r) => typeof (x) == 'string',
     (x, h, r) => `${x}`);
-addRenderer(
+_renderers.push(
     (x, h, r) => x["IsAsyncCall"],
     (x, h, r) => {
         let hresult = h + '.Result';
         r.afterRender(async () => {
             let response = await call(x);
             x.Result = response;
-            renderTo(response, hresult, document.getElementById(hresult));
-            applyOnInits();
+            r.renderTo(response, hresult, document.getElementById(hresult));
         });
         return `<ul>
                     <li>Result
@@ -145,19 +94,19 @@ addRenderer(
                     </li>
                 </ul>`;
     });
-addRenderer(
+_renderers.push(
     (x, h, r) => x["IsForm"],
-    (x, h, r) => renderForm2(_page, x, h, r));
-addRenderer(
+    (x, h, r) => renderForm2(x, h, r));
+_renderers.push(
     (x, h, r) => x["href"],
     (x, h, r) => `<a id="${h}" href="${href(x)}"> ${field(h)} </a><br/>`);
-addRenderer(
+_renderers.push(
     (x, h, r) => x.IsSvg,
     (x, h, r) => `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`));
 
-addRenderer(
+_renderers.push(
     (x, h, r) => x.IsLinkModel,
     (x, h, r) => `<a "id="${h}" href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
-addRenderer(
+_renderers.push(
     (x, h, r) => h == '',
     (x, h, r) => renderPage(x, h, r));

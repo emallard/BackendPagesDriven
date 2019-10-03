@@ -15,15 +15,15 @@ function getPageName(h) {
     return split[0];
 }
 
-function getValueFromPath(x, path) {
-    //console.log(' get ' + members.join('.'));
-    var fields = path.split('.');
+function valueExists(x, members) {
     let y = x;
-    for (let i = 0; i < fields.length; ++i)
-        y = y[fields[i]];
-    return y;
+    for (let i = 0; i < members.length; ++i) {
+        y = y[members[i]];
+        if (y == null)
+            return false;
+    }
+    return y != null;
 }
-
 
 function getValue(x, members) {
     //console.log(' get ' + members.join('.'));
