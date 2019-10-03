@@ -65,7 +65,7 @@ class SelectInput {
         let selected = select['Selected'];
         let sourceResult = select['Source']['Result'];
         if (sourceResult != null)
-            selectElt.innerHTML = sourceResult.map(x => '<option>' + x + '</option>').join('');
+            selectElt.innerHTML = sourceResult.map(x => '<option>' + x.Label + '</option>').join('');
         //.value = funcModel();
     }
 }

@@ -13,4 +13,10 @@ namespace Comptes
         public AsyncCall<TQuery, TModel[]> Source;
         public TModel Selected;
     }
+
+    public class ValueLabel<T>
+    {
+        public T Value;
+        public string Label;
+    }
 }

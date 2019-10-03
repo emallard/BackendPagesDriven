@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using CocoriCore;
 
@@ -13,13 +14,13 @@ namespace Comptes
     public class DepenseCreatePage : PageBase<DepenseCreatePageQuery>
     {
         public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Depense;
-        public Select<PosteListQuery, PosteListResponseItem> PosteSelect;
+        public Select<PosteListQuery, ValueLabel<ID<Poste>>> PosteSelect;
         public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
 
         public DepenseCreatePage()
         {
             OnInit(this, x => x.Depense.Result.Poste, x => x.PosteSelect.Selected);
-            OnSubmit(this, x => x.PosteSelect.Selected.Id, x => x.Creer.Command.IdPoste);
+            OnSubmit(this, x => x.PosteSelect.Selected.Value, x => x.Creer.Command.IdPoste);
 
             //Render(this, x => x.PosteSelect, x => x.Creer.Command.IdPoste);
         }
@@ -45,6 +46,16 @@ namespace Comptes
                 .MapResponse<DepenseCreateInitResponse>()
                 .ToSelf();
 
+            OnMessage<PosteListQuery>()
+                .WithResponse<PosteListResponseItem[]>()
+                .BuildModel<ValueLabel<ID<Poste>>[]>((q, r) =>
+                {
+                    return r.Select(x => new ValueLabel<ID<Poste>>()
+                    {
+                        Value = x.Id,
+                        Label = x.Nom
+                    }).ToArray();
+                });
         }
     }
 }

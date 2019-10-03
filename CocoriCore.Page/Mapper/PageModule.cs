@@ -201,5 +201,13 @@ namespace CocoriCore
             module.Mappings3.Add(mapping3);
             return module;
         }
+
+        public PageModule BuildModel<TModel>(Func<TMessage, TResponse, TModel> func)
+        {
+            var mapping3 = new PageMapping3();
+            mapping3.Init<TMessage, TResponse, TModel>(func);
+            module.Mappings3.Add(mapping3);
+            return module;
+        }
     }
 }
