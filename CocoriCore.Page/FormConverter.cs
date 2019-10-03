@@ -37,17 +37,15 @@ namespace CocoriCore
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             JObject jobject = JObject.FromObject(value);
+
             var command = ((IForm)value).GetCommand();
-            var jcommand = JObject.FromObject(command);
+            var jFieldTypeNames = new JObject(); ;
             foreach (var mi in command.GetType().GetPropertiesAndFields())
             {
-                jcommand.Remove(mi.Name);
-                var jmember = new JObject();
-                jmember.Add("_TypeName", mi.GetMemberType().GetFriendlyName());
-                jcommand.Add(mi.Name, jmember);
+                jFieldTypeNames.Add(mi.Name, mi.GetMemberType().GetFriendlyName());
             }
-            jobject.Remove("Command");
-            jobject.Add("Command", jcommand);
+
+            jobject.Add("CommandFieldTypeNames", jFieldTypeNames);
             jobject.WriteTo(writer);
         }
     }

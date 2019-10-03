@@ -16,12 +16,32 @@ function renderForm2(form, h, r) {
     }));
 
 
-    var h2 = pathWithoutPage(h);
+    var hForm = pathWithoutPage(h);
     var pageName = getPageName(h);
 
-    var onSubmits = r.page.OnSubmits;
     var command = form.Command;
 
+    let inputFields = getInputsToBeRendered(r.page, command, hForm + '.Command');
+    console.log('InputsToBeRendered : \n  ' + inputFields.join('\n  '));
+
+    let html = '';
+    for (let hField of inputFields) {
+        let fieldValue = getValue(r.page, hField.split('.'));
+        let input2 = createInput(r.page, form, hForm, fieldValue, hField);
+        html += input2.render(fieldValue, pageName + '.' + hField, r);
+        r.afterRender(() => {
+            input2.updateFromModel()
+        });
+    }
+
+    return `<form id="${h}">
+                ${html}
+                <button type="submit" class="btn btn-primary">${field(h)}</button>
+            </form>`;
+
+    /*
+
+    
     var fieldPathsInForm = [];
     for (let k of Object.keys(command)) {
         fieldPathsInForm.push(h2 + '.Command.' + k);
@@ -45,44 +65,65 @@ function renderForm2(form, h, r) {
         console.log('render input : ' + f);
         //console.log(getValue(r.page, f.split('.')));
         html += renderInput(getValue(r.page, f.split('.')), pageName + '.' + f, r);
-    }
+    }*/
 
-    return `<form id="${h}">
-                ${html}
-                <button type="submit" class="btn btn-primary">${field(h)}</button>
-            </form>`;
+
 }
 
-function renderInput(x, h, r) {
-    var f = field(h);
+function getInputsToBeRendered(page, command, hCommand) {
 
-    if (x._TypeName != null) {
-        if (x._TypeName == 'string')
-            return `<div class="form-group">
-                        <label for="${h}">${f}</label>
-                        <input class="form-control" id="${h}"></input>
-                    </div>`;
+    let hInputs = [];
+    for (let k of Object.keys(command)) {
 
-        if (x._TypeName == 'double')
-            return `<div class="form-group">
-                        <label for="${h}">${f}</label>
-                        <input class="form-control" type="number" id="${h}"></input>
-                    </div>`;
+        let commandField = hCommand + '.' + k;
 
-        if (x._TypeName.startsWith('ID<'))
-            return `<div class="form-group">
-                        <label for="${h}">${f}</label>
-                        <input class="form-control" id="${h}"></input>
-                    </div>`;
+        let foundOnSubmit = false;
+        for (let onSubmit of page.OnSubmits) {
+
+            let onSubmitCommandField = onSubmit.To.join('.');
+            if (onSubmitCommandField == commandField) {
+                hInputs.push(onSubmit.From.slice(0, 1).join('.'));
+                foundOnSubmit = true;
+            }
+        }
+        if (!foundOnSubmit) {
+            hInputs.push(commandField);
+        }
+    }
+    return hInputs;
+}
+
+function createInput(page, form, hForm, field, hField) {
+
+    if (page['_inputs'] == null)
+        page['_inputs'] = [];
+
+    let typeName = null;
+    let hCommand = hForm + '.Command';
+    if (hField.startsWith(hCommand)) {
+        let fieldName = hField.split('.')[hField.split('.').length - 1];
+        console.log('CommandFieldTypeNames', form['CommandFieldTypeNames']);
+        console.log('fieldName ' + fieldName);
+        typeName = form['CommandFieldTypeNames'][fieldName];
+    }
+
+    var input = selectInput(field, typeName);
+    input.hModel = hField;
+    page['_inputs'].push(input);
+    return input;
+}
+
+function selectInput(x, typeName) {
+    if (typeName != null) {
+        if (typeName == 'string')
+            return new GenericInput('');
+        if (typeName == 'double')
+            return new GenericInput('number');
+        //if (typeName.startsWith('ID<'))
+        //    return new GenericInput();
     }
     if (x["IsSelect"])
-        return `<div class="form-group">
-            <label for="${h}">${f}</label>
-            <select class="form-control" id="${h}">
-                <option>kikoo</option>
-            </select>
-        </div>`;
+        return new SelectInput();
 
-    return `[INPUT ${x._TypeName}]`;
-
+    return new GenericInput();
 }

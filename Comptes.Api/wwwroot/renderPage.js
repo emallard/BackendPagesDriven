@@ -49,7 +49,14 @@ function applyOnInits(page) {
     for (let init of page.OnInits) {
         if (valueExists(page, init.From)) {
             let v = getValue(page, init.From);
-            setFormInputValue(pageTypeName, init.To, v);
+
+            console.log('applyOnInits setValue ' + init.To.join('.'), v);
+            setValue(page, init.To, v);
+
+            // update Inputs from models
+            for (var input of page['_inputs']) {
+                input.updateFromModel();
+            }
         }
     }
 }

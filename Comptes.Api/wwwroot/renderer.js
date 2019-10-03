@@ -11,10 +11,16 @@ class Renderer {
 
     callAfterRender() {
         console.log(`call after render (${this.afterRenders.length})`);
-        for (let f of this.afterRenders) {
-            f();
+        try {
+            for (let f of this.afterRenders) {
+                f();
+            }
         }
-        this.afterRenders = [];
+        finally {
+            this.afterRenders = [];
+        }
+
+
     }
 
     renderTo(x, h, elt) {

@@ -18,7 +18,6 @@ namespace CocoriCore
 
         public List<PageBinding> OnSubmits = new List<PageBinding>();
         public List<PageBinding> OnInits = new List<PageBinding>();
-        public List<PageBinding> Inputs = new List<PageBinding>();
 
         public void ApplyBindings()
         {
@@ -74,16 +73,6 @@ namespace CocoriCore
                 To = GetMemberNames(to.Body)
             });
         }
-
-        public void Render<T>(T page, Expression<Func<T, object>> member, Expression<Func<T, object>> form) where T : IPageBase
-        {
-            Inputs.Add(new PageBinding()
-            {
-                From = GetMemberNames(member.Body),
-                To = GetMemberNames(form.Body)
-            });
-        }
-
         private string[] GetMemberNames(Expression expr)
         {
             var expression = expr;

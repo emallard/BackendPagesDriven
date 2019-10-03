@@ -38,10 +38,10 @@ function setValue(x, members, value) {
     let y = x;
     for (let i = 0; i < members.length - 1; ++i)
         y = y[members[i]];
-    y[members.length - 1] = value;
+    y[members[members.length - 1]] = value;
 }
 
-function setFormInputValue(pageTypeName, members, value) {
+function updateFormInputValue(pageTypeName, members, value) {
     let id = pageTypeName + '.' + members.join('.');
     console.log(' setInput : ' + id + ' = ' + value);
     if (value['Id'] != null)
