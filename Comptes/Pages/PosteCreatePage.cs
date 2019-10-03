@@ -12,13 +12,13 @@ namespace Comptes
 
     public class PosteCreatePage : PageBase<PosteCreatePageQuery>
     {
-        public AsyncCall<PosteCreateInitQuery, PosteCreateInitResponse> Init;
+        public AsyncCall<PosteCreateInitQuery, PosteCreateInitResponse> Poste;
 
         public Form<PosteCreateCommand, PosteListPageQuery> Creer;
 
         public PosteCreatePage()
         {
-            Init(this, x => x.Init.Result.Nom, x => x.Creer.Command.Nom);
+            OnInit(this, x => x.Poste.Result.Nom, x => x.Creer.Command.Nom);
         }
     }
 
@@ -27,7 +27,7 @@ namespace Comptes
         public PosteCreatePageModule()
         {
             HandlePage<PosteCreatePageQuery, PosteCreatePage>()
-                .ForAsyncCall(p => p.Init)
+                .ForAsyncCall(p => p.Poste)
                 .MapResponse<PosteCreateInitResponse>()
                 .ToSelf()
 

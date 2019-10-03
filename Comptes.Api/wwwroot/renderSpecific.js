@@ -1,19 +1,19 @@
 addRenderer(
-    (x, h, r) => (0 <= h.indexOf("PosteListPage.Postes.Result.[")),
+    (x, h, r) => h.startsWith("PosteListPage.Postes.Result.["),
     (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
 
 
 // PageLogs
 
 addRenderer(
-    (x, h, r) => (0 <= h.indexOf("HomePage.Pages.Result.[")),
+    (x, h, r) => h.startsWith("HomePage.Pages.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.PageName}</a>`);
 
 addRenderer(
-    (x, h, r) => (0 <= h.indexOf("HomePage.Entities.Result.[")),
+    (x, h, r) => h.startsWith("HomePage.Entities.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.EntityName}</a>`);
 addRenderer(
-    (x, h, r) => (0 <= h.indexOf("HomePage.Tests.Result.[")),
+    (x, h, r) => h.startsWith("HomePage.Tests.Result.["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.TestName}</a>`);
 
 

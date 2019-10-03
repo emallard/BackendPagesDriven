@@ -16,13 +16,13 @@ namespace CocoriCore
         public TPageQuery PageQuery;
         public string PageTypeName;
 
-        public List<PageBinding> Bindings = new List<PageBinding>();
-        public List<PageBinding> Inits = new List<PageBinding>();
+        public List<PageBinding> OnSubmits = new List<PageBinding>();
+        public List<PageBinding> OnInits = new List<PageBinding>();
         public List<PageBinding> Inputs = new List<PageBinding>();
 
         public void ApplyBindings()
         {
-            foreach (var b in Bindings)
+            foreach (var b in OnSubmits)
                 ApplyBinding(b);
         }
 
@@ -57,25 +57,25 @@ namespace CocoriCore
             memberInfoSet.InvokeSetter(currentObject, value);
         }
 
-        public void Bind<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        public void OnSubmit<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
         {
-            Bindings.Add(new PageBinding()
+            OnSubmits.Add(new PageBinding()
             {
                 From = GetMemberNames(from.Body),
                 To = GetMemberNames(to.Body)
             });
         }
 
-        public void Init<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        public void OnInit<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
         {
-            Inits.Add(new PageBinding()
+            OnInits.Add(new PageBinding()
             {
                 From = GetMemberNames(from.Body),
                 To = GetMemberNames(to.Body)
             });
         }
 
-        public void Input<T>(T page, Expression<Func<T, object>> member, Expression<Func<T, object>> form) where T : IPageBase
+        public void Render<T>(T page, Expression<Func<T, object>> member, Expression<Func<T, object>> form) where T : IPageBase
         {
             Inputs.Add(new PageBinding()
             {

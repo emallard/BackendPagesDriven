@@ -5,23 +5,6 @@ function addRenderer(predicate, func) {
     renderers.push({ predicate: predicate, func: func })
 }
 
-class Renderer {
-    constructor() {
-        this.afterRenders = [];
-    }
-
-    afterRender(f) {
-        this.afterRenders.push(f);
-    }
-
-    callAfterRender() {
-        console.log('call after render');
-        for (let f of this.afterRenders) {
-            f();
-        }
-    }
-}
-
 function renderTo(x, h, elt) {
     let renderer = new Renderer();
     elt.innerHTML = render(x, h, renderer);
@@ -137,7 +120,7 @@ addRenderer(
             let response = await call(x);
             x.Result = response;
             renderTo(response, hresult, document.getElementById(hresult));
-            applyInits();
+            applyOnInits();
         });
         return `<ul>
                     <li>Result

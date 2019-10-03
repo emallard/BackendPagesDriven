@@ -1,41 +1,9 @@
-function renderForm(x, h, r) {
-    r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
-        evt.preventDefault();
-
-        let keys = Object.keys(x.Command);
-        for (let k of keys) {
-            x.Command[k] = document.getElementById(h + ".Command." + k).value;
-        }
-
-        console.log('submit ' + h);
-        formCall(x);
-        return false;
-    }));
-
-    return `<form id="${h}">
-                ${renderInputs(x, h + '.Command', r)}
-                <button type="submit" class="btn btn-primary">${field(h)}</button>
-            </form>`;
-}
-
-function renderInputs(form, h) {
-    let html = '';
-    let keys = Object.keys(form.Command);
-    for (let k of keys) {
-        //console.log('    input : ' + k);
-        html += `<div class="form-group">
-                    <label for="${k}">${k}</label>
-                    <input class="form-control" id="${h}.${k}" class="${h}.${k}"></input>
-                </div>`;
-    }
-    return html;
-}
-
-
 function renderForm2(page, form, h, r) {
 
     r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
         evt.preventDefault();
+
+        applyOnSubmits(page);
 
         let keys = Object.keys(form.Command);
         for (let k of keys) {
@@ -51,7 +19,7 @@ function renderForm2(page, form, h, r) {
     var h2 = pathWithoutPage(h);
     var pageName = getPageName(h);
 
-    var inputs = page.Inputs;
+    var onSubmits = page.OnSubmits;
     var command = form.Command;
 
     var fieldPathsInForm = [];
@@ -60,13 +28,14 @@ function renderForm2(page, form, h, r) {
     }
 
     // replace command paths with inputs paths
-    for (let input of inputs) {
-        var inputToReplace = input.To.join('.');
-        var foundIndex = fieldPathsInForm.indexOf(inputToReplace);
+    for (let onSubmit of onSubmits) {
+        var commandFieldToReplace = onSubmit.To.join('.');
+        var foundIndex = fieldPathsInForm.indexOf(commandFieldToReplace);
 
-        console.log('inputToReplace : ' + inputToReplace + ' : ' + foundIndex);
-        if (foundIndex >= 0)
-            fieldPathsInForm[foundIndex] = input.From.join('.');
+        if (foundIndex >= 0) {
+            console.log('commandFieldToReplace : ' + commandFieldToReplace + ' : ' + foundIndex);
+            fieldPathsInForm[foundIndex] = onSubmit.From[0];
+        }
     }
 
     console.log('renderForm2 : ' + h, fieldPathsInForm);

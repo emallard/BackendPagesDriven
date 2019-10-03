@@ -12,15 +12,16 @@ namespace Comptes
 
     public class DepenseCreatePage : PageBase<DepenseCreatePageQuery>
     {
-        public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Init;
+        public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Depense;
         public Select<PosteListQuery, PosteListResponseItem> PosteSelect;
         public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
 
         public DepenseCreatePage()
         {
-            Init(this, x => x.Init.Result.Poste, x => x.PosteSelect.Selected);
-            Input(this, x => x.PosteSelect, x => x.Creer.Command.IdPoste);
-            Bind(this, x => x.PosteSelect.Selected.Id, x => x.Creer.Command.IdPoste);
+            OnInit(this, x => x.Depense.Result.Poste, x => x.PosteSelect.Selected);
+            OnSubmit(this, x => x.PosteSelect.Selected.Id, x => x.Creer.Command.IdPoste);
+
+            //Render(this, x => x.PosteSelect, x => x.Creer.Command.IdPoste);
         }
     }
 
@@ -40,7 +41,7 @@ namespace Comptes
                 .MapResponse<PosteListResponseItem[]>()
                 .ToSelf()
 
-                .ForAsyncCall(p => p.Init)
+                .ForAsyncCall(p => p.Depense)
                 .MapResponse<DepenseCreateInitResponse>()
                 .ToSelf();
 

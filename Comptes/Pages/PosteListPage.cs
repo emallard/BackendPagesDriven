@@ -25,7 +25,8 @@ namespace Comptes
         public PosteListPageModule()
         {
             this.HandlePage<PosteListPageQuery, PosteListPage>()
-                .ForAsyncCall(p => p.Postes)
+                //.ForAsyncCall(p => p.Postes)
+                .ForAsyncCall<PosteListQuery>()
                 .MapResponse<PosteListResponseItem[]>()
                 .ToModel<PosteListPageItem[]>((q, r) => r.Select(x => new PosteListPageItem()
                 {

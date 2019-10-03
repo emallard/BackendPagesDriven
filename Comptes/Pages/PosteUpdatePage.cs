@@ -19,8 +19,8 @@ namespace Comptes
 
         public PosteUpdatePage()
         {
-            Init(this, x => x.Init.Result.Nom, x => x.Enregistrer.Command.Nom);
-            Init(this, x => x.PageQuery.Id, x => x.Enregistrer.Command.Id);
+            OnInit(this, x => x.Init.Result.Nom, x => x.Enregistrer.Command.Nom);
+            OnInit(this, x => x.PageQuery.Id, x => x.Enregistrer.Command.Id);
         }
     }
 
