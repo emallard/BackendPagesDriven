@@ -1,7 +1,7 @@
 namespace CocoriCore
 {
 
-    public interface IPageQuery
+    public interface IPageQuery : IMessage
     {
 
     }

@@ -35,7 +35,7 @@ namespace CocoriCore
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var message = (IMessage)value;
+            var message = (IPageQuery)value;
             JObject jObject = new JObject();
             foreach (var mi in message.GetType().GetPropertiesAndFields())
             {

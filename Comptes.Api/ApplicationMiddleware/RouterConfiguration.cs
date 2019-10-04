@@ -32,7 +32,7 @@ namespace Comptes.Api
             builder.Get<DepenseCreatePageQuery>().SetPath("api/depenses/creer");
             builder.Get<DepenseViewPageQuery>().SetPath(x => $"api/depenses/{x.Id}");
 
-            builder.Post<Call>().SetPath("api/call").UseBody();
+            builder.Post<GenericMessage>().SetPath("api/call").UseBody();
             //builder.Get<FavIconMessage>().SetPath("favicon.ico").UseQuery();
             builder.Get<Tests_Id_GET>().SetPath(x => $"api/tests/{x.Type}/{x.TestName}").UseQuery();
 

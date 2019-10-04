@@ -13,7 +13,8 @@ namespace CocoriCore
         [Fact]
         public void Test()
         {
-            var call = new Call<Message, Response>(new Message() { Id = Guid.NewGuid() });
+            var call = new Call<Message, Response>();
+            call.Message = new Message() { Id = Guid.NewGuid() };
 
             var settings = new JsonSerializerSettings()
             {
@@ -23,9 +24,9 @@ namespace CocoriCore
 
             var jsonString = jsonSerializer.Serialize(call);
 
-            var deserialized = (Call)jsonSerializer.Deserialize(
+            var deserialized = (GenericMessage)jsonSerializer.Deserialize(
                     new JsonTextReader(new StringReader(jsonString)),
-                    typeof(Call));
+                    typeof(GenericMessage));
 
             Console.WriteLine(deserialized.GetType()); // Must be Call<Message, Response>
         }

@@ -1,7 +1,7 @@
 function renderArrayAsList(x, h, r) {
     let html = `<ul>`;
     for (var i = 0; i < x.length; ++i)
-        html += "<li>" + r.render(x[i], h + `.[${i}]`) + '</li>';
+        html += "<li>" + r.render(x[i], h + `[${i}]`) + '</li>';
     html += "</ul>"
     return html;
 }
@@ -89,7 +89,7 @@ _renderers.push(
     (x, h, r) => typeof (x) == 'string',
     (x, h, r) => `${x}`);
 _renderers.push(
-    (x, h, r) => x["IsAsyncCall"],
+    (x, h, r) => x["IsAsyncCall"] && x["OnInit"],
     (x, h, r) => {
         let hresult = h + '.Result';
         r.afterRender(async () => {
@@ -104,15 +104,21 @@ _renderers.push(
                 </ul>`;
     });
 _renderers.push(
+    (x, h, r) => x["IsAsyncCall"] && !x["OnInit"],
+    (x, h, r) => {
+        r.afterRender(() => document.getElementById(h).addEventListener('click', () => call(x)))
+        return `<button class="btn btn-success" id="${h}"> ${field(h)} </button>`;
+    });
+_renderers.push(
     (x, h, r) => x["IsForm"],
     (x, h, r) => renderForm2(x, h, r));
 _renderers.push(
     (x, h, r) => x["href"],
     (x, h, r) => `<a id="${h}" href="${href(x)}"> ${field(h)} </a><br/>`);
+
 _renderers.push(
     (x, h, r) => x.IsSvg,
     (x, h, r) => `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`));
-
 _renderers.push(
     (x, h, r) => x.IsPageLink,
     (x, h, r) => `<a "id="${h}" href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);

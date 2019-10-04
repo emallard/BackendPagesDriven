@@ -8,7 +8,7 @@ namespace CocoriCore
     }
 
     public class PageCall<TPageMessage, TMessage, TResponse, TPageResponse>
-            : Call
+            : GenericMessage
             , IMessage<TPageResponse>
         where TPageMessage : IMessage
 

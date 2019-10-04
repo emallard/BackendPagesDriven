@@ -54,7 +54,7 @@ function applyOnInits(page) {
             setValue(page, init.To, v);
 
             // update Inputs from models
-            for (var input of page['_inputs']) {
+            for (var input of _pageinputs) {
                 input.updateFromModel();
             }
         }
@@ -73,7 +73,6 @@ function applyOnSubmits(page) {
 }
 
 function applyInputsToModel(page) {
-    for (var input of page['_inputs']) {
+    for (var input of _pageinputs)
         input.updateModel();
-    }
 }

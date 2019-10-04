@@ -8,6 +8,9 @@ using Ninject;
 using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.NamedScope;
 using Ninject.Extensions.Factory;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Comptes
 {
     public class TestBase : IPageTest// : IDisposable
@@ -64,8 +67,15 @@ namespace Comptes
 
         public void WithSeleniumBrowser(RouterOptions routerOptions)
         {
+            kernel.Bind<JsonSerializer>().ToMethod(ctx =>
+            {
+                var serializer = new JsonSerializer();
+                serializer.Converters.Add(new StringEnumConverter());
+                serializer.Converters.Add(new IDConverter());
+                return serializer;
+            }).InSingletonScope();
             kernel.Bind<RouterOptions>().ToConstant(routerOptions);
-            kernel.Rebind<IBrowser>().To<SeleniumBrowser>();
+            kernel.Rebind<IBrowser>().To<SeleniumBrowser>().InNamedScope("user");
         }
         /*
         public BrowserFluent<Accueil_Page> CreateBrowser(string id)

@@ -37,7 +37,7 @@ namespace Comptes
                 .ToSelf()
 
                 .ForForm(p => p.Enregistrer)
-                .MapResponse<Void>()
+                .MapResponse<CocoriCore.Void>()
                 .ToModel<PosteListPageQuery>((q, r, m) => { });
 
         }

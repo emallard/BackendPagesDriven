@@ -27,16 +27,6 @@ namespace Comptes
     {
         public DepenseListPageModule()
         {
-            /*
-            this.MapAsyncCall<PageListeDepensesQuery, ListQuery<DepenseView>, DepenseView[], PageListeDepenseItem[]>(
-                q => new ListQuery<DepenseView>(),
-                (q, r) => r.Select(x => new PageListeDepenseItem()
-                {
-                    Lien = new PageDepenseQuery { Id = x.Id.Id },
-                    Depense = x
-                }).ToArray()
-                );
-            */
             this.HandlePage<ListeDepensesPageQuery, DepenseListPage>((q, p) => { })
                 .ForAsyncCall(x => x.Depenses)
                 .MapResponse<DepenseListResponseItem[]>()

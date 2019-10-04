@@ -32,7 +32,7 @@ namespace CocoriCore.PageLogs
         {
             var test = new Test()
             {
-                TestClass = testClass,
+                TestType = testClass,
                 TestMethod = methodName,
                 TestName = testClass.FullName + "." + methodName
             };

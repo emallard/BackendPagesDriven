@@ -16,13 +16,13 @@ namespace CocoriCore
         public override bool CanWrite => false;
         public override bool CanConvert(Type objectType)
         {
-            return typeof(Call).IsAssignableFrom(objectType);
+            return typeof(GenericMessage).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject jObject = JObject.Load(reader);
-            var call = jObject.ToObject<Call>();
+            var call = jObject.ToObject<GenericMessage>();
             var newObj = jObject.ToObject(call._Type, serializer);
             return newObj;
         }

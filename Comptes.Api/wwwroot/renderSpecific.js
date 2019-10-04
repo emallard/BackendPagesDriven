@@ -1,6 +1,6 @@
 _renderers.push(
-    (x, h, r) => h.startsWith("PosteListPage.Postes.Result.["),
-    (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
+    (x, h, r) => h.startsWith("PosteListPage.Postes.Result["),
+    (x, h, r) => `<a id="${h}.Lien" href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
 
 
 _renderers.push(
@@ -11,14 +11,14 @@ _renderers.push(
 // PageLogs
 
 _renderers.push(
-    (x, h, r) => h.startsWith("HomePage.Pages.Result.["),
+    (x, h, r) => h.startsWith("HomePage.Pages.Result["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.PageName}</a>`);
 
 _renderers.push(
-    (x, h, r) => h.startsWith("HomePage.Entities.Result.["),
+    (x, h, r) => h.startsWith("HomePage.Entities.Result["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.EntityName}</a>`);
 _renderers.push(
-    (x, h, r) => h.startsWith("HomePage.Tests.Result.["),
+    (x, h, r) => h.startsWith("HomePage.Tests.Result["),
     (x, h, r) => `<a href="${href(x.Link)}">${x.TestName}</a>`);
 
 

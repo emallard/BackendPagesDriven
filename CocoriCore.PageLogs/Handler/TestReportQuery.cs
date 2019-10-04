@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CocoriCore.Linq.Async;
+using CocoriCore.Page;
 
 namespace CocoriCore.PageLogs
 {
@@ -42,9 +43,9 @@ namespace CocoriCore.PageLogs
     public class PagePathRedirection : IPagePathItem
     {
         public int IndexInTest;
-        public LinkModel PageFrom;
+        public PageLink PageFrom;
         public string PageFromMemberName;
-        public LinkModel PageTo;
+        public PageLink PageTo;
         public bool PageToHasAssert;
     }
 
@@ -105,13 +106,13 @@ namespace CocoriCore.PageLogs
                 }
                 if (item is TestPageRedirection redirection)
                 {
-                    LinkModel pageFrom = null;
+                    PageLink pageFrom = null;
                     if (redirection.FromPageName != null)
-                        pageFrom = new LinkModel(
+                        pageFrom = new PageLink(
                                         new PagePageQuery() { PageName = redirection.FromPageName },
                                         redirection.FromPageName
                                         );
-                    var pageTo = new LinkModel(
+                    var pageTo = new PageLink(
                                     new PagePageQuery() { PageName = redirection.ToPageName },
                                     redirection.ToPageName
                                     );

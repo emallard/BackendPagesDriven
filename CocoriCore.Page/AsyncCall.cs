@@ -14,6 +14,7 @@ namespace CocoriCore
     public class AsyncCall<TQuery, TModel> : IMessage<TModel>, IAsyncCall where TQuery : IMessage
     {
         public bool IsAsyncCall = true;
+        public bool OnInit = true;
         public Type _Type;
         public Type _PageQueryType;
         public TQuery Query = Activator.CreateInstance<TQuery>();

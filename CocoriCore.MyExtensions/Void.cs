@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 
-namespace Comptes
+
+namespace CocoriCore
 {
     public class Void
     {
+
     }
 }

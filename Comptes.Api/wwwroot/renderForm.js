@@ -58,10 +58,8 @@ function getInputsToBeRendered(page, command, hCommand) {
     return hInputs;
 }
 
+var _pageinputs = [];
 function createInput(page, form, hForm, field, hField) {
-
-    if (page['_inputs'] == null)
-        page['_inputs'] = [];
 
     let typeName = null;
     let hCommand = hForm + '.Command';
@@ -74,7 +72,8 @@ function createInput(page, form, hForm, field, hField) {
 
     var input = selectInput(field, typeName);
     input.hModel = hField;
-    page['_inputs'].push(input);
+
+    _pageinputs.push(input);
     return input;
 }
 

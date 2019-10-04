@@ -95,7 +95,7 @@ namespace CocoriCore.Page
 
             return fields
                 .Where(f => !f.GetMemberType().IsAssignableTo(typeof(IPageQuery))
-                        && !f.GetMemberType().IsAssignableTo(typeof(Call))
+                        && !f.GetMemberType().IsAssignableTo(typeof(GenericMessage))
                         )
                 .ToArray();
         }
@@ -115,7 +115,7 @@ namespace CocoriCore.Page
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
 
             return fields
-                .Where(f => f.GetMemberType().IsAssignableTo(typeof(Call)))
+                .Where(f => f.GetMemberType().IsAssignableTo(typeof(GenericMessage)))
                 .Select(f =>
                 {
                     var generics = f.GetMemberType().GetGenericArguments(typeof(Call<,>));

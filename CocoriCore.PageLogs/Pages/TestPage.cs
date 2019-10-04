@@ -9,6 +9,7 @@ namespace CocoriCore.PageLogs
     {
         public AsyncCall<TestReportQuery, TestReport> TestReport;
         public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
+        public AsyncCall<RunWithSeleniumCommand, Void> RunWithSelenium;
     }
 
     public class TestPageModule : PageModule
@@ -18,12 +19,10 @@ namespace CocoriCore.PageLogs
             HandlePage<TestPageQuery, TestPageResponse>((q, p) =>
             {
                 p.TestReport.Query.TestName = q.TestName;
+
+                p.RunWithSelenium.Query.TestName = q.TestName;
+                p.RunWithSelenium.OnInit = false;
             });
-            /*
-                .ForAsyncCall(p => p.TestReport)
-                .MapResponse<TestReport>()
-                .ToSelf();
-            */
         }
 
     }
