@@ -26,6 +26,15 @@ function renderArrayAsDatatable2(x, h, r, options) {
 }
 
 function renderArrayAsTable(x, h, r, options) {
+    if (options == null)
+        options = {};
+    if (options.columns == null) {
+        options.columns = [];
+        let keys = Object.keys(x[0]);
+        for (let k of keys)
+            options.columns.push({ "title": k, "data": k });
+    }
+
     return `<table class="table" id="${h}">
                 <thead>
                     ${renderTableHeaders(options)}
@@ -47,7 +56,7 @@ function renderTableRows(data, options, h, r) {
 }
 
 function renderTableRow(data, options, h, r) {
-    let htmls = options.columns.map(column => render(data[column.data], h + column.data, r));
+    let htmls = options.columns.map(column => r.render(data[column.data], h + column.data));
     return '<tr>' + htmls.map(html => `<td>${html}</td>`).join('') + '</tr>';
 }
 
@@ -105,7 +114,7 @@ _renderers.push(
     (x, h, r) => `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`));
 
 _renderers.push(
-    (x, h, r) => x.IsLinkModel,
+    (x, h, r) => x.IsPageLink,
     (x, h, r) => `<a "id="${h}" href="${href(x.PageQuery)}"> ${x.Text} </a><br/>`);
 _renderers.push(
     (x, h, r) => h == '',

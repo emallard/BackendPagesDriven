@@ -36,10 +36,23 @@ namespace CocoriCore
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var message = (IMessage)value;
+            JObject jObject = new JObject();
+            foreach (var mi in message.GetType().GetPropertiesAndFields())
+            {
+                var field = mi.InvokeGetter(message);
+                var jfield = JToken.FromObject(field, serializer);
+                jObject.Add(mi.Name, jfield);
+            }
+
             var url = this.routeToUrl.ToUrl(message);
+            jObject.Add("href", JToken.FromObject(url));
+            jObject.WriteTo(writer);
+
+            /*
             JObject jObject = JObject.FromObject(value);
             jObject.Add("href", JToken.FromObject(url));
             jObject.WriteTo(writer);
+            */
         }
     }
 }

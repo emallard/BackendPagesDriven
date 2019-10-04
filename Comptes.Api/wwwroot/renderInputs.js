@@ -15,15 +15,6 @@ class GenericInput {
                     <label for="${h}">${f}</label>
                     <input class="form-control" type="${this.inputType}" id="${h}"></input>
                 </div>`;
-
-        /*
-if (x._TypeName.startsWith('ID<'))
-return `<div class="form-group">
-            <label for="${h}">${f}</label>
-            <input class="form-control" id="${h}"></input>
-        </div>`;
-        */
-
     }
 
     updateFromModel() {
@@ -31,6 +22,11 @@ return `<div class="form-group">
         let value = getValue(this.page, this.hModel.split('.'));
         //console.log(this.page, value);
         document.getElementById(this.id).value = value;
+    }
+
+    updateModel() {
+        let value = document.getElementById(this.id).value;
+        setValue(this.page, this.hModel.split('.'), value);
     }
 }
 
@@ -65,7 +61,15 @@ class SelectInput {
         let selected = select['Selected'];
         let sourceResult = select['Source']['Result'];
         if (sourceResult != null)
-            selectElt.innerHTML = sourceResult.map(x => '<option>' + x.Label + '</option>').join('');
-        //.value = funcModel();
+            selectElt.innerHTML = sourceResult.map(x => `<option value="${x.Value}">${x.Label}</option>`).join('');
+    }
+
+    updateModel() {
+        let selectElt = document.getElementById(this.id);
+        //let selectedIndex = selectElt.selectedIndex;
+        let selectedValue = selectElt.selectedOptions[0].value;
+
+        let selectModel = getValue(this.page, this.hModel.split('.'));
+        selectModel.Selected = { Value: selectedValue };
     }
 }

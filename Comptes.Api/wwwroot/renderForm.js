@@ -3,13 +3,8 @@ function renderForm2(form, h, r) {
     r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
         evt.preventDefault();
 
+        applyInputsToModel(r.page);
         applyOnSubmits(r.page);
-
-        let keys = Object.keys(form.Command);
-        for (let k of keys) {
-            form.Command[k] = document.getElementById(h + ".Command." + k).value;
-        }
-
         console.log('submit ' + h);
         formCall(form);
         return false;
@@ -38,36 +33,6 @@ function renderForm2(form, h, r) {
                 ${html}
                 <button type="submit" class="btn btn-primary">${field(h)}</button>
             </form>`;
-
-    /*
-
-    
-    var fieldPathsInForm = [];
-    for (let k of Object.keys(command)) {
-        fieldPathsInForm.push(h2 + '.Command.' + k);
-    }
-
-    // replace command paths with inputs paths
-    for (let onSubmit of onSubmits) {
-        var commandFieldToReplace = onSubmit.To.join('.');
-        var foundIndex = fieldPathsInForm.indexOf(commandFieldToReplace);
-
-        if (foundIndex >= 0) {
-            console.log('commandField to replace : ' + commandFieldToReplace + ' : ' + foundIndex);
-            fieldPathsInForm[foundIndex] = onSubmit.From[0];
-        }
-    }
-
-    //console.log('renderForm2 : ' + h, fieldPathsInForm);
-
-    let html = '';
-    for (let f of fieldPathsInForm) {
-        console.log('render input : ' + f);
-        //console.log(getValue(r.page, f.split('.')));
-        html += renderInput(getValue(r.page, f.split('.')), pageName + '.' + f, r);
-    }*/
-
-
 }
 
 function getInputsToBeRendered(page, command, hCommand) {

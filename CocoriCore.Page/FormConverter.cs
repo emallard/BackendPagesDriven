@@ -39,7 +39,7 @@ namespace CocoriCore
             JObject jobject = JObject.FromObject(value);
 
             var command = ((IForm)value).GetCommand();
-            var jFieldTypeNames = new JObject(); ;
+            var jFieldTypeNames = new JObject();
             foreach (var mi in command.GetType().GetPropertiesAndFields())
             {
                 jFieldTypeNames.Add(mi.Name, mi.GetMemberType().GetFriendlyName());

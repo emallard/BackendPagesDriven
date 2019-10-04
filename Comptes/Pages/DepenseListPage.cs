@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CocoriCore;
+using CocoriCore.Page;
 
 namespace Comptes
 {
@@ -16,8 +17,10 @@ namespace Comptes
 
     public class DepenseListPageItem
     {
-        public DepenseViewPageQuery Lien;
-        public DepenseListResponseItem Depense;
+        public PageLink Voir;
+        public string NomPoste;
+        public string Description;
+        public double Montant;
     }
 
     public class DepenseListPageModule : PageModule
@@ -39,8 +42,10 @@ namespace Comptes
                 .MapResponse<DepenseListResponseItem[]>()
                 .ToModel<DepenseListPageItem[]>((q, r) => r.Select(x => new DepenseListPageItem()
                 {
-                    Lien = new DepenseViewPageQuery() { Id = x.Id },
-                    Depense = x
+                    Voir = new PageLink(new DepenseViewPageQuery() { Id = x.Id }, "Voir"),
+                    NomPoste = x.NomPoste,
+                    Description = x.Description,
+                    Montant = x.Montant
                 }).ToArray());
         }
     }

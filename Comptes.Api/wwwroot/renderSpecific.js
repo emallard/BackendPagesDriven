@@ -3,6 +3,11 @@ _renderers.push(
     (x, h, r) => `<a href="${href(x.Lien)}">${x.Poste.Nom}</a>`);
 
 
+_renderers.push(
+    (x, h, r) => h == "DepenseListPage.Depenses.Result",
+    (x, h, r) => renderArrayAsTable(x, h, r, null));
+
+
 // PageLogs
 
 _renderers.push(

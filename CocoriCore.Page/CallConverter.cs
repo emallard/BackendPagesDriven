@@ -23,7 +23,7 @@ namespace CocoriCore
         {
             JObject jObject = JObject.Load(reader);
             var call = jObject.ToObject<Call>();
-            var newObj = jObject.ToObject(call._Type);
+            var newObj = jObject.ToObject(call._Type, serializer);
             return newObj;
         }
 

@@ -61,12 +61,19 @@ function applyOnInits(page) {
     }
 }
 
+
 function applyOnSubmits(page) {
     console.log('applyOnSubmits');
     for (let s of page.OnSubmits) {
-        console.log('  ' + s.From.To.Join('.') + ' => ' + s.ToJoin('.'));
+        console.log('  ' + s.From.join('.') + ' => ' + s.To.join('.'));
         let v = getValue(page, s.From);
         console.log('  ' + v);
         setValue(page, s.To, v);
+    }
+}
+
+function applyInputsToModel(page) {
+    for (var input of page['_inputs']) {
+        input.updateModel();
     }
 }

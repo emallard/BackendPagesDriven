@@ -11,7 +11,7 @@ namespace Comptes
     public class DepenseViewResponse
     {
         public ID<Depense> Id { get; set; }
-        public ID<Poste> IdPoste;
+        //public ID<Poste> IdPoste;
         public string NomPoste;
         public string Description;
         public double Montant;
@@ -34,7 +34,7 @@ namespace Comptes
             return new DepenseViewResponse()
             {
                 Id = depense.Id,
-                IdPoste = depense.IdPoste,
+                //IdPoste = depense.IdPoste,
                 NomPoste = poste.Nom,
                 Description = depense.Description,
                 Montant = depense.Montant
