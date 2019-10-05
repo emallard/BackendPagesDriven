@@ -70,7 +70,7 @@ namespace Comptes.Api
                 var serializer = new JsonSerializer();
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<PageQueryConverter>());
                 serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<FormConverter>());
-                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<CallConverter>());
+                serializer.Converters.Add(ctx.GetContextPreservingResolutionRoot().Get<GenericMessageConverter>());
                 serializer.Converters.Add(new StringEnumConverter());
                 serializer.Converters.Add(new IDConverter());
                 return serializer;

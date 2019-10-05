@@ -7,9 +7,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CocoriCore
 {
-    public class CallConverter : JsonConverter
+    public class GenericMessageConverter : JsonConverter
     {
-        public CallConverter()
+        public GenericMessageConverter()
         {
         }
 
