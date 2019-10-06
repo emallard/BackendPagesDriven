@@ -11,5 +11,6 @@ namespace Comptes
         public ID<Poste> IdPoste;
         public string Description;
         public double Montant;
+        public DateTime Date;
     }
 }

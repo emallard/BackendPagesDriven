@@ -7,12 +7,12 @@ using CocoriCore.Router;
 
 namespace CocoriCore.PageLogs
 {
-    public class RunWithSeleniumCommand : IMessage<Void>
+    public class RunWithSeleniumCommand : IMessage<Empty>
     {
         public string TestName;
     }
 
-    public class RunWithSeleniumHandler : MessageHandler<RunWithSeleniumCommand, Void>
+    public class RunWithSeleniumHandler : MessageHandler<RunWithSeleniumCommand, Empty>
     {
         private readonly IRepository repository;
         private readonly RouterOptions routerOptions;
@@ -24,7 +24,7 @@ namespace CocoriCore.PageLogs
             this.repository = repository;
             this.routerOptions = routerOptions;
         }
-        public override async Task<Void> ExecuteAsync(RunWithSeleniumCommand message)
+        public override async Task<Empty> ExecuteAsync(RunWithSeleniumCommand message)
         {
             var test = await repository.LoadAsync<Test>(x => x.TestName, message.TestName);
 
@@ -42,7 +42,7 @@ namespace CocoriCore.PageLogs
                 }
             });
 
-            return new Void();
+            return new Empty();
         }
     }
 }

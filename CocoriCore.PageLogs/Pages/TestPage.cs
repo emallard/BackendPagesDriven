@@ -9,7 +9,7 @@ namespace CocoriCore.PageLogs
     {
         public AsyncCall<TestReportQuery, TestReport> TestReport;
         public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
-        public AsyncCall<RunWithSeleniumCommand, Void> RunWithSelenium;
+        public AsyncCall<RunWithSeleniumCommand, Empty> RunWithSelenium;
     }
 
     public class TestPageModule : PageModule

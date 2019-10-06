@@ -3,13 +3,13 @@ using CocoriCore;
 
 namespace Comptes
 {
-    public class PosteUpdateCommand : IMessage<Void>
+    public class PosteUpdateCommand : IMessage<Empty>
     {
         public ID<Poste> Id { get; set; }
         public string Nom;
     }
 
-    public class PosteUpdateCommandHandler : MessageHandler<PosteUpdateCommand, Void>
+    public class PosteUpdateCommandHandler : MessageHandler<PosteUpdateCommand, Empty>
     {
         private readonly IRepository repository;
 
@@ -18,7 +18,7 @@ namespace Comptes
             this.repository = repository;
         }
 
-        public async override Task<Void> ExecuteAsync(PosteUpdateCommand message)
+        public async override Task<Empty> ExecuteAsync(PosteUpdateCommand message)
         {
             var posteupdate = await repository.LoadAsync<Poste>(message.Id);
 
@@ -26,7 +26,7 @@ namespace Comptes
 
             await repository.UpdateAsync(posteupdate);
 
-            return new Void();
+            return new Empty();
         }
     }
 }

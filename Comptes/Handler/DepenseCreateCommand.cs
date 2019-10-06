@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using CocoriCore;
 
@@ -8,6 +9,7 @@ namespace Comptes
         public ID<Poste> IdPoste;
         public string Description;
         public double Montant;
+        public DateTime Date;
     }
 
     public class DepenseCreateCommandHandler : MessageHandler<DepenseCreateCommand, ID<Depense>>
@@ -25,7 +27,8 @@ namespace Comptes
             {
                 IdPoste = message.IdPoste,
                 Description = message.Description,
-                Montant = message.Montant
+                Montant = message.Montant,
+                Date = message.Date
             };
             await repository.InsertAsync(Depense);
             return Depense.Id;

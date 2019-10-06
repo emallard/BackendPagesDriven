@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CocoriCore;
@@ -16,6 +17,7 @@ namespace Comptes
         public string NomPoste;
         public string Description;
         public double Montant;
+        public DateTime Date;
     }
 
     public class DepenseListHandler : MessageHandler<DepenseListQuery, DepenseListResponseItem[]>
@@ -39,7 +41,8 @@ namespace Comptes
                 IdPoste = x.IdPoste,
                 NomPoste = postes.First(y => y.Id == x.IdPoste).Nom,
                 Description = x.Description,
-                Montant = x.Montant
+                Montant = x.Montant,
+                Date = x.Date
             }).ToArray();
 
             return items;

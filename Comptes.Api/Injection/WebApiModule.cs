@@ -75,7 +75,6 @@ namespace Comptes.Api
                 serializer.Converters.Add(new IDConverter());
                 return serializer;
             }).InSingletonScope();
-            this.Bind<IClock>().To<Clock>().InSingletonScope();
 
             this.Bind<PageLogsConfiguration>().ToConstant(new PageLogsConfiguration(
                 Comptes.AssemblyInfo.Assembly
