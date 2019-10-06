@@ -77,7 +77,8 @@ namespace CocoriCore
             memberInfoSet.InvokeSetter(currentObject, value);
         }
 
-        public void OnSubmit<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        public void OnSubmit<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> from, Expression<Func<TPage, TMember>> to)
+            where TPage : IPageBase
         {
             OnSubmits.Add(new PageBinding()
             {
@@ -86,7 +87,8 @@ namespace CocoriCore
             });
         }
 
-        public void OnInit<T>(T page, Expression<Func<T, object>> from, Expression<Func<T, object>> to) where T : IPageBase
+        public void OnInit<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> from, Expression<Func<TPage, TMember>> to)
+            where TPage : IPageBase
         {
             OnInits.Add(new PageBinding()
             {

@@ -12,7 +12,7 @@ namespace Comptes
 
     public class DepenseCreateInitResponse
     {
-        public PosteListResponseItem Poste;
+        public ValueLabel<ID<Poste>> Poste;
     }
 
     public class DepenseCreateInitHandler : MessageHandler<DepenseCreateInitQuery, DepenseCreateInitResponse>
@@ -30,10 +30,10 @@ namespace Comptes
             if (poste != null)
                 return new DepenseCreateInitResponse()
                 {
-                    Poste = new PosteListResponseItem()
+                    Poste = new ValueLabel<ID<Poste>>()
                     {
-                        Id = poste.Id,
-                        Nom = poste.Nom
+                        Value = poste.Id,
+                        Label = poste.Nom
                     }
                 };
             else

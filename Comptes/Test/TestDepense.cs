@@ -15,19 +15,17 @@ namespace Comptes
 
             user
                 .Display(new AccueilPageQuery())
-                .Follow(p => p.ListePostes)
-                .Follow(p => p.NouveauPoste)
-                .Fill(p => p.Creer.Command.Nom, "Voiture")
-                .Submit(p => p.Creer)
-                .ThenFollow(r => r)
+                .Play(Get<ScenarioCreerPoste>(s => s.NomPostes = new string[] { "Voiture", "Alimentation" }))
 
                 .Display(new AccueilPageQuery())
                 .Follow(p => p.ListeDepenses)
                 .Follow(p => p.NouvelleDepense)
 
-                .Assert(p => p.PosteSelect.Source.Result.Should().ContainSingle(x => x.Label == "Voiture"))
+                .Assert(p => p.PosteSelect.Source.Result,
+                    source => source.Should().Contain(x => x.Label == "Voiture"),
+                    source => source.Should().Contain(x => x.Label == "Alimentation"))
 
-                .Fill(p => p.PosteSelect.Selected, p => p.PosteSelect.Source.Result.First())
+                .Fill(p => p.PosteSelect.Selected, p => p.PosteSelect.Source.Result.First(x => x.Label == "Voiture"))
                 .Fill(p => p.Creer.Command.Description, "Plein d'essence")
                 .Fill(p => p.Creer.Command.Montant, 30)
                 .Submit(p => p.Creer)
