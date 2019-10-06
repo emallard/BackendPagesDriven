@@ -21,8 +21,6 @@ namespace Comptes
         {
             OnInit(this, x => x.Depense.Result.Poste, x => x.PosteSelect.Selected);
             OnSubmit(this, x => x.PosteSelect.Selected.Value, x => x.Creer.Command.IdPoste);
-
-            //Render(this, x => x.PosteSelect, x => x.Creer.Command.IdPoste);
         }
     }
 

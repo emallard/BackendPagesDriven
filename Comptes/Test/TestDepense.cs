@@ -31,12 +31,15 @@ namespace Comptes
                 .Fill(p => p.Creer.Command.Description, "Plein d'essence")
                 .Fill(p => p.Creer.Command.Montant, 30)
                 .Fill(p => p.Creer.Command.Date, new DateTime(2000, 1, 1))
-                .Submit(p => p.Creer);
+                .Submit(p => p.Creer)
+                .ThenFollow(r => r)
 
-
-            // TODO : quand il y a des valeurs par defaut. par exemple date.today, 
-            //        faire un test où on remplit, un test où on remplit pas
-
+                .Assert(p => p.Depenses.Result.Should().ContainSingle(
+                    x => x.NomPoste == "Voiture"
+                      && x.Description == "Plein d'essence"
+                      && x.Date == new DateTime(2000, 1, 1)
+                      && x.Montant == 30
+                      ));
         }
     }
 }

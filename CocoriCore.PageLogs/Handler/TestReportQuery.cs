@@ -106,6 +106,8 @@ namespace CocoriCore.PageLogs
                 }
                 if (item is TestPageRedirection redirection)
                 {
+                    if (!string.IsNullOrEmpty(redirection.ScenarioNames))
+                        continue;
                     PageLink pageFrom = null;
                     if (redirection.FromPageName != null)
                         pageFrom = new PageLink(

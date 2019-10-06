@@ -6,18 +6,7 @@ using CocoriCore.Page;
 namespace CocoriCore.Page
 {
 
-    public class BrowserFluent : BrowserFluent<int>
-    {
-        public BrowserFluent(ICurrentUserLogger logs,
-            IBrowser browser,
-            IFactory factory) :
-             base(logs, browser, factory)
-        {
-        }
-    }
-
-
-    public class BrowserFluent<TPage>
+    public class BrowserFluent<TPage> where TPage : IPageBase
     {
         public readonly ICurrentUserLogger logger;
         public readonly IBrowser browser;
@@ -63,6 +52,7 @@ namespace CocoriCore.Page
         }
 
         public BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPage, TPageTo> scenario)
+            where TPageTo : IPageBase
         {
             var scenarioId = Guid.NewGuid();
             this.logger.Log(new LogScenarioStart { ScenarioId = scenarioId, Name = scenario.GetType().Name });
@@ -73,22 +63,6 @@ namespace CocoriCore.Page
 
             return result;
         }
-
-        /*
-        public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
-            Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm,
-            Action<TMessage> modifyMessage
-        )
-            where TMessage : IMessage, new()
-        {
-            var command = new TMessage();
-            modifyMessage(command);
-
-            this.logs.Log(new LogSubmit { Id = this.Id, MemberName = ((MemberExpression)getForm.Body).Member.Name });
-
-            var formResponse = browser.Submit(Page, getForm, command).Result;
-            return new TestBrowserFluentSubmitted<TPage, TFormResponse>(this, formResponse);
-        }*/
 
         public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)

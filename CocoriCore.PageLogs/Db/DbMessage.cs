@@ -20,6 +20,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 PageName = context.PageName,
                 MessageName = messageName
             });

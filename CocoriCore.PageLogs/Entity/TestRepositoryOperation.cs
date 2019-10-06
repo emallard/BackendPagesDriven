@@ -8,6 +8,7 @@ namespace CocoriCore.PageLogs
         public string TestName;
         public int IndexInTest;
         public string UserName;
+        public string ScenarioNames;
         public string PageName;
         public string MessageName;
         public string EntityName;

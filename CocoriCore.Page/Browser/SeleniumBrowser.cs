@@ -116,6 +116,7 @@ namespace CocoriCore.Page
         }
 
         public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm)
+            where TPage : IPageBase
             where TMessage : IMessage, new()
         {
             await Task.CompletedTask;

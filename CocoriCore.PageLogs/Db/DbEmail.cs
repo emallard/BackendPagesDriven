@@ -20,6 +20,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 EmailName = l.MailMessage.Body.GetType().GetFriendlyName()
             });
         }
@@ -31,6 +32,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 PageName = context.PageName,
                 MessageName = context.MessageName,
                 EmailName = l.MailMessage.Body.GetType().GetFriendlyName()

@@ -21,6 +21,7 @@ namespace Comptes
         public string NomPoste;
         public string Description;
         public double Montant;
+        public DateTime Date;
     }
 
     public class DepenseListPageModule : PageModule
@@ -35,7 +36,8 @@ namespace Comptes
                     Voir = new PageLink(new DepenseViewPageQuery() { Id = x.Id }, "Voir"),
                     NomPoste = x.NomPoste,
                     Description = x.Description,
-                    Montant = x.Montant
+                    Montant = x.Montant,
+                    Date = x.Date
                 }).ToArray());
         }
     }

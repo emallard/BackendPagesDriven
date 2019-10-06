@@ -19,6 +19,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 FromPageName = null,
                 MemberName = null,
                 ToPageName = l.PageQuery.GetType().GetFriendlyName(),
@@ -34,6 +35,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest + 1,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 PageName = l.PageQuery.GetType().GetFriendlyName()
             };
 
@@ -53,6 +55,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 FromPageName = context.PageName,
                 ToPageName = l.PageQuery.GetType().GetFriendlyName(),
                 MemberName = l.MemberName,
@@ -68,6 +71,8 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
+
                 PageName = l.PageQuery.GetType().GetFriendlyName()
             };
 
@@ -88,6 +93,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 FromPageName = context.PageName,
                 ToPageName = l.PageQuery.GetType().GetFriendlyName(),
                 IsForm = true,
@@ -103,6 +109,7 @@ namespace CocoriCore.PageLogs
                 TestName = context.TestName,
                 IndexInTest = context.IndexInTest,
                 UserName = context.UserName,
+                ScenarioNames = context.ScenarioNames,
                 PageName = l.PageQuery.GetType().GetFriendlyName(),
             };
 

@@ -16,7 +16,9 @@ namespace CocoriCore.Page
         Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(
             TPage page,
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
-        where TMessage : IMessage, new();
+
+            where TPage : IPageBase
+            where TMessage : IMessage, new();
 
 
         Task<T> SubmitRedirect<T>(IMessage<T> message) where T : IPageBase;

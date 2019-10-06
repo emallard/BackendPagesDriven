@@ -7,24 +7,24 @@ namespace CocoriCore.Page
     public class UserFluent
     {
         public string UserName;
-        private readonly BrowserFluent browserFluent;
         private readonly MailFluent mailFluent;
         private readonly IUserLogger userLogger;
         private readonly SettableClock settableClock;
         private readonly ICurrentUserLogger currentUserLogger;
+        private readonly IFactory factory;
 
         public UserFluent(
             IUserLogger userLogger,
             IEmailReader emailReader,
             SettableClock settableClock,
             ICurrentUserLogger currentUserLogger,
-            BrowserFluent browserFluent,
+            IFactory factory,
             MailFluent mailFluent)
         {
-            this.browserFluent = browserFluent;
             this.userLogger = userLogger;
             this.settableClock = settableClock;
             this.currentUserLogger = currentUserLogger;
+            this.factory = factory;
             this.mailFluent = mailFluent;
         }
 
@@ -37,6 +37,7 @@ namespace CocoriCore.Page
 
         public BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
+            var browserFluent = factory.Create<BrowserFluent<T>>();
             return browserFluent.Display(message);
         }
 

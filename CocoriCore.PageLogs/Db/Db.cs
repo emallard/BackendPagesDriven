@@ -5,10 +5,10 @@ using CocoriCore.Page;
 
 namespace CocoriCore.PageLogs
 {
-
-    public partial class Db
+    public class Db
     {
         private readonly IRepository repository;
+        private readonly DbScenario dbScenario;
         private readonly DbPage dbPage;
         private readonly DbEmail dbEmail;
         private readonly DbEntity dbEntity;
@@ -16,12 +16,14 @@ namespace CocoriCore.PageLogs
 
         public Db(
             IRepository repository,
+            DbScenario dbScenario,
             DbPage dbPage,
             DbEmail dbEmail,
             DbEntity dbEntity,
             DbMessage dbMessage)
         {
             this.repository = repository;
+            this.dbScenario = dbScenario;
             this.dbPage = dbPage;
             this.dbEmail = dbEmail;
             this.dbEntity = dbEntity;
@@ -76,6 +78,10 @@ namespace CocoriCore.PageLogs
                 await dbMessage.Insert(context, logMessageBus);
             if (o is LogRepo logRepo)
                 await dbEntity.Insert(context, logRepo);
+            if (o is LogScenarioStart logScenarioStart)
+                await dbScenario.Insert(context, logScenarioStart);
+            if (o is LogScenarioEnd logScenarioEnd)
+                await dbScenario.Insert(context, logScenarioEnd);
             if (o is LogSubmit logSubmit)
                 await dbPage.Insert(context, logSubmit);
             if (o is LogSubmitRedirect logSubmitRedirect)

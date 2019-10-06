@@ -107,7 +107,7 @@ namespace CocoriCore.Page
             form.Command = message;
             return await ExecuteAsync(form);
         }*/
-
+        /*
         public void ApplyOnSubmits(IPageBase page)
         {
             page.ApplyOnSubmits();
@@ -116,10 +116,13 @@ namespace CocoriCore.Page
         public void ApplyOnInits(IPageBase page)
         {
             page.ApplyOnInits();
-        }
+        }*/
 
-        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm) where TMessage : IMessage, new()
+        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm)
+            where TPage : IPageBase
+            where TMessage : IMessage, new()
         {
+            page.ApplyOnSubmits();
             var func = expressionForm.Compile();
             var form = func(page);
             return await ExecuteAsync(form);
