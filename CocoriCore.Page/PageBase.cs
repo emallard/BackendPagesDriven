@@ -8,7 +8,8 @@ namespace CocoriCore
 {
     public interface IPageBase
     {
-        void ApplyBindings();
+        void ApplyOnSubmits();
+        void ApplyOnInits();
     }
 
     public class PageBase<TPageQuery> : IPageBase
@@ -19,28 +20,48 @@ namespace CocoriCore
         public List<PageBinding> OnSubmits = new List<PageBinding>();
         public List<PageBinding> OnInits = new List<PageBinding>();
 
-        public void ApplyBindings()
+        public void ApplyOnSubmits()
         {
             foreach (var b in OnSubmits)
                 ApplyBinding(b);
         }
 
-        private void ApplyBinding(PageBinding binding)
+        public void ApplyOnInits()
         {
-            var value = GetValue(binding.From, this);
-            SetValue(binding.To, this, value);
+            foreach (var b in OnInits)
+                TryApplyBinding(b);
         }
 
-        private object GetValue(string[] memberNames, object o)
+        private void ApplyBinding(PageBinding binding)
         {
+            object value;
+            if (TryGetValue(binding.From, this, out value))
+                SetValue(binding.To, this, value);
+            else
+                throw new Exception("Binding can't be applied");
+        }
+
+        private void TryApplyBinding(PageBinding binding)
+        {
+            object value;
+            if (TryGetValue(binding.From, this, out value))
+                SetValue(binding.To, this, value);
+        }
+
+        private bool TryGetValue(string[] memberNames, object o, out object value)
+        {
+            value = null;
             var currentObject = o;
             for (var i = 0; i < memberNames.Length; i++)
             {
+                if (currentObject == null)
+                    return false;
                 var memberInfo = currentObject.GetType().GetPropertyOrField(memberNames[i], BindingFlags.Instance | BindingFlags.Public);
                 currentObject = memberInfo.InvokeGetter(currentObject);
             }
 
-            return currentObject;
+            value = currentObject;
+            return true;
         }
 
         private void SetValue(string[] memberNames, object o, object value)

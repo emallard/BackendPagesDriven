@@ -46,6 +46,7 @@ namespace CocoriCore.Page
         }
 
         public BrowserFluent<TMessage> Follow<TMessage>(Expression<Func<TMail, IMessage<TMessage>>> expressionLink)
+            where TMessage : IPageBase
         {
             var message = (IMessage<TMessage>)expressionLink.Compile().Invoke(this.MailMessage.Body);
             return userFluent.Value.Display(message);

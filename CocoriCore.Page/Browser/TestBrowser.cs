@@ -23,7 +23,7 @@ namespace CocoriCore.Page
             this.browserclaimsProvider = browserclaimsProvider;
         }
 
-        public async Task<T> Follow<TPage, T>(TPage page, Expression<Func<TPage, IMessage<T>>> expressionMessage)
+        public async Task<T> Follow<TPage, T>(TPage page, Expression<Func<TPage, IMessage<T>>> expressionMessage) where T : IPageBase
         {
             var func = expressionMessage.Compile();
             var message = func(page);
@@ -32,23 +32,24 @@ namespace CocoriCore.Page
             return next;
         }
 
-        public async Task<T> Display<T>(IMessage<T> message)
+        public async Task<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
             var next = await this.ExecuteAsync(message);
             await ExecuteAsyncCalls(next);
             return next;
         }
 
-        public async Task<T> SubmitRedirect<T>(IMessage<T> message)
+        public async Task<T> SubmitRedirect<T>(IMessage<T> message) where T : IPageBase
         {
             var next = await this.ExecuteAsync(message);
             await ExecuteAsyncCalls(next);
             return next;
         }
 
-        private async Task ExecuteAsyncCalls<T>(T page)
+        private async Task ExecuteAsyncCalls<T>(T page) where T : IPageBase
         {
             await ExecuteAsyncCalls(page, page);
+            page.ApplyOnInits();
         }
         private async Task ExecuteAsyncCalls<T>(T page, object o)
         {
@@ -107,9 +108,14 @@ namespace CocoriCore.Page
             return await ExecuteAsync(form);
         }*/
 
-        public void ApplyBindings(IPageBase page)
+        public void ApplyOnSubmits(IPageBase page)
         {
-            page.ApplyBindings();
+            page.ApplyOnSubmits();
+        }
+
+        public void ApplyOnInits(IPageBase page)
+        {
+            page.ApplyOnInits();
         }
 
         public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm) where TMessage : IMessage, new()

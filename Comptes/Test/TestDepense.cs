@@ -6,44 +6,8 @@ using Xunit;
 
 namespace Comptes
 {
-    public class Pages_Tests : TestBase
+    public class TestDepense : TestBase
     {
-        [Fact]
-        public void CreerPoste()
-        {
-            var user = CreateUser("moi");
-
-            user
-                .Display(new AccueilPageQuery())
-                .Follow(p => p.ListePostes)
-                .Follow(p => p.NouveauPoste)
-                .Assert(p => p.Poste.Result.Nom.Should().Be("Voiture"))
-
-                .Fill(p => p.Creer.Command.Nom, "Alimentation")
-                .Submit(p => p.Creer)
-                .ThenFollow(r => r)
-                .Assert(p => p.Postes.Result,
-                        x => x.Length.Should().Be(1),
-                        x => x[0].Poste.Nom.Should().Be("Alimentation"));
-        }
-
-        [Fact]
-        public void ModifierPoste()
-        {
-            var user = CreateUser("moi");
-
-            user
-                .Display(new AccueilPageQuery())
-                .Follow(p => p.ListePostes)
-                .Follow(p => p.NouveauPoste)
-                .Fill(p => p.Creer.Command.Nom, "Alimentation")
-                .Submit(p => p.Creer)
-                .ThenFollow(r => r)
-
-                .Follow(p => p.Postes.Result[0].Lien)
-                .Follow(p => p.Modifier);
-        }
-
         [Fact]
         public void CreerDepense()
         {

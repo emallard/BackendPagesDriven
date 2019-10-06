@@ -13,13 +13,13 @@ namespace Comptes
 
     public class PosteUpdatePage : PageBase<PosteUpdatePageQuery>
     {
-        public AsyncCall<PosteUpdateInitQuery, PosteUpdateInitResponse> Init;
+        public AsyncCall<PosteUpdateInitQuery, PosteUpdateInitResponse> Poste;
 
         public Form<PosteUpdateCommand, PosteListPageQuery> Enregistrer;
 
         public PosteUpdatePage()
         {
-            OnInit(this, x => x.Init.Result.Nom, x => x.Enregistrer.Command.Nom);
+            OnInit(this, x => x.Poste.Result.Nom, x => x.Enregistrer.Command.Nom);
             OnInit(this, x => x.PageQuery.Id, x => x.Enregistrer.Command.Id);
         }
     }
@@ -30,9 +30,9 @@ namespace Comptes
         {
             HandlePage<PosteUpdatePageQuery, PosteUpdatePage>((q, p) =>
             {
-                p.Init.Query.Id = q.Id;
+                p.Poste.Query.Id = q.Id;
             })
-                .ForAsyncCall(p => p.Init)
+                .ForAsyncCall(p => p.Poste)
                 .MapResponse<PosteUpdateInitResponse>()
                 .ToSelf()
 

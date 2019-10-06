@@ -30,7 +30,7 @@ namespace CocoriCore.Page
             this.routeToUrl = routeToUrl;
             Thread.Sleep(3000);
         }
-        public async Task<T> Display<T>(IMessage<T> message)
+        public async Task<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
             await Task.CompletedTask;
             var url = "http://localhost:5000" + routeToUrl.ToUrl(message);
@@ -46,6 +46,7 @@ namespace CocoriCore.Page
         }
 
         public async Task<T> Follow<TPage, T>(TPage page, Expression<Func<TPage, IMessage<T>>> expressionMessage)
+            where T : IPageBase
         {
             await Task.CompletedTask;
             var idMessage = GetId(page, expressionMessage);
@@ -59,7 +60,7 @@ namespace CocoriCore.Page
             return DeserializePage<T>();
         }
 
-        public async Task<T> SubmitRedirect<T>(IMessage<T> message)
+        public async Task<T> SubmitRedirect<T>(IMessage<T> message) where T : IPageBase
         {
             await Task.CompletedTask;
 
@@ -114,12 +115,8 @@ namespace CocoriCore.Page
             return default(TFormResponse);
         }
 
-        public void ApplyBindings(IPageBase page)
-        {
-
-        }
-
-        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm) where TMessage : IMessage, new()
+        public async Task<TFormResponse> Submit<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, Form<TMessage, TFormResponse>>> expressionForm)
+            where TMessage : IMessage, new()
         {
             await Task.CompletedTask;
 

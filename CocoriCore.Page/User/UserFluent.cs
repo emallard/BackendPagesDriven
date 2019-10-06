@@ -35,7 +35,7 @@ namespace CocoriCore.Page
             return this;
         }
 
-        public BrowserFluent<T> Display<T>(IMessage<T> message)
+        public BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
             return browserFluent.Display(message);
         }

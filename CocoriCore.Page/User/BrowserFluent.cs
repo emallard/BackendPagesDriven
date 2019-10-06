@@ -23,7 +23,6 @@ namespace CocoriCore.Page
         public readonly IBrowser browser;
         private readonly IFactory factory;
         public TPage Page;
-        public string Id;
 
         public BrowserFluent(
             ICurrentUserLogger logs,
@@ -41,7 +40,7 @@ namespace CocoriCore.Page
             return this;
         }
 
-        public BrowserFluent<T> Follow<T>(Expression<Func<TPage, IMessage<T>>> expressionMessage)
+        public BrowserFluent<T> Follow<T>(Expression<Func<TPage, IMessage<T>>> expressionMessage) where T : IPageBase
         {
             if (browser is TestBrowser)
             {
@@ -56,7 +55,7 @@ namespace CocoriCore.Page
             return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
         }
 
-        public BrowserFluent<T> Display<T>(IMessage<T> message)
+        public BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
             this.logger.Log(new LogDisplay { PageQuery = message });
             var nextPage = this.browser.Display(message).Result;
@@ -95,7 +94,6 @@ namespace CocoriCore.Page
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
             where TMessage : IMessage, new()
         {
-            browser.ApplyBindings((IPageBase)this.Page);
             //this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Submit(Page, getForm).Result;
 
@@ -154,7 +152,7 @@ namespace CocoriCore.Page
             return this;
         }
 
-        public BrowserFluent<T> ThenFollow<T>(Func<TPostResponse, IMessage<T>> getMessage)
+        public BrowserFluent<T> ThenFollow<T>(Func<TPostResponse, IMessage<T>> getMessage) where T : IPageBase
         {
             // TODO difference TestBrowser / SeleniumBrowser
             if (browser is TestBrowser)

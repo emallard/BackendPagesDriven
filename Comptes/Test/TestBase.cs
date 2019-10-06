@@ -100,7 +100,9 @@ namespace Comptes
 
         public T Get<T>(Action<T> modification)
         {
-            return kernel.Get<T>();
+            var x = kernel.Get<T>();
+            modification(x);
+            return x;
         }
 
 
