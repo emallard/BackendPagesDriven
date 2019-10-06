@@ -47,12 +47,6 @@ namespace CocoriCore
             var url = this.routeToUrl.ToUrl(message);
             jObject.Add("href", JToken.FromObject(url));
             jObject.WriteTo(writer);
-
-            /*
-            JObject jObject = JObject.FromObject(value);
-            jObject.Add("href", JToken.FromObject(url));
-            jObject.WriteTo(writer);
-            */
         }
     }
 }

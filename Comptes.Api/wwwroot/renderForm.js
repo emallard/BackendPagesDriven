@@ -65,8 +65,6 @@ function createInput(page, form, hForm, field, hField) {
     let hCommand = hForm + '.Command';
     if (hField.startsWith(hCommand)) {
         let fieldName = hField.split('.')[hField.split('.').length - 1];
-        console.log('CommandFieldTypeNames', form['CommandFieldTypeNames']);
-        console.log('fieldName ' + fieldName);
         typeName = form['CommandFieldTypeNames'][fieldName];
     }
 
@@ -83,6 +81,8 @@ function selectInput(x, typeName) {
             return new GenericInput('');
         if (typeName == 'double')
             return new GenericInput('number');
+        if (typeName == 'DateTime')
+            return new GenericInput('date');
         //if (typeName.startsWith('ID<'))
         //    return new GenericInput();
     }

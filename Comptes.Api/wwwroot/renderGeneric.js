@@ -26,6 +26,16 @@ function renderArrayAsDatatable2(x, h, r, options) {
 }
 
 function renderArrayAsTable(x, h, r, options) {
+
+    if (x == null || x.length == 0)
+        return '[No elements in array]';
+
+    if (options == null) {
+        if (_renderers.findSpecific(x[0], h, r)) {
+            return this.renderArrayAsList(x, h, r);
+        }
+    }
+
     if (options == null)
         options = {};
     if (options.columns == null) {
@@ -35,12 +45,12 @@ function renderArrayAsTable(x, h, r, options) {
             options.columns.push({ "title": k, "data": k });
     }
 
-    return `<table class="table" id="${h}">
+    return `<table class="table table-responsive" id="${h}">
                 <thead>
                     ${renderTableHeaders(options)}
                 </thead>
                 <tbody>
-                    ${renderTableRows(x, options, h, r)}
+                    ${renderTableRows(x, h, r, options)}
                 </tbody>
             </table>
             `
@@ -51,12 +61,15 @@ function renderTableHeaders(options) {
     return '<tr>' + html + '</tr>';
 }
 
-function renderTableRows(data, options, h, r) {
-    return data.map((x, i) => renderTableRow(x, options, h + `[${i}].`, r)).join('');
+function renderTableRows(data, h, r, options) {
+    return data.map((x, i) => renderTableRow(x, h + `[${i}]`, r, options)).join('');
 }
 
-function renderTableRow(data, options, h, r) {
-    let htmls = options.columns.map(column => r.render(data[column.data], h + column.data));
+function renderTableRow(data, h, r, options) {
+
+    let htmls = options.columns.map(column => {
+        return r.render(data[column.data], h + '.' + column.data)
+    });
     return '<tr>' + htmls.map(html => `<td>${html}</td>`).join('') + '</tr>';
 }
 
@@ -84,7 +97,7 @@ _renderers.push(
     (x, h, r) => renderObjectAsList(x, h, r));
 _renderers.push(
     (x, h, r) => Array.isArray(x),
-    (x, h, r) => renderArrayAsList(x, h, r));
+    (x, h, r) => renderArrayAsTable(x, h, r));
 _renderers.push(
     (x, h, r) => typeof (x) == 'string',
     (x, h, r) => `${x}`);
@@ -97,11 +110,14 @@ _renderers.push(
             x.Result = response;
             r.renderTo(response, hresult, document.getElementById(hresult));
         });
+        return `<div id="${hresult}"></div>`;
+        /*
         return `<ul>
                     <li>Result
                         <div id="${hresult}"></div>
                     </li>
                 </ul>`;
+        */
     });
 _renderers.push(
     (x, h, r) => x["IsAsyncCall"] && !x["OnInit"],

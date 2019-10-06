@@ -22,36 +22,31 @@ namespace CocoriCore.PageLogs
 
     public class PagePath
     {
-        public IPagePathItem[] Items;
+        public PagePathRedirection[] Items;
     }
-
-    public class IPagePathItem
-    {
-        public string _Type;
-        public IPagePathItem()
+    /*
+        public class IPagePathItem
         {
-            this._Type = GetType().Name;
+            public string _Type;
+            public IPagePathItem()
+            {
+                this._Type = GetType().Name;
+            }
         }
-    }
 
-    public class PagePathPage : IPagePathItem
-    {
-        public string PageName;
-        public bool HasAssert;
-    }
-
-    public class PagePathRedirection : IPagePathItem
+        public class PagePathPage : IPagePathItem
+        {
+            public string PageName;
+            public bool HasAssert;
+        }
+    */
+    public class PagePathRedirection
     {
         public int IndexInTest;
         public PageLink PageFrom;
         public string PageFromMemberName;
         public PageLink PageTo;
         public bool PageToHasAssert;
-    }
-
-    public class PagePathPageAssert : IPagePathItem
-    {
-        public string PageName;
     }
 
     public class WithIndex

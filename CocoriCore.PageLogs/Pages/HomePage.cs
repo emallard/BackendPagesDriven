@@ -1,4 +1,5 @@
 using System.Linq;
+using CocoriCore.Page;
 
 namespace CocoriCore.PageLogs
 {
@@ -10,9 +11,9 @@ namespace CocoriCore.PageLogs
     public class HomePage : PageBase<HomePageQuery>
     {
         public Form<RunTestCommand, HomePageQuery> RunTests;
-        public AsyncCall<PageListQuery, PageListPageItem[]> Pages;
-        public AsyncCall<EntityListQuery, EntityListPageItem[]> Entities;
-        public AsyncCall<TestListQuery, TestListPageItem[]> Tests;
+        public AsyncCall<PageListQuery, PageLink[]> Pages;
+        public AsyncCall<EntityListQuery, PageLink[]> Entities;
+        public AsyncCall<TestListQuery, PageLink[]> Tests;
         public PageGraphPageQuery ViewPageGraph;
     }
 
@@ -27,31 +28,31 @@ namespace CocoriCore.PageLogs
 
                 .ForAsyncCall(p => p.Pages)
                 .MapResponse<string[]>()
-                .ToModel<PageListPageItem[]>((q, r) =>
-                    r.Select(x => new PageListPageItem()
+                .ToModel<PageLink[]>((q, r) =>
+                    r.Select(x => new PageLink()
                     {
-                        PageName = x,
-                        Link = new PagePageQuery() { PageName = x }
+                        Text = x,
+                        PageQuery = new PagePageQuery() { PageName = x }
                     }).ToArray()
                 )
 
                 .ForAsyncCall(p => p.Entities)
                 .MapResponse<string[]>()
-                .ToModel<EntityListPageItem[]>((q, r) =>
-                    r.Select(x => new EntityListPageItem()
+                .ToModel<PageLink[]>((q, r) =>
+                    r.Select(x => new PageLink()
                     {
-                        EntityName = x,
-                        Link = new EntityPageQuery() { EntityName = x }
+                        Text = x,
+                        PageQuery = new EntityPageQuery() { EntityName = x }
                     }).ToArray()
                 )
 
                 .ForAsyncCall(p => p.Tests)
                 .MapResponse<string[]>()
-                .ToModel<TestListPageItem[]>((q, r) =>
-                    r.Select(x => new TestListPageItem()
+                .ToModel<PageLink[]>((q, r) =>
+                    r.Select(x => new PageLink()
                     {
-                        TestName = x,
-                        Link = new TestPageQuery() { TestName = x }
+                        Text = x,
+                        PageQuery = new TestPageQuery() { TestName = x }
                     }).ToArray()
                 )
 

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CocoriCore;
+using CocoriCore.Page;
 
 namespace Comptes
 {
@@ -11,15 +12,16 @@ namespace Comptes
     public class PosteListPage : PageBase<PosteListPageQuery>
     {
         public PosteCreatePageQuery NouveauPoste;
-        public AsyncCall<PosteListQuery, PosteListPageItem[]> Postes;
+        public AsyncCall<PosteListQuery, PageLink<PosteViewPageQuery>[]> Postes;
     }
 
-    public class PosteListPageItem
-    {
-        public PosteViewPageQuery Lien;
-        public PosteListResponseItem Poste;
-    }
-
+    /*
+        public class PosteListPageItem
+        {
+            public PosteViewPageQuery Lien;
+            public PosteListResponseItem Poste;
+        }
+    */
     public class PosteListPageModule : PageModule
     {
         public PosteListPageModule()
@@ -28,11 +30,10 @@ namespace Comptes
                 //.ForAsyncCall(p => p.Postes)
                 .ForAsyncCall<PosteListQuery>()
                 .MapResponse<PosteListResponseItem[]>()
-                .ToModel<PosteListPageItem[]>((q, r) => r.Select(x => new PosteListPageItem()
-                {
-                    Lien = new PosteViewPageQuery { Id = x.Id },
-                    Poste = x
-                }).ToArray());
+                .ToModel<PageLink<PosteViewPageQuery>[]>((q, r) => r.Select(x => new PageLink<PosteViewPageQuery>(
+                    new PosteViewPageQuery { Id = x.Id },
+                    x.Nom
+                )).ToArray());
         }
     }
 }

@@ -65,7 +65,6 @@ class SelectInput {
 
     updateFromModel() {
         let select = getValue(this.page, this.hModel.split('.'));
-        console.log('SELECT MODEL ', select);
         let selectElt = document.getElementById(this.id);
         let sourceResult = select['Source']['Result'];
         if (sourceResult != null)

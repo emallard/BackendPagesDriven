@@ -41,11 +41,7 @@ class Renderer {
 
         if (x == null)
             return '';
-        let found = null;
-        for (let r of _renderers.renderers) {
-            if (r.predicate(x, h, this))
-                found = r;
-        }
+        let found = _renderers.find(x, h, this);
         if (found == null)
             console.error('not found renderer : ' + h, x);
         return found.func(x, h, this);
@@ -60,6 +56,23 @@ class RenderConf {
     }
     push(predicate, func) {
         this.renderers.push({ predicate: predicate, func: func })
+    }
+    find(x, h, r) {
+        let found = null;
+        for (let elt of this.renderers) {
+            if (elt.predicate(x, h, r))
+                found = elt;
+        }
+        return found;
+    }
+
+    findSpecific(x, h, r) {
+        for (let i = 3; i < this.renderers.length; ++i) {
+            let elt = this.renderers[i];
+            if (elt.predicate(x, h, r))
+                return true;
+        }
+        return false;
     }
 }
 var _renderers = new RenderConf();

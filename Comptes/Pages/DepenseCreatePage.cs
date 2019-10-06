@@ -20,6 +20,7 @@ namespace Comptes
         public DepenseCreatePage()
         {
             OnInit(this, x => x.Depense.Result.Poste, x => x.PosteSelect.Selected);
+            OnInit(this, x => x.Depense.Result.Date, x => x.Creer.Command.Date);
             OnSubmit(this, x => x.PosteSelect.Selected.Value, x => x.Creer.Command.IdPoste);
         }
     }

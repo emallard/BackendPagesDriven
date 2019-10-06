@@ -10,12 +10,6 @@ namespace CocoriCore.PageLogs
         public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
     }
 
-    public class TestListPageItem
-    {
-        public TestPageQuery Link;
-        public string TestName;
-    }
-
     public class TestListPageModule : PageModule
     {
         public TestListPageModule()

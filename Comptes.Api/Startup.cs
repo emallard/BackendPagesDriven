@@ -86,7 +86,7 @@ namespace Comptes.Api
                 else
                 {
                     ctx.Response.ContentType = "text/html";
-                    await ctx.Response.WriteAsync(File.ReadAllText("Comptes.Api/page3.html"));
+                    await ctx.Response.WriteAsync(File.ReadAllText("Comptes.Api/wwwroot/page.html"));
                 }
 
                 //await next();
