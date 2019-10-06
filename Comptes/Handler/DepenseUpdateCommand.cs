@@ -33,7 +33,7 @@ namespace Comptes
 
             await repository.UpdateAsync(depense);
 
-            return default(Empty);
+            return new Empty();
         }
     }
 }

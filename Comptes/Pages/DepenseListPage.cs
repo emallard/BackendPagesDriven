@@ -5,11 +5,11 @@ using CocoriCore.Page;
 
 namespace Comptes
 {
-    public class ListeDepensesPageQuery : IPageQuery<DepenseListPage>
+    public class DepenseListPageQuery : IPageQuery<DepenseListPage>
     {
     }
 
-    public class DepenseListPage : PageBase<ListeDepensesPageQuery>
+    public class DepenseListPage : PageBase<DepenseListPageQuery>
     {
         public DepenseCreatePageQuery NouvelleDepense;
         public AsyncCall<DepenseListQuery, DepenseListPageItem[]> Depenses;
@@ -17,7 +17,7 @@ namespace Comptes
 
     public class DepenseListPageItem
     {
-        public PageLink Voir;
+        public PageLink<DepenseUpdatePageQuery> Modifier;
         public string NomPoste;
         public string Description;
         public double Montant;
@@ -28,12 +28,12 @@ namespace Comptes
     {
         public DepenseListPageModule()
         {
-            this.HandlePage<ListeDepensesPageQuery, DepenseListPage>((q, p) => { })
+            this.HandlePage<DepenseListPageQuery, DepenseListPage>((q, p) => { })
                 .ForAsyncCall(x => x.Depenses)
                 .MapResponse<DepenseListResponseItem[]>()
                 .ToModel<DepenseListPageItem[]>((q, r) => r.Select(x => new DepenseListPageItem()
                 {
-                    Voir = new PageLink(new DepenseViewPageQuery() { Id = x.Id }, "Voir"),
+                    Modifier = new PageLink<DepenseUpdatePageQuery>(new DepenseUpdatePageQuery() { Id = x.Id }, "Modifier"),
                     NomPoste = x.NomPoste,
                     Description = x.Description,
                     Montant = x.Montant,

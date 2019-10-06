@@ -15,7 +15,7 @@ namespace Comptes
     {
         public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Depense;
         public Select<PosteListQuery, ValueLabel<ID<Poste>>> PosteSelect;
-        public Form<DepenseCreateCommand, ListeDepensesPageQuery> Creer;
+        public Form<DepenseCreateCommand, DepenseListPageQuery> Creer;
 
         public DepenseCreatePage()
         {
@@ -35,7 +35,7 @@ namespace Comptes
             })
                 .ForForm(p => p.Creer)
                 .MapResponse<ID<Depense>>()
-                .ToModel<ListeDepensesPageQuery>((c, r, m) => { })
+                .ToModel<DepenseListPageQuery>((c, r, m) => { })
 
                 .ForAsyncCall(p => p.PosteSelect.Source)
                 .MapResponse<PosteListResponseItem[]>()

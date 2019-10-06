@@ -27,6 +27,8 @@ class GenericInput {
         //console.log('updateFromModel ' + this.id + ' : ' + this.hModel);
         let value = getValue(this.page, this.hModel.split('.'));
         //console.log(this.page, value);
+        if (this.inputType == 'date')
+            value = value.substring(0, value.indexOf('T'));
         document.getElementById(this.id).value = value;
     }
 
@@ -69,6 +71,16 @@ class SelectInput {
         let sourceResult = select['Source']['Result'];
         if (sourceResult != null)
             selectElt.innerHTML = sourceResult.map(x => `<option value="${x.Value}">${x.Label}</option>`).join('');
+
+        let selected = select['Selected'];
+        if (selected != null) {
+            for (let i = 0; i < selectElt.options.length; i++) {
+                let option = selectElt.options[i];
+                if (option.value == selected.Value) {
+                    selectElt.selectedIndex = i;
+                }
+            }
+        }
     }
 
     updateModel() {
