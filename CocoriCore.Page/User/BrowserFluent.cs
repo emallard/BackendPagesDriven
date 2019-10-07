@@ -5,8 +5,49 @@ using CocoriCore.Page;
 
 namespace CocoriCore.Page
 {
+    public interface IBrowserFluent
+    {
+        BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase;
+        BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPageTo> scenario) where TPageTo : IPageBase;
+    }
 
-    public class BrowserFluent<TPage> where TPage : IPageBase
+
+    public class BrowserFluent : IBrowserFluent
+    {
+        private readonly ICurrentUserLogger logger;
+        private readonly IBrowser browser;
+        private readonly IFactory factory;
+
+        public BrowserFluent(
+            ICurrentUserLogger logger,
+            IBrowser browser,
+            IFactory factory)
+        {
+            this.logger = logger;
+            this.browser = browser;
+            this.factory = factory;
+        }
+
+        public BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase
+        {
+            this.logger.Log(new LogDisplay { PageQuery = message });
+            var nextPage = this.browser.Display(message).Result;
+            return factory.Create<BrowserFluent<T>>().SetPageAndId(nextPage);
+        }
+
+        public BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPageTo> scenario)
+           where TPageTo : IPageBase
+        {
+            var scenarioId = Guid.NewGuid();
+            this.logger.Log(new LogScenarioStart { ScenarioId = scenarioId, Name = scenario.GetType().Name });
+            var result = scenario.Play(this);
+            this.logger.Log(new LogScenarioEnd { ScenarioId = scenarioId });
+            return result;
+        }
+    }
+
+
+    public class BrowserFluent<TPage> : IBrowserFluent where TPage : IPageBase
     {
         public readonly ICurrentUserLogger logger;
         public readonly IBrowser browser;
@@ -56,13 +97,22 @@ namespace CocoriCore.Page
         {
             var scenarioId = Guid.NewGuid();
             this.logger.Log(new LogScenarioStart { ScenarioId = scenarioId, Name = scenario.GetType().Name });
-
             var result = scenario.Play(this);
-
             this.logger.Log(new LogScenarioEnd { ScenarioId = scenarioId });
-
             return result;
         }
+
+        public BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPageTo> scenario)
+            where TPageTo : IPageBase
+        {
+            var scenarioId = Guid.NewGuid();
+            this.logger.Log(new LogScenarioStart { ScenarioId = scenarioId, Name = scenario.GetType().Name });
+            var result = scenario.Play(this);
+            this.logger.Log(new LogScenarioEnd { ScenarioId = scenarioId });
+            return result;
+        }
+
+
 
         public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)

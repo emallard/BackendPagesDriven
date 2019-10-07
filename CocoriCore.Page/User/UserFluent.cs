@@ -8,6 +8,7 @@ namespace CocoriCore.Page
     {
         public string UserName;
         private readonly MailFluent mailFluent;
+        private readonly BrowserFluent browserFluent;
         private readonly IUserLogger userLogger;
         private readonly SettableClock settableClock;
         private readonly ICurrentUserLogger currentUserLogger;
@@ -19,13 +20,15 @@ namespace CocoriCore.Page
             SettableClock settableClock,
             ICurrentUserLogger currentUserLogger,
             IFactory factory,
-            MailFluent mailFluent)
+            MailFluent mailFluent,
+            BrowserFluent browserFluent)
         {
             this.userLogger = userLogger;
             this.settableClock = settableClock;
             this.currentUserLogger = currentUserLogger;
             this.factory = factory;
             this.mailFluent = mailFluent;
+            this.browserFluent = browserFluent;
         }
 
         public UserFluent SetUserName(string id)
@@ -37,9 +40,13 @@ namespace CocoriCore.Page
 
         public BrowserFluent<T> Display<T>(IMessage<T> message) where T : IPageBase
         {
-            var browserFluent = factory.Create<BrowserFluent<T>>();
             return browserFluent.Display(message);
         }
+        public BrowserFluent<TPageTo> Play<TPageTo>(IScenario<TPageTo> scenario) where TPageTo : IPageBase
+        {
+            return browserFluent.Play(scenario);
+        }
+
 
         public async Task<MailFluentMessage<T>> ReadEmail<T>(string emailAddress)
         {

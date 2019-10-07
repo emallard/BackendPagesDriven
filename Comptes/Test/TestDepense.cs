@@ -41,5 +41,21 @@ namespace Comptes
                       && x.Montant == 30
                       ));
         }
+
+        [Fact]
+        public void ModifierDepense()
+        {
+            var user = CreateUser("moi");
+
+            user
+                .Play(Get<ScenarioCreerDepense>())
+
+                .Display(new AccueilPageQuery())
+                .Follow(p => p.ListeDepenses)
+                .Follow(p => p.Depenses.Result[0].Modifier)
+                .Fill(p => p.Enregistrer.Command.Description, "Updated description")
+                .Submit(p => p.Enregistrer)
+                .ThenFollow(r => r);
+        }
     }
 }

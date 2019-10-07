@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CocoriCore;
@@ -9,7 +8,8 @@ using Xunit;
 
 namespace Comptes
 {
-    public class ScenarioCreerPoste : IScenario<AccueilPage, PosteListPage>
+
+    public class ScenarioCreerPoste : IScenario<AccueilPage>
     {
 
         public string[] NomPostes;
@@ -22,7 +22,7 @@ namespace Comptes
             this.repository = repository;
         }*/
 
-        public BrowserFluent<PosteListPage> Play(BrowserFluent<AccueilPage> browserFluent)
+        public BrowserFluent<AccueilPage> Play(IBrowserFluent browserFluent)
         {
             /*
             if (NomPostes == null)
@@ -33,23 +33,24 @@ namespace Comptes
 
                 }
             }*/
-
-            var listePostes = browserFluent
-                .Follow(p => p.ListePostes);
+            BrowserFluent<AccueilPage> result = null;
             foreach (var n in this.NomPostes)
             {
-                listePostes = Play(listePostes, n);
+                result = Play(browserFluent, n);
             }
-            return listePostes;
+            return result;
         }
 
-        public BrowserFluent<PosteListPage> Play(BrowserFluent<PosteListPage> browserFluent, string nom)
+        public BrowserFluent<AccueilPage> Play(IBrowserFluent browserFluent, string nom)
         {
             return browserFluent
+                .Display(new AccueilPageQuery())
+                .Follow(p => p.ListePostes)
                 .Follow(p => p.NouveauPoste)
                 .Fill(p => p.Creer.Command.Nom, nom)
                 .Submit(p => p.Creer)
-                .ThenFollow(r => r);
+                .ThenFollow(r => r)
+                .Display(new AccueilPageQuery());
         }
     }
 }

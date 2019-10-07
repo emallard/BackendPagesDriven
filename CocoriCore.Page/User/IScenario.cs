@@ -6,4 +6,11 @@ namespace CocoriCore.Page
     {
         BrowserFluent<TPageTo> Play(BrowserFluent<TPageFrom> browserFluent);
     }
+
+
+    public interface IScenario<TPageTo>
+        where TPageTo : IPageBase
+    {
+        BrowserFluent<TPageTo> Play(IBrowserFluent browserFluent);
+    }
 }

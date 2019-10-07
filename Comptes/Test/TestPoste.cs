@@ -33,9 +33,10 @@ namespace Comptes
             var user = CreateUser("moi");
 
             user
-                .Display(new AccueilPageQuery())
-                .Play(Get<ScenarioCreerPoste>(x => x.NomPostes = new string[] { "Alimentation", "Vacances" }))
 
+                .Play(Get<ScenarioCreerPoste>(x => x.NomPostes = new string[] { "Alimentation", "Vacances" }))
+                .Display(new AccueilPageQuery())
+                .Follow(p => p.ListePostes)
                 .Follow(p => p.Postes.Result[0].PageQuery)
                 .Follow(p => p.Modifier)
                 .Assert(p => p.Poste.Result.Nom.Should().Be("Alimentation"))

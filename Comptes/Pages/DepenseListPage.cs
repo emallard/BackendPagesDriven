@@ -18,7 +18,7 @@ namespace Comptes
 
     public class DepenseListPageItem
     {
-        public PageLink<DepenseUpdatePageQuery> Modifier;
+        public DepenseUpdatePageQuery Modifier;
         public string NomPoste;
         public string Description;
         public double Montant;
@@ -34,7 +34,7 @@ namespace Comptes
                 .MapResponse<DepenseListResponseItem[]>()
                 .ToModel<DepenseListPageItem[]>((q, r) => r.Select(x => new DepenseListPageItem()
                 {
-                    Modifier = new PageLink<DepenseUpdatePageQuery>(new DepenseUpdatePageQuery() { Id = x.Id }, "Modifier"),
+                    Modifier = new DepenseUpdatePageQuery() { Id = x.Id },
                     NomPoste = x.NomPoste,
                     Description = x.Description,
                     Montant = x.Montant,
