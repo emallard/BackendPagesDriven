@@ -10,4 +10,3 @@ _renderers.push(
         return `${x.Svg}`.replace('<svg', `<svg id="${h + '.Svg'}"`);
     }
 );
-

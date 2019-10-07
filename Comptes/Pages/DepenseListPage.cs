@@ -11,6 +11,7 @@ namespace Comptes
 
     public class DepenseListPage : PageBase<DepenseListPageQuery>
     {
+        public MenuComponent Menu;
         public DepenseCreatePageQuery NouvelleDepense;
         public AsyncCall<DepenseListQuery, DepenseListPageItem[]> Depenses;
     }

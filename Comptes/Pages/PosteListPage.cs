@@ -11,17 +11,11 @@ namespace Comptes
 
     public class PosteListPage : PageBase<PosteListPageQuery>
     {
+        public MenuComponent Menu;
         public PosteCreatePageQuery NouveauPoste;
         public AsyncCall<PosteListQuery, PageLink<PosteViewPageQuery>[]> Postes;
     }
 
-    /*
-        public class PosteListPageItem
-        {
-            public PosteViewPageQuery Lien;
-            public PosteListResponseItem Poste;
-        }
-    */
     public class PosteListPageModule : PageModule
     {
         public PosteListPageModule()
