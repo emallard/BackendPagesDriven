@@ -1,7 +1,7 @@
 
 
 
-function renderPage(page, h, r) {
+function renderPage(page, id, r) {
 
     let pageTypeName = page.PageTypeName;
     pageTypeName = pageTypeName.substring(pageTypeName.lastIndexOf('.') + 1);

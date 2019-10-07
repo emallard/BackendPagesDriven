@@ -1,17 +1,17 @@
 
-function field(h) {
-    let split = h.split('.');
+function field(id) {
+    let split = id.split('.');
     let f = split[split.length - 1];
     return f;
 }
 
-function pathWithoutPage(h) {
-    let split = h.split('.');
+function pathWithoutPage(id) {
+    let split = id.split('.');
     return split.slice(1).join('.');
 }
 
-function getPageName(h) {
-    let split = h.split('.');
+function getPageName(id) {
+    let split = id.split('.');
     return split[0];
 }
 

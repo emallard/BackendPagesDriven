@@ -6,18 +6,18 @@ class GenericInput {
         this.id = '';
         this.page = null;
     }
-    render(x, h, r) {
-        let f = field(h);
-        this.id = h;
+    render(x, id, r) {
+        let f = field(id);
+        this.id = id;
         this.page = r.page;
 
         //r.afterRender(() => {
-        //    document.getElementById(h).addEventListener('change', () => this.updateModel());
+        //    document.getElementById(id).addEventListener('change', () => this.updateModel());
         //});
 
         return `<div class="form-group">
-                    <label for="${h}">${f}</label>
-                    <input class="form-control" type="${this.inputType}" id="${h}"></input>
+                    <label for="${id}">${f}</label>
+                    <input class="form-control" type="${this.inputType}" id="${id}"></input>
                 </div>`;
     }
 
@@ -45,22 +45,22 @@ class SelectInput {
         this.page = null;
     }
 
-    render(x, h, r) {
-        let f = field(h);
+    render(x, id, r) {
+        let f = field(id);
         this.page = r.page;
-        this.id = h;
+        this.id = id;
 
         r.afterRender(async () => {
 
-            //document.getElementById(h).addEventListener('change', () => this.updateModel());
+            //document.getElementById(id).addEventListener('change', () => this.updateModel());
 
             let response = await call(x.Source);
             x.Source.Result = response;
             this.updateFromModel();
         });
         return `<div class="form-group">
-            <label for="${h}">${f}</label>
-            <select class="form-control" id="${h}">
+            <label for="${id}">${f}</label>
+            <select class="form-control" id="${id}">
             </select>
         </div>`;
     }

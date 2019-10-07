@@ -1,18 +1,18 @@
-function renderForm2(form, h, r) {
+function renderForm2(form, id, r) {
 
-    r.afterRender(() => document.getElementById(h).addEventListener('submit', (evt) => {
+    r.afterRender(() => document.getElementById(id).addEventListener('submit', (evt) => {
         evt.preventDefault();
 
         applyInputsToModel(r.page);
         applyOnSubmits(r.page);
-        console.log('submit ' + h);
+        console.log('submit ' + id);
         formCall(form);
         return false;
     }));
 
 
-    var hForm = pathWithoutPage(h);
-    var pageName = getPageName(h);
+    var hForm = pathWithoutPage(id);
+    var pageName = getPageName(id);
 
     var command = form.Command;
 
@@ -29,9 +29,9 @@ function renderForm2(form, h, r) {
         });
     }
 
-    return `<form id="${h}">
+    return `<form id="${id}">
                 ${html}
-                <button type="submit" class="btn btn-primary">${field(h)}</button>
+                <button type="submit" class="btn btn-primary">${field(id)}</button>
             </form>`;
 }
 

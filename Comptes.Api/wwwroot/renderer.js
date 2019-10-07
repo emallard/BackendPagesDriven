@@ -23,16 +23,16 @@ class Renderer {
 
     }
 
-    renderTo(x, h, elt) {
-        elt.innerHTML = this.render(x, h);
+    renderTo(x, id, elt) {
+        elt.innerHTML = this.render(x, id);
         setTimeout(() => {
             this.callAfterRender();
             applyOnInits(this.page)
         }, 0);
     }
 
-    render(x, h) {
-        console.log("render " + h);
+    render(x, id) {
+        console.log("render " + id);
         guard++;
         if (guard > 1000) {
             console.log("GUARD TOO MANY CALLS : " + guard);
@@ -41,10 +41,10 @@ class Renderer {
 
         if (x == null)
             return '';
-        let found = _renderers.find(x, h, this);
+        let found = _renderers.find(x, id, this);
         if (found == null)
-            console.error('not found renderer : ' + h, x);
-        return found.func(x, h, this);
+            console.error('not found renderer : ' + id, x);
+        return found.func(x, id, this);
     }
 }
 
@@ -57,19 +57,19 @@ class RenderConf {
     push(predicate, func) {
         this.renderers.push({ predicate: predicate, func: func })
     }
-    find(x, h, r) {
+    find(x, id, r) {
         let found = null;
         for (let elt of this.renderers) {
-            if (elt.predicate(x, h, r))
+            if (elt.predicate(x, id, r))
                 found = elt;
         }
         return found;
     }
 
-    findSpecific(x, h, r) {
+    findSpecific(x, id, r) {
         for (let i = 3; i < this.renderers.length; ++i) {
             let elt = this.renderers[i];
-            if (elt.predicate(x, h, r))
+            if (elt.predicate(x, id, r))
                 return true;
         }
         return false;
