@@ -49,13 +49,13 @@ namespace CocoriCore.Page
             where T : IPageBase
         {
             await Task.CompletedTask;
-            var idMessage = GetId(page, expressionMessage);
+            var idMessage = ExprToString(expressionMessage);
             driver.FindElement(By.Id(idMessage)).Click();
 
             // attendre que la page soit chargée
             //var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             //wait.Until(d => d.FindElements(By.Id("asyncCallsDone")).Count > 0);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             return DeserializePage<T>();
         }
@@ -92,7 +92,7 @@ namespace CocoriCore.Page
         {
             await Task.CompletedTask;
 
-            var formId = GetId(page, expressionForm);
+            var formId = ExprToString(expressionForm);
 
             var messageType = message.GetType();
             var propertiesAndFields = messageType.GetPropertiesAndFields();
@@ -121,7 +121,7 @@ namespace CocoriCore.Page
         {
             await Task.CompletedTask;
 
-            var elt = driver.FindElement(By.Id(GetId(page, expressionForm)));
+            var elt = driver.FindElement(By.Id(ExprToString(expressionForm)));
             var button = elt.FindElement(By.CssSelector("button"));
             button.Click();
 
@@ -130,6 +130,13 @@ namespace CocoriCore.Page
 
         public void Fill<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember, TMember value)
         {
+            IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+            var id = ExprToString(expressionMember.Body);
+            var jsObject = jsonSerializer.Serialize(value);
+            js.ExecuteScript("_page." + id + " = " + jsObject);
+            js.ExecuteScript("onPageUpdate('" + id + "', " + jsObject + ");");
+
+            /*
             var elt = driver.FindElement(By.Id(GetId(page, expressionMember)));
             if (value != null)
             {
@@ -137,13 +144,9 @@ namespace CocoriCore.Page
                 elt.SendKeys(value.ToString());
                 Thread.Sleep(500);
             }
+            */
         }
 
-        private string GetId<TPage, TMember>(TPage page, Expression<Func<TPage, TMember>> expressionMember)
-        {
-            var pageTypeName = page.GetType().Name;
-            return pageTypeName + "." + ExprToString(expressionMember.Body);
-        }
 
         private string ExprToString(Expression expr)
         {

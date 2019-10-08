@@ -1,8 +1,10 @@
 let guard = 0;
 class Renderer {
+
     constructor(p) {
         this.page = p;
         this.afterRenders = [];
+        this.inputs = [];
     }
 
     afterRender(callback) {
@@ -27,7 +29,7 @@ class Renderer {
         elt.innerHTML = this.render(x, id);
         setTimeout(() => {
             this.callAfterRender();
-            applyOnInits(this.page)
+            this.applyOnInits()
         }, 0);
     }
 
@@ -45,6 +47,46 @@ class Renderer {
         if (found == null)
             console.error('not found renderer : ' + id, x);
         return found.func(x, id, this);
+    }
+
+    applyOnInits() {
+        console.log('applyOnInits');
+        for (let init of this.page.OnInits) {
+            if (valueExists(this.page, init.From)) {
+                let v = getValue(this.page, init.From);
+
+                console.log('applyOnInits setValue ' + init.To.join('.'), v);
+                setValue(this.page, init.To, v);
+                this.onPageUpdate(init.To.join('.'));
+                /*
+                // update Inputs from models
+                for (var input of _pageinputs) {
+                    input.updateFromModel();
+                }
+                */
+            }
+        }
+    }
+
+    applyOnSubmits() {
+        console.log('applyOnSubmits');
+        for (let s of this.page.OnSubmits) {
+            console.log('  ' + s.From.join('.') + ' => ' + s.To.join('.'));
+            let v = getValue(this.page, s.From);
+            console.log('  ' + v);
+            setValue(this.page, s.To, v);
+        }
+    }
+
+    applyInputsToModel() {
+        for (let input of this.inputs)
+            input.updateModel();
+    }
+
+    onPageUpdate(id) {
+        console.log('onPageUpdate ' + id);
+        for (let input of this.inputs)
+            input.onPageUpdate(id);
     }
 }
 

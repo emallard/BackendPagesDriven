@@ -40,11 +40,3 @@ function setValue(x, members, value) {
         y = y[members[i]];
     y[members[members.length - 1]] = value;
 }
-
-function updateFormInputValue(pageTypeName, members, value) {
-    let id = pageTypeName + '.' + members.join('.');
-    console.log(' setInput : ' + id + ' = ' + value);
-    if (value['Id'] != null)
-        value = value['Id'];
-    document.getElementById(id).value = value;
-}

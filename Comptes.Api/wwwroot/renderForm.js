@@ -3,27 +3,23 @@ function renderForm2(form, id, r) {
     r.afterRender(() => document.getElementById(id).addEventListener('submit', (evt) => {
         evt.preventDefault();
 
-        applyInputsToModel(r.page);
-        applyOnSubmits(r.page);
+        r.applyInputsToModel();
+        r.applyOnSubmits();
         console.log('submit ' + id);
         formCall(form);
         return false;
     }));
 
-
-    var hForm = pathWithoutPage(id);
-    var pageName = getPageName(id);
-
     var command = form.Command;
 
-    let inputFields = getInputsToBeRendered(r.page, command, hForm + '.Command');
+    let inputFields = getInputsToBeRendered(r.page, command, id + '.Command');
     console.log('InputsToBeRendered : \n  ' + inputFields.join('\n  '));
 
     let html = '';
-    for (let hField of inputFields) {
-        let fieldValue = getValue(r.page, hField.split('.'));
-        let input2 = createInput(r.page, form, hForm, fieldValue, hField);
-        html += input2.render(fieldValue, pageName + '.' + hField, r);
+    for (let idField of inputFields) {
+        let fieldValue = getValue(r.page, idField.split('.'));
+        let input2 = createInput(form, id, fieldValue, idField, r);
+        html += input2.render(fieldValue, idField, r);
         r.afterRender(() => {
             input2.updateFromModel()
         });
@@ -37,7 +33,7 @@ function renderForm2(form, id, r) {
 
 function getInputsToBeRendered(page, command, hCommand) {
 
-    let hInputs = [];
+    let idInputs = [];
     for (let k of Object.keys(command)) {
 
         let commandField = hCommand + '.' + k;
@@ -47,31 +43,29 @@ function getInputsToBeRendered(page, command, hCommand) {
 
             let onSubmitCommandField = onSubmit.To.join('.');
             if (onSubmitCommandField == commandField) {
-                hInputs.push(onSubmit.From.slice(0, 1).join('.'));
+                idInputs.push(onSubmit.From.slice(0, 1).join('.'));
                 foundOnSubmit = true;
             }
         }
         if (!foundOnSubmit) {
-            hInputs.push(commandField);
+            idInputs.push(commandField);
         }
     }
-    return hInputs;
+    return idInputs;
 }
 
-var _pageinputs = [];
-function createInput(page, form, hForm, field, hField) {
+function createInput(form, idForm, field, idField, r) {
 
     let typeName = null;
-    let hCommand = hForm + '.Command';
-    if (hField.startsWith(hCommand)) {
-        let fieldName = hField.split('.')[hField.split('.').length - 1];
+    let hCommand = idForm + '.Command';
+    if (idField.startsWith(hCommand)) {
+        let fieldName = idField.split('.')[idField.split('.').length - 1];
         typeName = form['CommandFieldTypeNames'][fieldName];
     }
 
     var input = selectInput(field, typeName);
-    input.hModel = hField;
 
-    _pageinputs.push(input);
+    r.inputs.push(input);
     return input;
 }
 

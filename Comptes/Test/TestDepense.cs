@@ -53,6 +53,7 @@ namespace Comptes
                 .Display(new AccueilPageQuery())
                 .Follow(p => p.ListeDepenses)
                 .Follow(p => p.Depenses.Result[0].Modifier)
+                .Fill(p => p.PosteSelect.Selected, p => p.PosteSelect.Source.Result.First(x => x.Label == "Alimentation"))
                 .Fill(p => p.Enregistrer.Command.Description, "Updated description")
                 .Submit(p => p.Enregistrer)
                 .ThenFollow(r => r);

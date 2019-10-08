@@ -2,7 +2,6 @@
 class GenericInput {
     constructor(inputType) {
         this.inputType = inputType;
-        this.hModel = '';
         this.id = '';
         this.page = null;
     }
@@ -22,11 +21,9 @@ class GenericInput {
     }
 
     updateFromModel() {
-        if (!valueExists(this.page, this.hModel.split('.')))
+        if (!valueExists(this.page, this.id.split('.')))
             return;
-        //console.log('updateFromModel ' + this.id + ' : ' + this.hModel);
-        let value = getValue(this.page, this.hModel.split('.'));
-        //console.log(this.page, value);
+        let value = getValue(this.page, this.id.split('.'));
         if (this.inputType == 'date')
             value = value.substring(0, value.indexOf('T'));
         document.getElementById(this.id).value = value;
@@ -34,13 +31,18 @@ class GenericInput {
 
     updateModel() {
         let value = document.getElementById(this.id).value;
-        setValue(this.page, this.hModel.split('.'), value);
+        setValue(this.page, this.id.split('.'), value);
+    }
+
+    onPageUpdate(id) {
+        if (id == this.id) {
+            this.updateFromModel();
+        }
     }
 }
 
 class SelectInput {
     constructor() {
-        this.hModel = '';
         this.id = '';
         this.page = null;
     }
@@ -66,7 +68,7 @@ class SelectInput {
     }
 
     updateFromModel() {
-        let select = getValue(this.page, this.hModel.split('.'));
+        let select = getValue(this.page, this.id.split('.'));
         let selectElt = document.getElementById(this.id);
         let sourceResult = select['Source']['Result'];
         if (sourceResult != null)
@@ -88,7 +90,12 @@ class SelectInput {
         //let selectedIndex = selectElt.selectedIndex;
         let selectedValue = selectElt.selectedOptions[0].value;
 
-        let selectModel = getValue(this.page, this.hModel.split('.'));
+        let selectModel = getValue(this.page, this.id.split('.'));
         selectModel.Selected = { Value: selectedValue };
+    }
+
+    onPageUpdate(id) {
+        if (id.startsWith(this.id))
+            this.updateFromModel();
     }
 }
