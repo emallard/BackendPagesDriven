@@ -45,7 +45,7 @@ namespace CocoriCore.PageLogs
 
             return pageNames.Select(x => new PageNode()
             {
-                ParameterizedUrl = x.PageUrl,
+                ParameterizedUrl = x.PageName + "\\n" + (x.PageUrl == "/" ? "//" : x.PageUrl),
                 IndexedName = x.PageName
             }).ToList();
 

@@ -16,11 +16,7 @@ namespace CocoriCore.PageLogs
     {
         public PageGraphPageModule()
         {
-            HandlePage<PageGraphPageQuery, PageGraphPage>()
-
-                .ForAsyncCall(p => p.Graph)
-                .MapResponse<PageGraphResponse>()
-                .ToSelf();
+            HandlePage<PageGraphPageQuery, PageGraphPage>();
         }
     }
 }
