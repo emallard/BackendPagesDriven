@@ -15,6 +15,27 @@ namespace CocoriCore
             this.routerOptions = routerOptions;
         }
 
+        public string ToParameterizedUrl(IMessage message)
+        {
+            var route = routerOptions.AllRoutes.FirstOrDefault(r => r.MessageType == message.GetType());
+            if (route == null)
+                throw new Exception("Did you forget to add route for " + message.GetType().FullName);
+
+            return route.ParameterizedUrl;
+        }
+        public string ToParameterizedUrlShort(IMessage message)
+        {
+            return string.Join("/", ToParameterizedUrl(message).Split("/").Select(
+                segment =>
+                {
+                    if (!segment.Contains(':'))
+                        return segment;
+                    return ":" + segment.Substring(0, segment.IndexOf(':'));
+                }
+            ));
+
+        }
+
         public string ToUrl(IMessage message)
         {
             var route = routerOptions.AllRoutes.FirstOrDefault(r => r.MessageType == message.GetType());

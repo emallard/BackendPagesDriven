@@ -7,10 +7,14 @@ namespace CocoriCore.PageLogs
     public class DbPage
     {
         private readonly IRepository repository;
+        private readonly RouteToUrl routeToUrl;
 
-        public DbPage(IRepository repository)
+        public DbPage(
+            IRepository repository,
+            RouteToUrl routeToUrl)
         {
             this.repository = repository;
+            this.routeToUrl = routeToUrl;
         }
         public async Task Insert(DbInsertContext context, LogDisplay l)
         {
@@ -30,23 +34,10 @@ namespace CocoriCore.PageLogs
             await repository.InsertAsync(redirection);
             context.IndexInTest++;
 
-            var page = new TestPage()
-            {
-                TestName = context.TestName,
-                IndexInTest = context.IndexInTest + 1,
-                UserName = context.UserName,
-                ScenarioNames = context.ScenarioNames,
-                PageName = l.PageQuery.GetType().GetFriendlyName()
-            };
-
-            await repository.InsertAsync(page);
-
-            context.PageName = page.PageName;
-            context.Page = page;
-            context.Redirection = redirection;
-            context.PageMemberName = null;
-            context.MessageName = null;
+            await InsertPage(context, l.PageQuery, redirection);
         }
+
+
 
         public async Task Insert(DbInsertContext context, LogFollow l)
         {
@@ -66,24 +57,7 @@ namespace CocoriCore.PageLogs
             await repository.InsertAsync(redirection);
             context.IndexInTest++;
 
-            var page = new TestPage()
-            {
-                TestName = context.TestName,
-                IndexInTest = context.IndexInTest,
-                UserName = context.UserName,
-                ScenarioNames = context.ScenarioNames,
-
-                PageName = l.PageQuery.GetType().GetFriendlyName()
-            };
-
-
-            await repository.InsertAsync(page);
-
-            context.PageName = page.PageName;
-            context.Page = page;
-            context.Redirection = redirection;
-            context.PageMemberName = null;
-            context.MessageName = null;
+            await InsertPage(context, l.PageQuery, redirection);
         }
 
         public async Task Insert(DbInsertContext context, LogSubmitRedirect l)
@@ -104,16 +78,22 @@ namespace CocoriCore.PageLogs
             await repository.InsertAsync(redirection);
             context.IndexInTest++;
 
+            await InsertPage(context, l.PageQuery, redirection);
+        }
+        private async Task InsertPage(DbInsertContext context, IMessage pageQuery, TestPageRedirection redirection)
+        {
             var page = new TestPage()
             {
                 TestName = context.TestName,
-                IndexInTest = context.IndexInTest,
+                IndexInTest = context.IndexInTest + 1,
                 UserName = context.UserName,
                 ScenarioNames = context.ScenarioNames,
-                PageName = l.PageQuery.GetType().GetFriendlyName(),
+                PageName = pageQuery.GetType().GetFriendlyName(),
+                PageUrl = routeToUrl.ToParameterizedUrlShort(pageQuery)
             };
 
             await repository.InsertAsync(page);
+
             context.PageName = page.PageName;
             context.Page = page;
             context.Redirection = redirection;

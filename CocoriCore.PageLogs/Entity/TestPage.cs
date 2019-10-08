@@ -11,6 +11,7 @@ namespace CocoriCore.PageLogs
         public string PageName;
 
         public bool HasAssert = false;
+        public string PageUrl;
         //public string Url;
     }
 }

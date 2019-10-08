@@ -38,15 +38,15 @@ namespace CocoriCore.PageLogs
         {
             var pageNames = (await repository
                                     .Query<TestPage>()
-                                    .Select(x => x.PageName)
+                                    .Select(x => new { x.PageName, x.PageUrl })
                                     .ToArrayAsync())
                                     .Distinct()
                                     .ToArray();
 
             return pageNames.Select(x => new PageNode()
             {
-                ParameterizedUrl = x,
-                IndexedName = x
+                ParameterizedUrl = x.PageUrl,
+                IndexedName = x.PageName
             }).ToList();
 
         }
@@ -78,14 +78,14 @@ namespace CocoriCore.PageLogs
                     continue;
 
                 if (!edges.Any(e => e.Name == x.MemberName
-                                 && e.From.ParameterizedUrl == x.FromPageName
-                                 && e.To.ParameterizedUrl == x.ToPageName))
+                                 && e.From.IndexedName == x.FromPageName
+                                 && e.To.IndexedName == x.ToPageName))
                 {
                     var edge = new PageEdge()
                     {
                         Name = x.MemberName,
-                        From = nodes.First(n => n.ParameterizedUrl == x.FromPageName),
-                        To = nodes.First(n => n.ParameterizedUrl == x.ToPageName),
+                        From = nodes.First(n => n.IndexedName == x.FromPageName),
+                        To = nodes.First(n => n.IndexedName == x.ToPageName),
                         IsLink = x.IsLink,
                         IsForm = x.IsForm
                     };
