@@ -13,6 +13,11 @@ namespace CocoriCore.PageLogs
         public AsyncCall<PageReportQuery, PageReportModel> PageReport;
         public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
         public AsyncCall<PageListQuery, PageLink[]> Pages;
+
+        public PagePage()
+        {
+            AddRenderInfo(this, x => x.Pages, "hidden");
+        }
     }
 
     public class PageReportModel

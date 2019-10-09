@@ -10,12 +10,15 @@ using Ninject.Extensions.NamedScope;
 using Ninject.Extensions.Factory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Runtime.CompilerServices;
 
 namespace Comptes
 {
     public class TestBase : IPageTest// : IDisposable
     {
         private StandardKernel kernel;
+        private string filePath;
+        private int lineNumber;
 
         public TestBase()
         {
@@ -77,16 +80,29 @@ namespace Comptes
             kernel.Bind<RouterOptions>().ToConstant(routerOptions);
             kernel.Rebind<IBrowser>().To<SeleniumBrowser>().InNamedScope("user");
         }
-        /*
-        public BrowserFluent<Accueil_Page> CreateBrowser(string id)
-        {
-            return kernel.Get<BrowserFluent<int>>().SetId(id).Display(new Accueil_Page_GET());
-        }*/
 
-        public UserFluent CreateUser(string userName)
+        public UserFluent CreateUser(string userName,
+            [CallerFilePath] string file = "",
+            [CallerLineNumber] int line = 0)
         {
+            this.filePath = file;
+            this.lineNumber = line;
             return kernel.Get<UserFluentFactory>().UserFluent.SetUserName(userName);
         }
+
+        /*
+        private static void Log0()
+        {
+            string currentFile = new System.Diagnostics.StackTrace(true).GetFrame(0).GetFileName();
+            int currentLine = new System.Diagnostics.StackTrace(true).GetFrame(0).GetFileLineNumber();
+        }
+        private static void Log(string text,
+                        [CallerFilePath] string file = "",
+                        [CallerMemberName] string member = "",
+                        [CallerLineNumber] int line = 0)
+        {
+            Console.WriteLine("{0}_{1}({2}): {3}", Path.GetFileName(file), member, line, text);
+        }*/
 
         public object[] GetLogs()
         {
@@ -103,6 +119,16 @@ namespace Comptes
             var x = kernel.Get<T>();
             modification(x);
             return x;
+        }
+
+        public string GetFilePath()
+        {
+            return this.filePath;
+        }
+
+        public int GetLineNumber()
+        {
+            return this.lineNumber;
         }
 
 

@@ -22,18 +22,20 @@ function renderPage(page, id, r) {
             <div class="container" style="margin-top: 90px">
                 <b>${pageTypeName}</b>
                 <ul>
-                    ${Object.keys(page2).map(k => `<li>${k} : ${r.render(page2[k], k)}</li>`).join('')}
+                    ${renderObjectAsList(page2, '', r)}
+                    
                 </ul>
                 <div style="font-size: 12px">${htmlOnInits + htmlOnSubmits}</div>
             </div>`;
 }
+//${Object.keys(page2).map(k => `<li>${k} : ${r.render(page2[k], k)}</li>`).join('')}
 
 function constructPageToRender(page) {
     console.log('fields to render :');
     let inputs = page.OnSubmits.map(x => x.From[0]);
     let page2 = {};
     for (let k of Object.keys(page)) {
-        if (k == 'PageQuery' || k == 'OnSubmits' || k == 'OnInits' || k == 'PageTypeName')
+        if (k == 'PageQuery' || k == 'OnSubmits' || k == 'OnInits' || k == 'PageTypeName' || k == 'RenderInfos')
             continue;
         if (k == 'Menu')
             continue;

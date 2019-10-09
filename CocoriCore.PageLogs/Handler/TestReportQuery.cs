@@ -16,6 +16,8 @@ namespace CocoriCore.PageLogs
     public class TestReport
     {
         public string TestName;
+        public string FilePath;
+        public int LineNumber;
         //public object[] Logs;
         public PagePath Path;
     }
@@ -71,10 +73,13 @@ namespace CocoriCore.PageLogs
         }
         public async Task<TestReport> Build(string testName)
         {
+            var test = await repository.LoadAsync<Test>(x => x.TestName, testName);
 
             var testReport = new TestReport()
             {
-                TestName = testName
+                TestName = testName,
+                FilePath = test.FilePath,
+                LineNumber = test.LineNumber
             };
 
             var pages = (await repository.Query<TestPage>()

@@ -19,6 +19,7 @@ namespace CocoriCore
 
         public List<PageBinding> OnSubmits = new List<PageBinding>();
         public List<PageBinding> OnInits = new List<PageBinding>();
+        public List<PageRenderInfo> RenderInfos = new List<PageRenderInfo>();
 
         public void ApplyOnSubmits()
         {
@@ -96,6 +97,15 @@ namespace CocoriCore
                 To = GetMemberNames(to.Body)
             });
         }
+
+        public void AddRenderInfo<TPage>(TPage page, Expression<Func<TPage, object>> member, string info)
+        {
+            RenderInfos.Add(new PageRenderInfo()
+            {
+                Expression = string.Join(".", GetMemberNames(member.Body)),
+                Info = info
+            });
+        }
         private string[] GetMemberNames(Expression expr)
         {
             var expression = expr;
@@ -120,9 +130,9 @@ namespace CocoriCore
         }
     }
 
-    public class PageBinding
+    public class PageRenderInfo
     {
-        public string[] From;
-        public string[] To;
+        public string Expression;
+        public string Info;
     }
 }

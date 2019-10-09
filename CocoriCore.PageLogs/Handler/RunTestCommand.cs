@@ -71,7 +71,13 @@ namespace CocoriCore.PageLogs
                         }
                     });
 
-                    await databaseBuilder.AddTest(test.Type, test.MethodName, testInstance.GetLogs());
+                    await databaseBuilder.AddTest(
+                        test.Type,
+                        test.MethodName,
+                        testInstance.GetLogs(),
+                        testInstance.GetFilePath(),
+                        testInstance.GetLineNumber());
+
                     sb.Add(" OK   " + test.Type.FullName);
                 }
                 catch (Exception e)

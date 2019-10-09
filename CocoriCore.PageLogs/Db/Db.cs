@@ -30,13 +30,20 @@ namespace CocoriCore.PageLogs
             this.dbMessage = dbMessage;
         }
 
-        public async Task AddTest(Type testClass, string methodName, object[] userLogs)
+        public async Task AddTest(
+            Type testClass,
+            string methodName,
+            object[] userLogs,
+            string filePath,
+            int lineNumber)
         {
             var test = new Test()
             {
                 TestType = testClass,
                 TestMethod = methodName,
-                TestName = testClass.FullName + "." + methodName
+                TestName = testClass.FullName + "." + methodName,
+                FilePath = filePath,
+                LineNumber = lineNumber
             };
 
             await repository.InsertAsync(test);

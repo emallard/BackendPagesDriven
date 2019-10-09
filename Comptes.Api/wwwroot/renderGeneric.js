@@ -76,8 +76,20 @@ function renderTableRow(data, id, r, options) {
 function renderObjectAsList(x, id, r) {
     let html = `<ul>`;
     let keys = Object.keys(x);
-    for (let k of keys)
-        html += `<li>${k} : ${r.render(x[k], id + '.' + k)}</li>`;
+    for (let k of keys) {
+        let childId = id == '' ? k : id + '.' + k;
+        let renderInfo = _find(r.page.RenderInfos, x => x.Expression == childId);
+        let hidden = false;
+        if (renderInfo != null && renderInfo.Info == 'hidden') {
+            hidden = true;
+            console.log('  ' + childId + ' is hidden')
+        }
+
+        html += `<li ${hidden ? 'style="display:none"' : ''} >
+                    ${k} : ${r.render(x[k], childId)}
+                 </li>`;
+    }
+
     html += "</ul>"
     return html;
 }

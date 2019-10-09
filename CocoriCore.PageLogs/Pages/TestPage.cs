@@ -9,6 +9,7 @@ namespace CocoriCore.PageLogs
     {
         public AsyncCall<TestReportQuery, TestReport> TestReport;
         public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
+        public AsyncCall<TestCsFileQuery, TestCsFileResponse> CsFile;
         public AsyncCall<RunWithSeleniumCommand, Empty> RunWithSelenium;
     }
 
@@ -22,6 +23,8 @@ namespace CocoriCore.PageLogs
 
                 p.RunWithSelenium.Query.TestName = q.TestName;
                 p.RunWithSelenium.OnInit = false;
+
+                p.CsFile.Query.TestName = q.TestName;
             });
         }
 

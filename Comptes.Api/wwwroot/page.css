@@ -5,3 +5,12 @@
         padding-inline-start: 4px;
     }
 }
+
+pre {
+    color:unset !important;
+    font-size:unset !important;
+}
+
+code {
+    background:unset !important;
+}

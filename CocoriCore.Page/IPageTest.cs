@@ -6,5 +6,8 @@ namespace CocoriCore
     {
         void WithSeleniumBrowser(RouterOptions routerOptions);
         object[] GetLogs();
+        string GetFilePath();
+        int GetLineNumber();
     }
+
 }
