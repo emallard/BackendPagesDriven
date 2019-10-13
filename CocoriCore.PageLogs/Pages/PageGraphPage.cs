@@ -9,7 +9,7 @@ namespace CocoriCore.PageLogs
 
     public class PageGraphPage : PageBase<PageGraphPageQuery>
     {
-        public AsyncCall<PageGraphQuery, PageGraphResponse> Graph;
+        public OnInitCall<PageGraphQuery, PageGraphResponse> Graph;
     }
 
     public class PageGraphPageModule : PageModule

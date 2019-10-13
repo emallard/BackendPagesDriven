@@ -8,28 +8,32 @@ namespace CocoriCore
         void SetPageQuery(object pageQuery);
         void SetMemberName(string name);
         string GetMemberName();
-        IMessage GetQuery();
+        IMessage GetMessage();
+
+        AsyncCallType GetCallType();
     }
 
-    public class AsyncCall<TQuery, TModel> : IMessage<TModel>, IAsyncCall where TQuery : IMessage
+    public enum AsyncCallType
+    {
+        OnInit,
+        Action,
+        Server
+    }
+
+
+    public class AsyncCall<TMessage, TModel> : IMessage<TModel>, IAsyncCall where TMessage : IMessage
     {
         public bool IsAsyncCall = true;
-        public bool OnInit = true;
+        public AsyncCallType CallType;
         public Type _Type;
         public Type _PageQueryType;
-        public TQuery Query = Activator.CreateInstance<TQuery>();
+        public TMessage Message = Activator.CreateInstance<TMessage>();
         public TModel Result;
         public string MemberName;
 
         public AsyncCall()
         {
             _Type = this.GetType();
-        }
-
-        public AsyncCall(object pageQuery)
-        {
-            _Type = this.GetType();
-            this.SetPageQuery(pageQuery);
         }
 
         public void SetResult(object o)
@@ -47,14 +51,19 @@ namespace CocoriCore
             MemberName = name;
         }
 
-        public IMessage GetQuery()
+        public IMessage GetMessage()
         {
-            return Query;
+            return Message;
         }
 
         public string GetMemberName()
         {
             return MemberName;
+        }
+
+        public AsyncCallType GetCallType()
+        {
+            return this.CallType;
         }
     }
 }

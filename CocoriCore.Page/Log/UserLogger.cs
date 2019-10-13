@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CocoriCore.Page;
 
-namespace Comptes
+namespace CocoriCore.Page
 {
     public class UserLogger : IUserLogger
     {

@@ -7,10 +7,10 @@ namespace Comptes
         public bool IsSelect => true;
         public Select()
         {
-            Source = new AsyncCall<TQuery, TModel[]>();
+            Source = new OnInitCall<TQuery, TModel[]>();
         }
 
-        public AsyncCall<TQuery, TModel[]> Source;
+        public OnInitCall<TQuery, TModel[]> Source;
         public TModel Selected;
     }
 

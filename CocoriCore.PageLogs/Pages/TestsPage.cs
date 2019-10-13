@@ -7,7 +7,7 @@ namespace CocoriCore.PageLogs
 
     public class TestListPage : PageBase<TestListPageQuery>
     {
-        public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
+        public OnInitCall<PageGraphQuery, PageGraphResponse> PageGraph;
     }
 
     public class TestListPageModule : PageModule

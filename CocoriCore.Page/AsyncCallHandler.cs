@@ -15,10 +15,10 @@ namespace CocoriCore
             this.mapper = mapper;
         }
 
-        public override async Task<TModel> ExecuteAsync(AsyncCall<TQuery, TModel> asyncCallMessage)
+        public override async Task<TModel> ExecuteAsync(AsyncCall<TQuery, TModel> AsyncCallMessage)
         {
-            var response = await executeHandler.ExecuteAsync(asyncCallMessage.Query);
-            return mapper.Map<TModel>(asyncCallMessage.Query, response);
+            var response = await executeHandler.ExecuteAsync(AsyncCallMessage.Message);
+            return mapper.Map<TModel>(AsyncCallMessage.Message, response);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Comptes
     {
         public MenuComponent Menu;
         public PosteCreatePageQuery NouveauPoste;
-        public AsyncCall<PosteListQuery, PageLink<PosteViewPageQuery>[]> Postes;
+        public OnInitCall<PosteListQuery, PageLink<PosteViewPageQuery>[]> Postes;
     }
 
     public class PosteListPageModule : PageModule

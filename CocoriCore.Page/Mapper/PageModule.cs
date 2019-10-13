@@ -13,7 +13,14 @@ namespace CocoriCore
         public List<PageHandling> Handlings = new List<PageHandling>();
 
         protected PageModuleHandlePage<TPageQuery, TPage> HandlePage<TPageQuery, TPage>(
-            Action<TPageQuery, TPage> action = null
+                )
+                    where TPageQuery : IMessage<TPage>
+                    where TPage : PageBase<TPageQuery>
+        {
+            return HandlePage<TPageQuery, TPage>(null);
+        }
+        protected PageModuleHandlePage<TPageQuery, TPage> HandlePage<TPageQuery, TPage>(
+            Action<TPageQuery, TPage> action
         )
             where TPageQuery : IMessage<TPage>
             where TPage : PageBase<TPageQuery>
@@ -60,7 +67,7 @@ namespace CocoriCore
             }
         }
 
-        public PageModuleOnMessage<TMessage> OnMessage<TMessage>()
+        public PageModuleOnMessage<TMessage> ForMessage<TMessage>()
         {
             return new PageModuleOnMessage<TMessage>(this);
         }

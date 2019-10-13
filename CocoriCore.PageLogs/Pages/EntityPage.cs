@@ -7,7 +7,7 @@ namespace CocoriCore.PageLogs
 
     public class EntityPage : PageBase<EntityPageQuery>
     {
-        public AsyncCall<EntityReportQuery, EntityReport> EntityReport;
+        public OnInitCall<EntityReportQuery, EntityReport> EntityReport;
     }
 
     public class EntityPageModule : PageModule
@@ -16,7 +16,7 @@ namespace CocoriCore.PageLogs
         {
             HandlePage<EntityPageQuery, EntityPage>((q, p) =>
             {
-                p.EntityReport.Query.EntityName = q.EntityName;
+                p.EntityReport.Message.EntityName = q.EntityName;
             })
                 .ForAsyncCall(p => p.EntityReport)
                 .MapResponse<EntityReport>()

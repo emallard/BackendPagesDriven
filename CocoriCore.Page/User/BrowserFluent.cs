@@ -124,6 +124,17 @@ namespace CocoriCore.Page
             return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
         }
 
+
+        public TestBrowserFluentSubmitted<TPage, TFormResponse> Click<TMessage, TFormResponse>(
+            Expression<Func<TPage, ActionCall<TMessage, TFormResponse>>> getCall)
+            where TMessage : IMessage, new()
+        {
+            //this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
+            var formResponse = browser.Click(Page, getCall).Result;
+
+            return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
+        }
+
         public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, TMember value)
         {
             this.browser.Fill(this.Page, expressionMember, value);

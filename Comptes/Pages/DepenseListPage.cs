@@ -13,7 +13,7 @@ namespace Comptes
     {
         public MenuComponent Menu;
         public DepenseCreatePageQuery NouvelleDepense;
-        public AsyncCall<DepenseListQuery, DepenseListPageItem[]> Depenses;
+        public OnInitCall<DepenseListQuery, DepenseListPageItem[]> Depenses;
     }
 
     public class DepenseListPageItem

@@ -36,7 +36,7 @@ namespace Comptes.Api
                 .InSingletonScope();
 
             this.Bind<IMessageBus>().To<Comptes.MessageBus>().InNamedScope("unitofwork");
-            this.Bind<IExecuteHandler>().To<Comptes.ExecuteHandler>().InNamedScope("unitofwork");
+            this.Bind<IExecuteHandler>().To<ExecuteHandler>().InNamedScope("unitofwork");
             this.Bind<PageMapperConfiguration>().ToConstant(
                 new PageMapperConfiguration(
                     CocoriCore.PageLogs.AssemblyInfo.Assembly,

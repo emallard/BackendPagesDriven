@@ -9,7 +9,7 @@ namespace CocoriCore.PageLogs
 
     public class EntityListPage : PageBase<EntityListPageQuery>
     {
-        public AsyncCall<PageGraphQuery, EntityListPageItem[]> PageGraph;
+        public OnInitCall<PageGraphQuery, EntityListPageItem[]> PageGraph;
     }
 
     public class EntityListPageItem

@@ -12,7 +12,7 @@ namespace Comptes
 
     public class PosteCreatePage : PageBase<PosteCreatePageQuery>
     {
-        public AsyncCall<PosteCreateInitQuery, PosteCreateInitResponse> Poste;
+        public OnInitCall<PosteCreateInitQuery, PosteCreateInitResponse> Poste;
 
         public Form<PosteCreateCommand, PosteListPageQuery> Creer;
 

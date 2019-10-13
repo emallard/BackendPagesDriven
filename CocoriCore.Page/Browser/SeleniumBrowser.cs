@@ -135,16 +135,6 @@ namespace CocoriCore.Page
             var jsObject = jsonSerializer.Serialize(value);
             js.ExecuteScript("_page." + id + " = " + jsObject);
             js.ExecuteScript("onPageUpdate('" + id + "', " + jsObject + ");");
-
-            /*
-            var elt = driver.FindElement(By.Id(GetId(page, expressionMember)));
-            if (value != null)
-            {
-                elt.Clear();
-                elt.SendKeys(value.ToString());
-                Thread.Sleep(500);
-            }
-            */
         }
 
 
@@ -158,21 +148,18 @@ namespace CocoriCore.Page
 
             var str = expression.ToString();
             return str.Substring(str.IndexOf(".") + 1);
-            /*
-            while (expression is MemberExpression memberExpression)
-            {
-                var memberInfo = memberExpression.Member;
-                memberInfos.Add(memberInfo);
-                expression = memberExpression.Expression;
-            }
+        }
 
-            memberInfos.Reverse();
+        public async Task<TFormResponse> Click<TPage, TMessage, TFormResponse>(TPage page, Expression<Func<TPage, ActionCall<TMessage, TFormResponse>>> getCall)
+            where TPage : IPageBase
+            where TMessage : IMessage, new()
+        {
+            await Task.CompletedTask;
 
-            var names = memberInfos.Select(x => x.Name).ToArray();
-            if (names.Length == 0)
-                throw new Exception("Error while parsing expression for member names");
-            return names;
-            */
+            var button = driver.FindElement(By.Id(ExprToString(getCall)));
+            button.Click();
+
+            return default(TFormResponse);
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CocoriCore;
 
-namespace Comptes
+namespace CocoriCore.Page
 {
 
     public class ExecuteHandler : IExecuteHandler

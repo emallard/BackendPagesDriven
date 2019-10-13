@@ -1,11 +1,11 @@
 using System;
 using CocoriCore;
 
-namespace Comptes
+namespace MultiUser
 {
     public class UserClaims : IClaims
     {
-        public ID<User> IdUtilisateur;
+        public ID<Utilisateur> IdUtilisateur;
 
         public DateTime ExpireAt => new DateTime(3000, 1, 1);
     }

@@ -62,7 +62,8 @@ namespace CocoriCore.Page
                 if (memberType.IsAssignableTo<IAsyncCall>())
                 {
                     var asyncCall = (IAsyncCall)mi.InvokeGetter(o);
-                    asyncCall.SetResult(await ExecuteAsync((IMessage)mi.InvokeGetter(o)));
+                    if (asyncCall.GetCallType() == AsyncCallType.OnInit)
+                        asyncCall.SetResult(await ExecuteAsync((IMessage)mi.InvokeGetter(o)));
                 }
                 else
                 {
@@ -144,6 +145,15 @@ namespace CocoriCore.Page
                 currentObject = memberInfos[i].InvokeGetter(currentObject);
 
             memberInfos[0].InvokeSetter(currentObject, value);
+        }
+
+        public async Task<TCallResponse> Click<TPage, TMessage, TCallResponse>(TPage page, Expression<Func<TPage, ActionCall<TMessage, TCallResponse>>> getCall)
+            where TPage : IPageBase
+            where TMessage : IMessage, new()
+        {
+            var func = getCall.Compile();
+            var call = func(page);
+            return await ExecuteAsync(call);
         }
     }
 }

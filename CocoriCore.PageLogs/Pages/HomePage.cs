@@ -11,9 +11,9 @@ namespace CocoriCore.PageLogs
     public class HomePage : PageBase<HomePageQuery>
     {
         public Form<RunTestCommand, HomePageQuery> RunTests;
-        public AsyncCall<PageListQuery, PageLink[]> Pages;
-        public AsyncCall<EntityListQuery, PageLink[]> Entities;
-        public AsyncCall<TestListQuery, PageLink[]> Tests;
+        public OnInitCall<PageListQuery, PageLink[]> Pages;
+        public OnInitCall<EntityListQuery, PageLink[]> Entities;
+        public OnInitCall<TestListQuery, PageLink[]> Tests;
         public PageGraphPageQuery ViewPageGraph;
     }
 

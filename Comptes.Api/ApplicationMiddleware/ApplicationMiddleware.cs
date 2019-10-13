@@ -5,6 +5,7 @@ using CocoriCore;
 using CocoriCore.Router;
 using CocoriCore.Page;
 using Newtonsoft.Json;
+using MultiUser;
 
 namespace Comptes.Api
 {

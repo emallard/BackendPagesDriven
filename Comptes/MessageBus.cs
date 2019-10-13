@@ -11,20 +11,15 @@ namespace Comptes
         private readonly IFactory factory;
         private readonly IPageMapper mapper;
 
-        //private readonly IRepository repository;
-
         public MessageBus(
             HandlerFinder handlerTypes,
             IFactory factory,
             IPageMapper mapper
-            //IRepository repository,
-            //IClaimsProvider authenticator
             )
         {
             this.handlerTypes = handlerTypes;
             this.factory = factory;
             this.mapper = mapper;
-            //this.authenticator = authenticator;
         }
 
         public async Task<object> ExecuteAsync(IMessage message)

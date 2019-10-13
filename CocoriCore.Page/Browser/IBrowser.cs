@@ -22,5 +22,13 @@ namespace CocoriCore.Page
 
 
         Task<T> SubmitRedirect<T>(IMessage<T> message) where T : IPageBase;
+
+
+        Task<TFormResponse> Click<TPage, TMessage, TFormResponse>(
+            TPage page,
+            Expression<Func<TPage, ActionCall<TMessage, TFormResponse>>> getCall)
+
+            where TPage : IPageBase
+            where TMessage : IMessage, new();
     }
 }

@@ -114,7 +114,7 @@ _renderers.push(
     (x, id, r) => typeof (x) == 'string',
     (x, id, r) => `${x}`);
 _renderers.push(
-    (x, id, r) => x["IsAsyncCall"] && x["OnInit"],
+    (x, id, r) => x['IsAsyncCall'] && x.CallType == 'OnInit',
     (x, id, r) => {
         let hresult = id + '.Result';
         r.afterRender(async () => {
@@ -132,7 +132,7 @@ _renderers.push(
         */
     });
 _renderers.push(
-    (x, id, r) => x["IsAsyncCall"] && !x["OnInit"],
+    (x, id, r) => x['IsAsyncCall'] && x.CallType == 'Action',
     (x, id, r) => {
         r.afterRender(() => document.getElementById(id).addEventListener('click', () => call(x)))
         return `<button class="btn btn-success" id="${id}"> ${field(id)} </button>`;

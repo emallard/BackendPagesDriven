@@ -13,7 +13,7 @@ namespace Comptes
 
     public class DepenseUpdatePage : PageBase<DepenseUpdatePageQuery>
     {
-        public AsyncCall<DepenseUpdateInitQuery, DepenseUpdateInitResponse> Depense;
+        public OnInitCall<DepenseUpdateInitQuery, DepenseUpdateInitResponse> Depense;
         public Select<PosteListQuery, ValueLabel<ID<Poste>>> PosteSelect;
 
         public Form<DepenseUpdateCommand, DepenseListPageQuery> Enregistrer;
@@ -36,7 +36,7 @@ namespace Comptes
         {
             HandlePage<DepenseUpdatePageQuery, DepenseUpdatePage>((q, p) =>
             {
-                p.Depense.Query.Id = q.Id;
+                p.Depense.Message.Id = q.Id;
             })
                 .ForForm(p => p.Enregistrer)
                 .MapResponse<CocoriCore.Empty>()

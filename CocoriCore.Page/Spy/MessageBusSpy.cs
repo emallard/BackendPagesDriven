@@ -22,7 +22,7 @@ namespace CocoriCore.Page
             if (message is IAsyncCall asyncCall)
             {
                 logger.Log(new LogAsyncCall() { MemberName = asyncCall.GetMemberName() });
-                loggedMessage = asyncCall.GetQuery();
+                loggedMessage = asyncCall.GetMessage();
             }
 
             if (message is IForm form)

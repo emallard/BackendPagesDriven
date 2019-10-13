@@ -7,10 +7,10 @@ namespace CocoriCore.PageLogs
 
     public class TestPageResponse : PageBase<TestPageQuery>
     {
-        public AsyncCall<TestReportQuery, TestReport> TestReport;
-        public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
-        public AsyncCall<TestCsFileQuery, TestCsFileResponse> CsFile;
-        public AsyncCall<RunWithSeleniumCommand, Empty> RunWithSelenium;
+        public OnInitCall<TestReportQuery, TestReport> TestReport;
+        public OnInitCall<PageGraphQuery, PageGraphResponse> PageGraph;
+        public OnInitCall<TestCsFileQuery, TestCsFileResponse> CsFile;
+        public ActionCall<RunWithSeleniumCommand, Empty> RunWithSelenium;
     }
 
     public class TestPageModule : PageModule
@@ -19,12 +19,11 @@ namespace CocoriCore.PageLogs
         {
             HandlePage<TestPageQuery, TestPageResponse>((q, p) =>
             {
-                p.TestReport.Query.TestName = q.TestName;
+                p.TestReport.Message.TestName = q.TestName;
 
-                p.RunWithSelenium.Query.TestName = q.TestName;
-                p.RunWithSelenium.OnInit = false;
+                p.RunWithSelenium.Message.TestName = q.TestName;
 
-                p.CsFile.Query.TestName = q.TestName;
+                p.CsFile.Message.TestName = q.TestName;
             });
         }
 

@@ -13,7 +13,7 @@ namespace Comptes
 
     public class DepenseCreatePage : PageBase<DepenseCreatePageQuery>
     {
-        public AsyncCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Depense;
+        public OnInitCall<DepenseCreateInitQuery, DepenseCreateInitResponse> Depense;
         public Select<PosteListQuery, ValueLabel<ID<Poste>>> PosteSelect;
         public Form<DepenseCreateCommand, DepenseListPageQuery> Creer;
 
@@ -31,7 +31,7 @@ namespace Comptes
         {
             HandlePage<DepenseCreatePageQuery, DepenseCreatePage>((q, p) =>
             {
-                p.PosteSelect.Source.Query = new PosteListQuery();
+                p.PosteSelect.Source.Message = new PosteListQuery();
             })
                 .ForForm(p => p.Creer)
                 .MapResponse<ID<Depense>>()
@@ -45,7 +45,7 @@ namespace Comptes
                 .MapResponse<DepenseCreateInitResponse>()
                 .ToSelf();
 
-            OnMessage<PosteListQuery>()
+            ForMessage<PosteListQuery>()
                 .WithResponse<PosteListResponseItem[]>()
                 .BuildModel<ValueLabel<ID<Poste>>[]>((q, r) =>
                 {

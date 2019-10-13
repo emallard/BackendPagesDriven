@@ -1,6 +1,6 @@
 using CocoriCore;
 
-namespace Comptes
+namespace CocoriCore
 {
     public interface IClaimsResponse
     {

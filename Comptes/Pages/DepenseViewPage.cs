@@ -10,14 +10,14 @@ namespace Comptes
 
     public class DepenseViewPage : PageBase<DepenseViewPageQuery>
     {
-        public AsyncCall<DepenseViewQuery, DepenseViewResponse> Depense;
+        public OnInitCall<DepenseViewQuery, DepenseViewResponse> Depense;
     }
 
     public class DepenseViewPageModule : PageModule
     {
         public DepenseViewPageModule()
         {
-            HandlePage<DepenseViewPageQuery, DepenseViewPage>((q, p) => { p.Depense.Query.Id = q.Id; })
+            HandlePage<DepenseViewPageQuery, DepenseViewPage>((q, p) => { p.Depense.Message.Id = q.Id; })
                 .ForAsyncCall(p => p.Depense)
                 .MapResponse<DepenseViewResponse>()
                 .ToSelf();

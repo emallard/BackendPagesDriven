@@ -10,9 +10,9 @@ namespace CocoriCore.PageLogs
 
     public class PagePage : PageBase<PagePageQuery>
     {
-        public AsyncCall<PageReportQuery, PageReportModel> PageReport;
-        public AsyncCall<PageGraphQuery, PageGraphResponse> PageGraph;
-        public AsyncCall<PageListQuery, PageLink[]> Pages;
+        public OnInitCall<PageReportQuery, PageReportModel> PageReport;
+        public OnInitCall<PageGraphQuery, PageGraphResponse> PageGraph;
+        public OnInitCall<PageListQuery, PageLink[]> Pages;
 
         public PagePage()
         {
@@ -40,9 +40,9 @@ namespace CocoriCore.PageLogs
     {
         public PagePageModule()
         {
-            HandlePage<PagePageQuery, PagePage>((q, p) => { p.PageReport.Query.PageName = q.PageName; });
+            HandlePage<PagePageQuery, PagePage>((q, p) => { p.PageReport.Message.PageName = q.PageName; });
 
-            OnMessage<PageReportQuery>()
+            ForMessage<PageReportQuery>()
             .WithResponse<PageReport>()
             .BuildModel<PageReportModel>((q, r, m) =>
             {
