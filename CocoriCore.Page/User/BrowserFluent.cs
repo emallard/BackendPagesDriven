@@ -114,25 +114,47 @@ namespace CocoriCore.Page
 
 
 
-        public TestBrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
+        public BrowserFluentSubmitted<TPage, TFormResponse> Submit<TMessage, TFormResponse>(
             Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
             where TMessage : IMessage, new()
         {
             //this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Submit(Page, getForm).Result;
 
-            return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
+            return factory.Create<BrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
         }
 
 
-        public TestBrowserFluentSubmitted<TPage, TFormResponse> Click<TMessage, TFormResponse>(
+        public BrowserFluent<TPage> SubmitShouldFail<TMessage, TFormResponse>(
+            Expression<Func<TPage, Form<TMessage, TFormResponse>>> getForm)
+            where TMessage : IMessage, new()
+        {
+            bool exceptionCaught = false;
+            try
+            {
+                var formResponse = browser.Submit(Page, getForm).Result;
+            }
+            catch (Exception)
+            {
+                exceptionCaught = true;
+            }
+            if (!exceptionCaught)
+                throw new Exception("Submit should have failed");
+
+            return this;
+        }
+
+
+
+
+        public BrowserFluentSubmitted<TPage, TFormResponse> Click<TMessage, TFormResponse>(
             Expression<Func<TPage, ActionCall<TMessage, TFormResponse>>> getCall)
             where TMessage : IMessage, new()
         {
             //this.logger.Log(new LogSubmit { MemberName = ((MemberExpression)getForm.Body).Member.Name });
             var formResponse = browser.Click(Page, getCall).Result;
 
-            return factory.Create<TestBrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
+            return factory.Create<BrowserFluentSubmitted<TPage, TFormResponse>>().SetResponse(formResponse);
         }
 
         public BrowserFluent<TPage> Fill<TMember>(Expression<Func<TPage, TMember>> expressionMember, TMember value)
@@ -164,14 +186,14 @@ namespace CocoriCore.Page
         }
     }
 
-    public class TestBrowserFluentSubmitted<TPage, TPostResponse>
+    public class BrowserFluentSubmitted<TPage, TPostResponse>
     {
         private TPostResponse postResponse;
         private readonly IFactory factory;
         private readonly IBrowser browser;
         private readonly ICurrentUserLogger logger;
 
-        public TestBrowserFluentSubmitted(
+        public BrowserFluentSubmitted(
             IFactory factory,
             IBrowser browser,
             ICurrentUserLogger logger)
@@ -181,7 +203,7 @@ namespace CocoriCore.Page
             this.logger = logger;
         }
 
-        public TestBrowserFluentSubmitted<TPage, TPostResponse> SetResponse(TPostResponse postResponse)
+        public BrowserFluentSubmitted<TPage, TPostResponse> SetResponse(TPostResponse postResponse)
         {
             this.postResponse = postResponse;
             return this;

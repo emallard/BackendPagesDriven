@@ -64,7 +64,7 @@ namespace MultiUser
             kernel.Rebind<IBrowser>().To<SeleniumBrowser>().InNamedScope("user");
         }
 
-        public UserFluent CreateUser(string userName,
+        public UserFluent CreateUser(string userName = "user",
             [CallerFilePath] string file = "",
             [CallerLineNumber] int line = 0)
         {

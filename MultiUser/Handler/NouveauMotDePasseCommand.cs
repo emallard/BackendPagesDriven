@@ -7,7 +7,7 @@ namespace MultiUser
 
     public class NouveauMotDePasseCommand : IMessage<Empty>
     {
-        public Guid Token;
+        public ID<TokenMotDePasseOublie> IdToken;
         public string MotDePasse;
         public string Confirmation;
     }
@@ -26,7 +26,7 @@ namespace MultiUser
 
         public async override Task<Empty> ExecuteAsync(NouveauMotDePasseCommand message)
         {
-            var token = await repository.LoadAsync<TokenMotDePasseOublie>(message.Token);
+            var token = await repository.LoadAsync<TokenMotDePasseOublie>(message.IdToken);
             token.Utilise = true;
             await repository.UpdateAsync(token);
 
