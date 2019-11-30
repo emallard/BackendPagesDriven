@@ -118,13 +118,15 @@ namespace CocoriCore.Page
                 .Where(f => f.GetMemberType().IsAssignableTo(typeof(GenericMessage)))
                 .Select(f =>
                 {
+                    return new FormMemberInfo();
+                    /*
                     var generics = f.GetMemberType().GetGenericArguments(typeof(Call<,>));
                     return new FormMemberInfo
                     {
                         Name = f.Name,
                         MessageType = generics[0],
                         ResponseType = generics[1]
-                    };
+                    };*/
                 })
                 .ToArray();
         }

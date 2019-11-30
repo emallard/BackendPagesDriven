@@ -25,8 +25,9 @@ namespace CocoriCore.Page
 
             var formTypes = forms.SelectMany(f =>
                     {
-                        var generics = f.GetMemberType().GetGenericArguments(typeof(Call<,>));
-                        return new Type[] { generics[0], generics[1] };
+                        //var generics = f.GetMemberType().GetGenericArguments(typeof(Call<,>));
+                        //return new Type[] { generics[0], generics[1] };
+                        return new Type[0];
                     }).ToArray();
 
             var arrays = fields.Where(f => f.FieldType.IsArray)
